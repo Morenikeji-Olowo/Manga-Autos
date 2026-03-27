@@ -35,9 +35,7 @@ app.use((req, res, next)=>{
 
 //middlewares
 const corseOptions = {
-    origin: [
-        "https://smota-livid.vercel.app/"
-    ],
+    origin: ["http://localhost:5174", "https://smota-livid.vercel.app"],
     credentials: true,
 };
 app.use(cors(corseOptions));

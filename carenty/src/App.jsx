@@ -6,7 +6,6 @@ import Cars from './pages/Cars'
 import CarDetail from './pages/CarDetail'
 import Login from './pages/auth/Login'
 import Signup from './pages/auth/Signup'
-import AdminDashboard from './pages/Admin/AdminDashboard'
 
 function App() {
   return (

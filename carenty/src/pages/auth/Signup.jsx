@@ -231,7 +231,7 @@ const handleSubmit = async (e) => {
               <button
                 type="submit"
                 disabled={isLoading}
-                onClick={handleSubmit}
+                onSubmit={handleSubmit}
                 className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-3 rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed mt-4"
               >
                 {isLoading ? <i className="fas fa-spinner fa-spin"></i> : 'Create an Account'}

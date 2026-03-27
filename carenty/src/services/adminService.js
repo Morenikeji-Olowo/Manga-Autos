@@ -26,3 +26,13 @@ export const deleteCar = async (id) => {
 export const markCarSold = async (id) => {
   return api.patch(API_ENDPOINTS.ADMIN_CARS.MARK_SOLD(id));
 };
+
+const authService = {
+  getAdminCars,
+  createCar,
+  updateCar,
+  deleteCar,
+  markCarSold,
+};
+
+export default authService;

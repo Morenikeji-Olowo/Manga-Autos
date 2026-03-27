@@ -1,25 +1,26 @@
-  // src/services/adminService.js
-  import axios from 'axios'
+import axios from 'axios'
 
-  const authService = {
-    signup: async ({ username, email, password }) => {
-      const res = await axios.post('/api/auth/signup', { username, email, password })
-      return res.data
-    },
+const API_BASE_URL = 'https://manga-autos.onrender.com'
 
-    login: async (email, password) => {
-      const res = await axios.post('/api/auth/login', { email, password })
-      return res.data
-    },
+const authService = {
+  signup: async ({ username, email, password }) => {
+    const res = await axios.post(`${API_BASE_URL}/api/auth/register`, { username, email, password })
+    return res.data
+  },
 
-    logout: async () => {
-      return true // or call API
-    },
+  login: async (email, password) => {
+    const res = await axios.post(`${API_BASE_URL}/api/auth/login`, { email, password })
+    return res.data
+  },
 
-    getMe: async () => {
-      const res = await axios.get('/api/auth/me')
-      return res.data
-    }
+  logout: async () => {
+    return true // or call API
+  },
+
+  getMe: async () => {
+    const res = await axios.get(`${API_BASE_URL}/api/auth/me`)
+    return res.data
   }
+}
 
-  export default authService
+export default authService

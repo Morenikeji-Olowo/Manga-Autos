@@ -54,16 +54,6 @@ export const useAuthStore = create(
         }
       },
 
-/*************  ✨ Windsurf Command ⭐  *************/
-      /**
-       * Logout the user
-       * 
-       * Try to logout the user via API
-       * If API call fails, clear local storage anyway
-       * Set user and isAuthenticated state to null and false respectively
-       * Show a success toast
-       */
-/*******  a2d69563-922c-4215-aa1a-13619f95d4de  *******/
       logout: async () => {
         try {
           await authService.logout()

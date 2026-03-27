@@ -23,46 +23,10 @@ export default function Signup() {
     }))
   }
 
-  const handleSubmit = async (e) => {
-    e.preventDefault()
-
-    // Basic validation
-    if (!formData.firstName || !formData.lastName || !formData.email || !formData.password) {
-      toast.error('Please fill in all fields')
-      return
-    }
-    if (formData.password !== formData.confirmPassword) {
-      toast.error('Passwords do not match')
-      return
-    }
-    if (formData.password.length < 6) {
-      toast.error('Password must be at least 6 characters')
-      return
-    }
-    if (!formData.agreeTerms) {
-      toast.error('Please agree to the Terms and Conditions')
-      return
-    }
-
-    try {
-      // Call Zustand store
-      const result = await signup({
-        username: `${formData.firstName} ${formData.lastName}`,
-        email: formData.email,
-        password: formData.password
-      })
-
-      if (result?.success) {
-        toast.success('Account created! Please check your email.')
-        navigate('/auth/check-email')
-      } else {
-        toast.error('Signup failed. Please try again.')
-      }
-    } catch (error) {
-      console.error(error)
-      toast.error(error?.response?.data?.message || error.message || 'Something went wrong')
-    }
-  }
+const handleSubmit = async (e) => {
+  e.preventDefault()
+  console.log('Form submitted', formData) // add this
+}
 
   return (
     <div className="min-h-screen flex">

@@ -1,32 +1,25 @@
-import { api } from "./api/client";
-import { API_ENDPOINTS } from "./api/endpoints";
+// src/services/adminService.js
+import axios from 'axios'
 
-// login
-export const loginUser = async (email, password) => {
-  return api.post(API_ENDPOINTS.AUTH.LOGIN, { email, password });
-};
+const authService = {
+  signup: async ({ username, email, password }) => {
+    const res = await axios.post('/api/auth/signup', { username, email, password })
+    return res.data
+  },
 
-// register
-export const registerUser = async (userData) => {
-  return api.post(API_ENDPOINTS.AUTH.SIGNUP, userData);
-};
+  login: async (email, password) => {
+    const res = await axios.post('/api/auth/login', { email, password })
+    return res.data
+  },
 
-// get current user
-export const getMe = async () => {
-  return api.get(API_ENDPOINTS.AUTH.ME);
-};
+  logout: async () => {
+    return true // or call API
+  },
 
-// logout
-export const logoutUser = async () => {
-  return api.post(API_ENDPOINTS.AUTH.LOGOUT);
-};
+  getMe: async () => {
+    const res = await axios.get('/api/auth/me')
+    return res.data
+  }
+}
 
-// forgot password
-export const forgotPassword = async (email) => {
-  return api.post(API_ENDPOINTS.AUTH.FORGOT_PASSWORD, { email });
-};
-
-// reset password
-export const resetPassword = async (token, newPassword) => {
-  return api.post(API_ENDPOINTS.AUTH.RESET_PASSWORD(token), { password: newPassword });
-};
+export default authService

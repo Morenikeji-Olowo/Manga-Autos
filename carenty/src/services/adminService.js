@@ -27,7 +27,7 @@ export const markCarSold = async (id) => {
   return api.patch(API_ENDPOINTS.ADMIN_CARS.MARK_SOLD(id));
 };
 
-const authService = {
+const adminService = {
   getAdminCars,
   createCar,
   updateCar,
@@ -35,4 +35,4 @@ const authService = {
   markCarSold,
 };
 
-export default authService;
+export default adminService;

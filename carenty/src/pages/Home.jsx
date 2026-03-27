@@ -120,10 +120,10 @@ export default function Home() {
                 </Link>
               ) : (
                 <>
-                  <Link to="/auth/login" className="text-gray-600 hover:text-red-500 transition">
+                  <Link to="/login" className="text-gray-600 hover:text-red-500 transition">
                     Login
                   </Link>
-                  <Link to="/auth/signup" className="bg-red-500 text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-red-600 transition">
+                  <Link to="/signup" className="bg-red-500 text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-red-600 transition">
                     Sign Up
                   </Link>
                 </>

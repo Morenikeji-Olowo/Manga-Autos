@@ -32,27 +32,18 @@ export const useAuthStore = create(
         }
       },
 
-      signup: async (userData) => {
-        set({ isLoading: true })
-        try {
-          const response = await authService.signup(userData)
-          
-          localStorage.setItem('accessToken', response.token)
-          localStorage.setItem('refreshToken', response.refreshToken)
-          
-          set({ 
-            user: response.user, 
-            isAuthenticated: true, 
-            isLoading: false 
-          })
-          
-          toast.success('Account created successfully!')
-          return { success: true }
-        } catch (error) {
-          set({ isLoading: false })
-          throw error
-        }
-      },
+signup: async (userData) => {
+  set({ isLoading: true })
+  try {
+    const response = await authService.signup(userData)
+    // Don't store token or set authenticated — email not verified yet
+    set({ isLoading: false })
+    return { success: true }
+  } catch (error) {
+    set({ isLoading: false })
+    throw error
+  }
+},
 
       logout: async () => {
         try {

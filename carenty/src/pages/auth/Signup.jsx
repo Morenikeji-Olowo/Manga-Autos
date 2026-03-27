@@ -111,7 +111,7 @@ const handleSubmit = async (e) => {
             <h1 className="text-3xl font-bold text-gray-900">Sign Up</h1>
             <p className="text-gray-500 mt-2">
               Already have an account?{' '}
-              <Link to="/auth/login" className="text-red-500 font-semibold hover:text-red-600">
+              <Link to="/login" className="text-red-500 font-semibold hover:text-red-600">
                 Log In
               </Link>
             </p>
@@ -231,6 +231,7 @@ const handleSubmit = async (e) => {
               <button
                 type="submit"
                 disabled={isLoading}
+                onClick={handleSubmit}
                 className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-3 rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed mt-4"
               >
                 {isLoading ? <i className="fas fa-spinner fa-spin"></i> : 'Create an Account'}

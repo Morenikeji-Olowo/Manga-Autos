@@ -21,7 +21,7 @@ adminRouter.put(
   updateCar
 );
 adminRouter.delete("/cars/:id",deleteCar );
-adminRouter.patch("cars/:id/sold",markCarAsSold );
+adminRouter.patch("/cars/:id/sold",markCarAsSold );
 
 
 adminRouter.get("/messages/unread-count", unreadCount);

@@ -4,6 +4,7 @@ import toast from 'react-hot-toast'
 import authService from '../../services/authService'
 
 export default function CheckEmail() {
+  // getting email form state
   const { state } = useLocation()
   const email = state?.email
 

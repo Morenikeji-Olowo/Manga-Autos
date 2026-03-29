@@ -2,7 +2,7 @@ import speakeasy from "speakeasy";
 import qrcode from "qrcode";
 import jsonwebtoken from "jsonwebtoken";
 import crypto from "crypto";
-import passport, { use } from "passport";
+import passport from "passport";
 import { sendEmail } from "../utils/sendEmail.js";
 import User from "../models/User.js";
 

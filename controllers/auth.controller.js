@@ -6,14 +6,17 @@ import passport from "passport";
 import { sendEmail } from "../utils/sendEmail.js";
 import User from "../models/User.js";
 
-
 const signToken = (user) =>
   jsonwebtoken.sign(
-    { userId: user._id, email: user.email, username: user.username, isAdmin: user.isAdmin },
+    {
+      userId: user._id,
+      email: user.email,
+      username: user.username,
+      isAdmin: user.isAdmin,
+    },
     process.env.JWT_SECRET,
-    { expiresIn: "1h" }
+    { expiresIn: "1h" },
   );
-
 
 const register = async (req, res) => {
   try {
@@ -21,7 +24,7 @@ const register = async (req, res) => {
 
     const newUser = await User.create({
       username,
-      password, 
+      password,
       email,
       isMfaActive: false,
     });
@@ -33,20 +36,25 @@ const register = async (req, res) => {
 
     // Send verification email
     const verifyUrl = `${process.env.FRONTEND_URL}/verify-email/${verificationToken}`;
-    await sendEmail(
+    sendEmail(
       newUser.email,
       "Verify your email",
-      `Please verify your account: ${verifyUrl}`
-    );
+      `
+  <p>Hello ${newUser.username},</p>
+  <p>Please verify your account:</p>
+  <a href="${verifyUrl}">${verifyUrl}</a>
+`,
+    ).catch((err) => console.error("Email failed:", err));
 
     res.status(201).json({
-      message: "User registered successfully. Check your email to verify your account.",
+      message:
+        "User registered successfully. Check your email to verify your account.",
       username: newUser.username,
       email: newUser.email,
       isAdmin: newUser.isAdmin,
     });
   } catch (error) {
-    console.error("Register error:", error); 
+    console.error("Register error:", error);
     // Duplicate key — email or username already exists
     if (error.code === 11000) {
       const field = Object.keys(error.keyPattern)[0];
@@ -55,7 +63,9 @@ const register = async (req, res) => {
         message: `An account with that ${field} already exists`,
       });
     }
-    res.status(500).json({ error: "Error registering user", message: error.message });
+    res
+      .status(500)
+      .json({ error: "Error registering user", message: error.message });
   }
 };
 
@@ -69,20 +79,26 @@ const verifyEmail = async (req, res) => {
     const { token } = req.params;
 
     const user = await User.findOne({ verificationToken: token }).select(
-      "+verificationToken"
+      "+verificationToken",
     );
 
     if (!user) {
-      return res.status(400).json({ message: "Invalid or expired verification link" });
+      return res
+        .status(400)
+        .json({ message: "Invalid or expired verification link" });
     }
 
     user.isEmailVerified = true;
     user.verificationToken = undefined;
     await user.save();
 
-    res.status(200).json({ message: "Email verified successfully. You can now log in." });
+    res
+      .status(200)
+      .json({ message: "Email verified successfully. You can now log in." });
   } catch (error) {
-    res.status(500).json({ error: "Error verifying email", message: error.message });
+    res
+      .status(500)
+      .json({ error: "Error verifying email", message: error.message });
   }
 };
 
@@ -93,7 +109,10 @@ export const login = async (req, res) => {
   const deviceToken = req.cookies?.trustedDevice;
 
   const user = await User.findOne({ email }).select("+password");
-  if (!user) return res.status(401).json({ message: "No account found with that email" });
+  if (!user)
+    return res
+      .status(401)
+      .json({ message: "No account found with that email" });
 
   const isMatch = await user.comparePassword(password);
   if (!isMatch) return res.status(401).json({ message: "Incorrect password" });
@@ -101,7 +120,7 @@ export const login = async (req, res) => {
   // Check if device is trusted — skip MFA if so
   if (deviceToken) {
     const trusted = user.trustedDevices?.find(
-      (d) => d.token === deviceToken && d.expires > Date.now()
+      (d) => d.token === deviceToken && d.expires > Date.now(),
     );
     if (trusted) {
       return res.json({
@@ -168,7 +187,9 @@ export const googleAuth = passport.authenticate("google", {
 export const googleCallback = (req, res) => {
   passport.authenticate("google", { session: false }, (err, user) => {
     if (err || !user) {
-      return res.redirect(`${process.env.FRONTEND_URL}/login?error=oauth_failed`);
+      return res.redirect(
+        `${process.env.FRONTEND_URL}/login?error=oauth_failed`,
+      );
     }
 
     const token = signToken(user);
@@ -311,14 +332,21 @@ const forgotPassword = async (req, res) => {
 
     if (user) {
       const resetToken = crypto.randomBytes(20).toString("hex");
-      const hashedToken = crypto.createHash("sha256").update(resetToken).digest("hex");
+      const hashedToken = crypto
+        .createHash("sha256")
+        .update(resetToken)
+        .digest("hex");
 
       user.resetPasswordToken = hashedToken;
       user.resetPasswordExpire = Date.now() + 10 * 60 * 1000; // 10 mins
       await user.save();
 
       const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
-      await sendEmail(user.email, "Password Reset", `Click here to reset: ${resetUrl}`);
+      await sendEmail(
+        user.email,
+        "Password Reset",
+        `Click here to reset: ${resetUrl}`,
+      );
     }
 
     // Same response whether user exists or not
@@ -326,7 +354,9 @@ const forgotPassword = async (req, res) => {
       message: "If that email is registered, a reset link has been sent",
     });
   } catch (error) {
-    res.status(500).json({ error: "Error processing request", message: error.message });
+    res
+      .status(500)
+      .json({ error: "Error processing request", message: error.message });
   }
 };
 
@@ -354,7 +384,9 @@ const resetPassword = async (req, res) => {
 
     res.status(200).json({ message: "Password reset successfully" });
   } catch (error) {
-    res.status(500).json({ error: "Error resetting password", message: error.message });
+    res
+      .status(500)
+      .json({ error: "Error resetting password", message: error.message });
   }
 };
 

@@ -2,7 +2,7 @@ import speakeasy from "speakeasy";
 import qrcode from "qrcode";
 import jsonwebtoken from "jsonwebtoken";
 import crypto from "crypto";
-import passport from "passport";
+import passport, { use } from "passport";
 import { sendEmail } from "../utils/sendEmail.js";
 import User from "../models/User.js";
 
@@ -84,7 +84,7 @@ const resendVerification = async (req, res) => {
 
     const verificationToken = crypto.randomBytes(32).toString("hex");
     user.verificationToken = verificationToken;
-    await User.save();
+    await user.save();
 
     const verifyUrl = `${process.env.RENDER_URL}/verify-email/${verificationToken}`;
     await sendEmail(
@@ -113,31 +113,24 @@ const resendVerification = async (req, res) => {
 */
 const verifyEmail = async (req, res) => {
   try {
-    const { token } = req.params;
+    const { token } = req.params
 
-    const user = await User.findOne({ verificationToken: token }).select(
-      "+verificationToken",
-    );
+    const user = await User.findOne({ verificationToken: token }).select('+verificationToken')
 
     if (!user) {
-      return res
-        .status(400)
-        .json({ message: "Invalid or expired verification link" });
+      return res.redirect(`${process.env.FRONTEND_URL}/verify-email?status=invalid`)
     }
 
-    user.isEmailVerified = true;
-    user.verificationToken = undefined;
-    await user.save();
+    user.isEmailVerified = true
+    user.verificationToken = undefined
+    await user.save()
 
-    res
-      .status(200)
-      .json({ message: "Email verified successfully. You can now log in." });
+    res.redirect(`${process.env.FRONTEND_URL}/verify-email?status=success`)
+
   } catch (error) {
-    res
-      .status(500)
-      .json({ error: "Error verifying email", message: error.message });
+    res.redirect(`${process.env.FRONTEND_URL}/verify-email?status=error`)
   }
-};
+}
 
 // ─── Login ───────────────────────────────────────────────
 // YOUR CODE — unchanged except signToken helper used

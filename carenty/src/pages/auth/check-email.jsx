@@ -88,7 +88,7 @@ export default function CheckEmail() {
               Go to Login
             </Link>
             <Link
-              to="/auth/signup"
+              to="/signup"
               className="block w-full border border-gray-200 text-gray-600 font-medium py-3 rounded-xl hover:bg-gray-50 transition text-sm"
             >
               Wrong email? Sign up again

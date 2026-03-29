@@ -46,6 +46,7 @@ const register = async (req, res) => {
       isAdmin: newUser.isAdmin,
     });
   } catch (error) {
+    console.error("Register error:", error); 
     // Duplicate key — email or username already exists
     if (error.code === 11000) {
       const field = Object.keys(error.keyPattern)[0];

@@ -86,7 +86,7 @@ const resendVerification = async (req, res) => {
     user.verificationToken = verificationToken;
     await User.save();
 
-    const verifyUrl = `${process.env.FRONTEND_URL}/verify-email/${verificationToken}`;
+    const verifyUrl = `${process.env.RENDER_URL}/verify-email/${verificationToken}`;
     await sendEmail(
       user.email,
       "Verify your email",

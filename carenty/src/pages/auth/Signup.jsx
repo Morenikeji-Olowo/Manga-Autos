@@ -52,7 +52,7 @@ const handleSubmit = async (e) => {
 
     if (result?.success) {
       toast.success('Account created! Please check your email.')
-      navigate('/auth/check-email')
+      navigate('/auth/check-email', {state: {email: formData.email}})
     }
   } catch (error) {
     toast.error(error?.response?.data?.message || error.message || 'Something went wrong')

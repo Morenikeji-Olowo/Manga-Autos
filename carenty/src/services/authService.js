@@ -13,6 +13,11 @@ const authService = {
     return res.data
   },
 
+  resendVerificatiion: async(email)=>{
+    const res = await axios.post(`${API_BASE_URL}/api/auth/resend-verification`, { email })
+    return res.data
+  },
+
   logout: async () => {
     return true // or call API
   },

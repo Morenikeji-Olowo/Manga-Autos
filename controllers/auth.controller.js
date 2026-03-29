@@ -35,7 +35,7 @@ const register = async (req, res) => {
     await newUser.save();
 
     // Send verification email
-    const verifyUrl = `${process.env.FRONTEND_URL}/verify-email/${verificationToken}`;
+    const verifyUrl = `${process.env.RENDER_URL}/verify-email/${verificationToken}`;
     sendEmail(
       newUser.email,
       "Verify your email",

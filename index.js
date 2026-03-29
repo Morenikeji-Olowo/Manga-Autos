@@ -36,13 +36,12 @@ app.use((req, res, next)=>{
 //middlewares
 
 const corsOptions = {
-  origin: ["http://localhost:5174", "https://smota-livid.vercel.app"],
+  origin: "https://smota-livid.vercel.app",
   credentials: true,
-  methods: ["GET","POST","PUT","PATCH","DELETE"],
-  allowedHeaders: ["Content-Type","Authorization"]
 };
 
-app.use(cors(corsOptions)); // global middleware // handle preflight requests
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // global middleware // handle preflight requests
 app.use(json({limit: "100mb"}));
 app.use(urlencoded({limit: "100mb", extended: true}));
 app.use(session({

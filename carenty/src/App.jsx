@@ -7,6 +7,7 @@ import CarDetail from './pages/CarDetail'
 import Login from './pages/auth/Login'
 import Signup from './pages/auth/Signup'
 import CheckEmail from './pages/auth/check-email'
+import VerifyEmail from './pages/auth/verify-email'
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <Route path='/signup' element={<Signup />} />
         <Route path="/cars/:id" element={<CarDetail />} />
         <Route path='/auth/check-email' element={<CheckEmail />} />
+        <Route path="/verify-email" element={<VerifyEmail />} />
       </Routes>
     </BrowserRouter>
   )

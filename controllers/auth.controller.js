@@ -69,6 +69,43 @@ const register = async (req, res) => {
   }
 };
 
+const resendVerification = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const user = await User.findOne({ email }).select("+verificationToken");
+
+    if (!user || user.isEmailVerified) {
+      return res.status(200).json({
+        message:
+          "If that email exists and is unverified, a new link has been sent",
+      });
+    }
+
+    const verificationToken = crypto.randomBytes(32).toString("hex");
+    user.verificationToken = verificationToken;
+    await User.save();
+
+    const verifyUrl = `${process.env.FRONTEND_URL}/verify-email/${verificationToken}`;
+    await sendEmail(
+      user.email,
+      "Verify your email",
+      `Please verify your account: ${verifyUrl}`,
+    );
+
+    res.status(200).json({
+      success: true,
+      message:
+        "If that email exists and is unverified, a new link has been sent",
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      error: "Error resending email",
+      message: error.message,
+    });
+  }
+};
 // ─── Verify email ────────────────────────────────────────
 /*
   NEW. User clicks link from their email → hits this endpoint.
@@ -395,6 +432,7 @@ const authController = {
   verifyEmail,
   login,
   googleAuth,
+  resendVerification,
   googleCallback,
   status,
   getMe,

@@ -8,6 +8,7 @@ const authRouter = Router();
 authRouter.post("/register", authController.register);
 authRouter.post("/login", authController.login);
 authRouter.get("/verify-email/:token", authController.verifyEmail);
+authRouter.post('/resend-verification', authController.resendVerification);
 authRouter.post("/forgot-password", authController.forgotPassword);
 authRouter.post("/reset-password/:token", authController.resetPassword);
 

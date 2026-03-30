@@ -145,7 +145,7 @@ export default function Navbar() {
                     className="text-sm font-medium text-gray-600 hover:text-red-500 transition">
                     Login
                   </Link>
-                  <Link to="/auth/signup"
+                  <Link to="/signup"
                     className="bg-red-500 text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-red-600 transition">
                     Sign Up
                   </Link>
@@ -229,7 +229,7 @@ export default function Navbar() {
                       className="w-full text-center border border-gray-200 text-gray-700 font-medium py-3 rounded-xl hover:bg-gray-50 transition text-sm">
                       Login
                     </Link>
-                    <Link to="/auth/signup"
+                    <Link to="/signup"
                       className="w-full text-center bg-red-500 text-white font-semibold py-3 rounded-xl hover:bg-red-600 transition text-sm">
                       Sign Up
                     </Link>

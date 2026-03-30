@@ -45,7 +45,7 @@ signup: async (userData) => {
   }
 },
 
-      logout: async () => {
+logout: async () => {
         try {
           await authService.logout()
         } catch (error) {

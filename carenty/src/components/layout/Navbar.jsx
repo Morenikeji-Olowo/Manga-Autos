@@ -33,12 +33,6 @@ export default function Navbar() {
     setMenuOpen(false)
   }, [location.pathname])
 
-/*************  ✨ Windsurf Command ⭐  *************/
-/**
- * Handles logout by calling the logout function from the auth store,
- * closes the dropdown menu, and navigates to the homepage.
- */
-/*******  93d5b488-c935-411b-9884-302216618ca9  *******/
   const handleLogout = async () => {
     await logout()
     setDropdownOpen(false)

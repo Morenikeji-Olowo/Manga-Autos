@@ -19,7 +19,10 @@ const authService = {
   },
 
   logout: async () => {
-    return true // or call API
+    const token = localStorage.getItem('accessToken')
+    await axios.post(`${API_BASE_URL}/api/auth/logout`, {}, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
   },
 
   getMe: async () => {

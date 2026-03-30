@@ -114,24 +114,27 @@ const resendVerification = async (req, res) => {
 */
 const verifyEmail = async (req, res) => {
   try {
-    const { token } = req.params
+    const { token } = req.params;
 
-    const user = await User.findOne({ verificationToken: token }).select('+verificationToken')
+    const user = await User.findOne({ verificationToken: token }).select(
+      "+verificationToken",
+    );
 
     if (!user) {
-      return res.redirect(`${process.env.FRONTEND_URL}/verify-email?status=invalid`)
+      return res.redirect(
+        `${process.env.FRONTEND_URL}/verify-email?status=invalid`,
+      );
     }
 
-    user.isEmailVerified = true
-    user.verificationToken = undefined
-    await user.save()
+    user.isEmailVerified = true;
+    user.verificationToken = undefined;
+    await user.save();
 
-    res.redirect(`${process.env.FRONTEND_URL}/verify-email?status=success`)
-
+    res.redirect(`${process.env.FRONTEND_URL}/verify-email?status=success`);
   } catch (error) {
-    res.redirect(`${process.env.FRONTEND_URL}/verify-email?status=error`)
+    res.redirect(`${process.env.FRONTEND_URL}/verify-email?status=error`);
   }
-}
+};
 
 // ─── Login ───────────────────────────────────────────────
 // YOUR CODE — unchanged except signToken helper used
@@ -195,6 +198,7 @@ export const login = async (req, res) => {
     username: user.username,
     isMfaActive: user.isMfaActive,
     isAdmin: user.isAdmin,
+    isEmailVerified: user.isEmailVerified, // 👈 add this
   });
 };
 
@@ -265,21 +269,22 @@ export const getMe = (req, res) => {
 // ─── Logout ──────────────────────────────────────────────
 // YOUR CODE — unchanged
 const logout = async (req, res) => {
-  try{
+  try {
     const token = req.headers.authorization?.split(" ")[1];
 
-    if(token){
+    if (token) {
       tokenBlacklist.add(token);
     }
-    res.status(200).json({ 
+    res.status(200).json({
       success: true,
-      message: "Logged out successfully" });
-  }
-  catch(error){
-    res.status(500).json({ 
+      message: "Logged out successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
       success: false,
-      error: "Error logging out", 
-      message: error.message });
+      error: "Error logging out",
+      message: error.message,
+    });
   }
 };
 

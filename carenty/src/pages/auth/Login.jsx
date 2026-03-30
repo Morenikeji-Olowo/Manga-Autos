@@ -32,14 +32,13 @@ const handleSubmit = async (e) => {
 
   try {
     const response = await login(formData.email, formData.password)
+    console.log(response);
 
     if (!response.emailVerified) {
-      // If email is not verified, redirect to "check email" page
       toast('Please verify your email before logging in.')
       navigate(`/auth/check-email?email=${formData.email}`)
       return
     }
-
     toast.success('Login successful!')
     navigate(from)
   } catch (error) {

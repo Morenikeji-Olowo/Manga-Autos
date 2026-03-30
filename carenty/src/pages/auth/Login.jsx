@@ -32,8 +32,6 @@ const handleSubmit = async (e) => {
 
   try {
     const response = await login(formData.email, formData.password)
-    console.log(response);
-
     if (!response.emailVerified) {
       toast('Please verify your email before logging in.')
       navigate(`/auth/check-email?email=${formData.email}`)

@@ -1,34 +1,51 @@
-import axios from 'axios'
+import axios from "axios";
 
-const API_BASE_URL = 'https://manga-autos.onrender.com'
+const API_BASE_URL = "https://manga-autos.onrender.com";
 
 const authService = {
   signup: async ({ username, email, password }) => {
-    const res = await axios.post(`${API_BASE_URL}/api/auth/register`, { username, email, password })
-    return res.data
+    const res = await axios.post(`${API_BASE_URL}/api/auth/register`, {
+      username,
+      email,
+      password,
+    });
+    return res.data;
   },
 
   login: async (email, password) => {
-    const res = await axios.post(`${API_BASE_URL}/api/auth/login`, { email, password })
-    return res.data
+    const res = await axios.post(`${API_BASE_URL}/api/auth/login`, {
+      email,
+      password,
+    });
+    return res.data;
   },
 
-  resendVerificatiion: async(email)=>{
-    const res = await axios.post(`${API_BASE_URL}/api/auth/resend-verification`, { email })
-    return res.data
+  resendVerificatiion: async (email) => {
+    const res = await axios.post(
+      `${API_BASE_URL}/api/auth/resend-verification`,
+      { email },
+    );
+    return res.data;
   },
 
   logout: async () => {
-    const token = localStorage.getItem('accessToken')
-    await axios.post(`${API_BASE_URL}/api/auth/logout`, {}, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
+    const token = localStorage.getItem("accessToken");
+    await axios.post(
+      `${API_BASE_URL}/api/auth/logout`,
+      {},
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      },
+    );
   },
 
   getMe: async () => {
-    const res = await axios.get(`${API_BASE_URL}/api/auth/me`)
-    return res.data
-  }
-}
+    const token = localStorage.getItem("accessToken");
+    const res = await axios.get(`${API_BASE_URL}/api/auth/me`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+  },
+};
 
-export default authService
+export default authService;

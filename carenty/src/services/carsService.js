@@ -1,53 +1,25 @@
-import { api } from './api/client'
-import { API_ENDPOINTS } from './api/endpoints'
+import axios from "axios";
 
-export const carsService = {
-  // Get all cars with filters
-  getCars: async (params = {}) => {
-    const { page = 1, limit = 12, ...filters } = params
-    
-    // Build query string
-    const queryParams = new URLSearchParams({
-      page,
-      limit,
-      ...filters
-    }).toString()
-    
-    return api.get(`${API_ENDPOINTS.CARS.LIST}?${queryParams}`)
+const API_BASE_URL = "https://manga-autos.onrender.com";
+
+const carService = {
+  getCars: async (filters = {}, sortBy = "newest") => {
+    const params = new URLSearchParams();
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value && value !== "All" && value !== "All Brands") {
+        params.append(key, value);
+      }
+    });
+    params.append("sort", sortBy);
+
+    const res = await axios.get(`${API_BASE_URL}/api/cars?${params.toString()}`);
+    return res.data;
   },
 
-  // Get single car by ID
   getCarById: async (id) => {
-    return api.get(API_ENDPOINTS.CARS.DETAIL(id))
+    const res = await axios.get(`${API_BASE_URL}/api/cars/${id}`);
+    return res.data;
   },
+};
 
-  // Get featured cars for homepage
-  getFeaturedCars: async (limit = 6) => {
-    return api.get(`${API_ENDPOINTS.CARS.FEATURED}?limit=${limit}`)
-  },
-
-  // Search cars by keyword
-  searchCars: async (query, params = {}) => {
-    const queryParams = new URLSearchParams({
-      q: query,
-      ...params
-    }).toString()
-    
-    return api.get(`${API_ENDPOINTS.CARS.SEARCH}?${queryParams}`)
-  },
-
-  // Get all filter options
-  getFilterOptions: async () => {
-    return api.get(API_ENDPOINTS.CARS.FILTERS)
-  },
-
-  // Compare multiple cars
-  compareCars: async (carIds) => {
-    return api.post(API_ENDPOINTS.CARS.COMPARE, { carIds })
-  },
-
-  // Get similar cars
-  getSimilarCars: async (carId, limit = 4) => {
-    return api.get(`${API_ENDPOINTS.CARS.SIMILAR(carId)}?limit=${limit}`)
-  },
-}
+export default carService;

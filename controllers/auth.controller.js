@@ -23,40 +23,75 @@ const register = async (req, res) => {
   try {
     const { username, password, email } = req.body;
 
+    // ── Validation ───────────────────────────────────────
+    if (!username || !email || !password) {
+      return res.status(400).json({
+        error: "Validation failed",
+        message: "Username, email and password are required",
+      });
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({
+        error: "Validation failed",
+        message: "Please enter a valid email address",
+      });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({
+        error: "Validation failed",
+        message: "Password must be at least 6 characters",
+      });
+    }
+
+    if (username.trim().length < 2) {
+      return res.status(400).json({
+        error: "Validation failed",
+        message: "Username must be at least 2 characters",
+      });
+    }
+
+    // ── Create user ──────────────────────────────────────
     const newUser = await User.create({
-      username,
+      username: username.trim(),
       password,
-      email,
+      email: email.toLowerCase().trim(),
       isMfaActive: false,
     });
 
-    // Generate email verification token
+    // ── Email verification ───────────────────────────────
     const verificationToken = crypto.randomBytes(32).toString("hex");
     newUser.verificationToken = verificationToken;
     await newUser.save();
 
-    // Send verification email
     const verifyUrl = `${process.env.RENDER_URL}/api/auth/verify-email/${verificationToken}`;
     sendEmail(
       newUser.email,
       "Verify your email",
       `
-  <p>Hello ${newUser.username},</p>
-  <p>Please verify your account:</p>
-  <a href="${verifyUrl}">${verifyUrl}</a>
-`,
-    ).catch((err) => console.error("Email failed:", err));
+        <p>Hello ${newUser.username},</p>
+        <p>Please verify your account by clicking the link below:</p>
+        <a href="${verifyUrl}" style="background:#ef4444;color:white;padding:12px 24px;border-radius:8px;text-decoration:none;display:inline-block;margin-top:8px;">
+          Verify Email
+        </a>
+        <p style="margin-top:16px;color:#6b7280;font-size:14px;">
+          If you didn't create an account, you can safely ignore this email.
+        </p>
+      `
+    ).catch((err) => console.error("Email send failed:", err));
 
     res.status(201).json({
-      message:
-        "User registered successfully. Check your email to verify your account.",
+      success: true,
+      message: "Account created. Please check your email to verify your account.",
       username: newUser.username,
       email: newUser.email,
-      isAdmin: newUser.isAdmin,
     });
+
   } catch (error) {
     console.error("Register error:", error);
-    // Duplicate key — email or username already exists
+
     if (error.code === 11000) {
       const field = Object.keys(error.keyPattern)[0];
       return res.status(409).json({
@@ -64,11 +99,14 @@ const register = async (req, res) => {
         message: `An account with that ${field} already exists`,
       });
     }
-    res
-      .status(500)
-      .json({ error: "Error registering user", message: error.message });
+
+    res.status(500).json({
+      error: "Error registering user",
+      message: error.message,
+    });
   }
 };
+
 
 const resendVerification = async (req, res) => {
   try {

@@ -1,6 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { useAuthStore } from '../stores/authStore'
 // import toast from 'react-hot-toast'
 
 /* ─── Animated Counter ─────────────────────────────────── */
@@ -37,7 +36,6 @@ function Counter({ target, suffix = '' }) {
 
 export default function Home() {
   const navigate = useNavigate()
-  const { isAuthenticated } = useAuthStore()
   const [searchQuery, setSearchQuery] = useState('')
   const [activeTab, setActiveTab] = useState('new')
 
@@ -72,72 +70,6 @@ export default function Home() {
 
   return (
     <div>
-
-      {/* ═══════════════════════════════════════════════════════════════ */}
-      {/* HEADER / NAVIGATION - Matching reference image */}
-      {/* ═══════════════════════════════════════════════════════════════ */}
-      <header className="bg-white border-b border-gray-100 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex items-center justify-between h-20">
-            {/* Logo */}
-            <Link to="/" className="flex items-center gap-2">
-              <i className="fas fa-car-side text-2xl text-red-500"></i>
-              <span className="font-bold text-2xl tracking-tight text-gray-900">Dribe</span>
-            </Link>
-
-            {/* Navigation Links */}
-            <div className="hidden md:flex items-center gap-8">
-              {['Types', 'Pricing', 'Features', 'Design', 'Blog', 'About'].map((item) => (
-                <a key={item} href="#" className="text-gray-600 hover:text-red-500 text-sm font-medium transition">
-                  {item}
-                </a>
-              ))}
-            </div>
-
-            {/* Contact & Search */}
-            <div className="hidden md:flex items-center gap-6">
-              <div className="flex items-center gap-3 text-sm text-gray-500">
-                <div className="flex items-center gap-1">
-                  <i className="fas fa-phone-alt text-gray-400 text-xs"></i>
-                  <span>+1234567890</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <i className="fas fa-envelope text-gray-400 text-xs"></i>
-                  <span>support@drivo.com</span>
-                </div>
-              </div>
-              <button className="text-gray-600 hover:text-red-500">
-                <i className="fas fa-search text-lg"></i>
-              </button>
-            </div>
-
-            {/* Auth Buttons */}
-            <div className="hidden md:flex items-center gap-4">
-              {isAuthenticated ? (
-                <Link to="/profile" className="flex items-center gap-2">
-                  <i className="fas fa-user-circle text-2xl text-gray-600"></i>
-                  <span className="text-sm font-medium">Profile</span>
-                </Link>
-              ) : (
-                <>
-                  <Link to="/login" className="text-gray-600 hover:text-red-500 transition">
-                    Login
-                  </Link>
-                  <Link to="/signup" className="bg-red-500 text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-red-600 transition">
-                    Sign Up
-                  </Link>
-                </>
-              )}
-            </div>
-
-            {/* Mobile Menu Button */}
-            <button className="md:hidden text-gray-600 text-2xl">
-              <i className="fas fa-bars"></i>
-            </button>
-          </div>
-        </div>
-      </header>
-
       {/* ═══════════════════════════════════════════════════════════════ */}
       {/* HERO SECTION - With Big Car Image */}
       {/* ═══════════════════════════════════════════════════════════════ */}

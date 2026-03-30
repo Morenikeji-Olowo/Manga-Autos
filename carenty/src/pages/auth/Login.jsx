@@ -1,10 +1,12 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../../stores/authStore'
 import toast from 'react-hot-toast'
 
 export default function Login() {
   const navigate = useNavigate()
+  const location = useLocation();
+  const from = location.state?.from || '/';
   const { login, isLoading } = useAuthStore()
   const [formData, setFormData] = useState({
     email: '',
@@ -39,7 +41,7 @@ const handleSubmit = async (e) => {
     }
 
     toast.success('Login successful!')
-    navigate('/')
+    navigate(from)
   } catch (error) {
     toast.error(error?.response?.data?.message || 'Invalid email or password')
   }

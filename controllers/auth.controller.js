@@ -1,3 +1,4 @@
+export const tokenBlacklist = new Set();
 import speakeasy from "speakeasy";
 import qrcode from "qrcode";
 import jsonwebtoken from "jsonwebtoken";
@@ -264,13 +265,22 @@ export const getMe = (req, res) => {
 // ─── Logout ──────────────────────────────────────────────
 // YOUR CODE — unchanged
 const logout = async (req, res) => {
-  if (!req.user) {
-    return res.status(401).json({ message: "Unauthenticated user" });
+  try{
+    const token = req.headers.authorization?.split(" ")[1];
+
+    if(token){
+      tokenBlacklist.add(token);
+    }
+    res.status(200).json({ 
+      success: true,
+      message: "Logged out successfully" });
   }
-  req.logout((err) => {
-    if (err) return res.status(400).json({ message: "User not logged in" });
-    res.status(200).json({ message: "User logged out successfully" });
-  });
+  catch(error){
+    res.status(500).json({ 
+      success: false,
+      error: "Error logging out", 
+      message: error.message });
+  }
 };
 
 // ─── 2FA ─────────────────────────────────────────────────

@@ -1,5 +1,6 @@
 import jsonwebtoken from "jsonwebtoken";
 import User from "../models/User.js";
+import { tokenBlacklist } from "../controllers/auth.controller.js";
 const protect = async (req, res, next) => {
   let token;
   if (
@@ -8,6 +9,11 @@ const protect = async (req, res, next) => {
   ) {
     try {
       token = req.headers.authorization.split(" ")[1];
+      if(tokenBlacklist.has(token)){
+        return res.status(401).json({
+          message: "Not authorized, session expired"
+        })
+      }
       const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
 
       req.user = await User.findById(decoded.userId).select("-password");
@@ -51,6 +57,9 @@ const optionalAuth = async (req, res, next) => {
     if (!authHeader?.startsWith("Bearer ")) return next();
 
     const token = authHeader.split(" ")[1];
+    if(tokenBlacklist.has(token)){
+      return next();
+    }
     const decoded = jsonwebtoken.verify(token, process.env.JWT_SECRET);
 
     const user = await User.findById(decoded.userId);

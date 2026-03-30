@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { useAuthStore } from '../stores/authStore'
-
+import { useAuthStore } from '../../stores/authStore'
 const navLinks = [
   { label: 'Home', to: '/' },
   { label: 'Cars', to: '/cars' },

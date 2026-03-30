@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../../stores/authStore'
-import AuthLayout from '../../components/layout/AuthLayout'
 
 export default function Signup() {
   const navigate = useNavigate()
@@ -71,7 +70,14 @@ export default function Signup() {
   return (
     <div className="min-h-screen flex">
       {/* Left Side */}
-      <AuthLayout>
+      <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-red-900 to-red-700">
+        <div className="absolute inset-0 bg-black/30 z-10"></div>
+        <img
+          src="https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&h=1200&fit=crop"
+          alt="Luxury Sports Car"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+      </div>
 
       {/* Right Side */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white overflow-y-auto">
@@ -238,9 +244,7 @@ export default function Signup() {
             </div>
           </form>
         </div>
-
       </div>
-    </AuthLayout>
     </div>
   )
 }

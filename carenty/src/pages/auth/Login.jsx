@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../../stores/authStore'
-import AuthLayout from '../../components/layout/AuthLayout'
 
 export default function Login() {
   const navigate = useNavigate()
@@ -61,7 +60,34 @@ export default function Login() {
   return (
     <div className="min-h-screen flex">
       {/* Left Side */}
-      <AuthLayout>
+      <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-red-900 to-red-700">
+        <div className="absolute inset-0 bg-black/30 z-10"></div>
+        <img
+          src="https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=800&h=1200&fit=crop"
+          alt="Luxury Car"
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+        <div className="relative z-20 flex flex-col justify-between p-12 text-white">
+          <Link to="/" className="inline-flex items-center gap-2 text-white">
+            <i className="fas fa-car-side text-2xl"></i>
+            <span className="font-bold text-xl">Dribe</span>
+          </Link>
+          <div className="max-w-md">
+            <h2 className="text-4xl font-bold mb-4">Welcome Back</h2>
+            <p className="text-white/80 leading-relaxed">
+              Drive your dreams with Dribe — Nigeria's premier car rental platform.
+            </p>
+            <div className="mt-8 flex items-center gap-2">
+              <div className="flex -space-x-2">
+                {[1, 2, 3].map(i => (
+                  <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-gray-300"></div>
+                ))}
+              </div>
+              <span className="text-sm text-white/70">Join 10,000+ happy drivers</span>
+            </div>
+          </div>
+        </div>
+      </div>
 
       {/* Right Side */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white">
@@ -199,7 +225,6 @@ export default function Login() {
           </p>
         </div>
       </div>
-      </AuthLayout>
     </div>
   )
 }

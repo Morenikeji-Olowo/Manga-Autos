@@ -1,11 +1,20 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../../stores/authStore'
-const navLinks = [
-  { label: 'Home', to: '/' },
-  { label: 'Cars', to: '/cars' },
-  { label: 'Pricing', to: '/pricing' },
-  { label: 'About', to: '/about' },
+
+const brands = [
+  { name: 'BMW', logo: '/brands/bmw.png' },
+  { name: 'Mercedes-Benz', logo: '/brands/mercedes.png' },
+  { name: 'Audi', logo: '/brands/audi.png' },
+  { name: 'Porsche', logo: '/brands/porsche.png' },
+  { name: 'Lexus', logo: '/brands/lexus.png' },
+  { name: 'Toyota', logo: '/brands/toyota.png' },
+  { name: 'Ferrari', logo: '/brands/ferrari.png' },
+  { name: 'Lamborghini', logo: '/brands/lamborghini.png' },
+  { name: 'Bentley', logo: '/brands/bentley.png' },
+  { name: 'Range Rover', logo: '/brands/rangerover.png' },
+  { name: 'Maserati', logo: '/brands/maserati.png' },
+  { name: 'Jaguar', logo: '/brands/jaguar.png' },
 ]
 
 export default function Navbar() {
@@ -14,223 +23,474 @@ export default function Navbar() {
   const { isAuthenticated, user, logout } = useAuthStore()
 
   const [menuOpen, setMenuOpen] = useState(false)
-  const [dropdownOpen, setDropdownOpen] = useState(false)
-  const dropdownRef = useRef(null)
+  const [activeDropdown, setActiveDropdown] = useState(null)
+  const [scrolled, setScrolled] = useState(false)
+  const navRef = useRef(null)
 
-  // Close dropdown when clicking outside
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20)
+    window.addEventListener('scroll', onScroll)
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
+
   useEffect(() => {
     const handleClickOutside = (e) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
-        setDropdownOpen(false)
+      if (navRef.current && !navRef.current.contains(e.target)) {
+        setActiveDropdown(null)
       }
     }
     document.addEventListener('mousedown', handleClickOutside)
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  // Close mobile menu on route change
   useEffect(() => {
     setMenuOpen(false)
+    setActiveDropdown(null)
   }, [location.pathname])
 
   const handleLogout = async () => {
     await logout()
-    setDropdownOpen(false)
+    setActiveDropdown(null)
     navigate('/')
   }
 
-  const isActive = (to) => location.pathname === to
-
   return (
     <>
-      <header className="bg-white border-b border-gray-100 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="flex items-center justify-between h-20">
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Roboto:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+          --brown: #6B4226;
+          --brown-light: #8B5E3C;
+          --brown-dark: #3D2314;
+          --cream: #F5EFE6;
+          --cream-dark: #EAE0D0;
+          --text: #1C1007;
+          --text-muted: #7A6552;
+        }
+        
+        body { 
+          font-family: 'Roboto', sans-serif; 
+        }
+        
+        .font-display { 
+          font-family: 'Playfair Display', serif !important; 
+        }
 
-            {/* Logo */}
-            <Link to="/" className="flex items-center gap-2 flex-shrink-0">
-              <i className="fas fa-car-side text-2xl text-red-500"></i>
-              <span className="font-bold text-2xl tracking-tight text-gray-900">Dribe</span>
+        .nav-underline { 
+          position: relative; 
+        }
+        
+        .nav-underline::after {
+          content: '';
+          position: absolute;
+          bottom: -2px; 
+          left: 0;
+          width: 0; 
+          height: 1.5px;
+          background: var(--brown);
+          transition: width 0.3s ease;
+        }
+        
+        .nav-underline:hover::after { 
+          width: 100%; 
+        }
+
+        .dropdown-fade {
+          opacity: 0;
+          transform: translateY(-6px);
+          animation: dropFadeIn 0.18s ease forwards;
+        }
+        
+        @keyframes dropFadeIn {
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        .mobile-slide {
+          animation: mobileSlide 0.25s ease forwards;
+        }
+        
+        @keyframes mobileSlide {
+          from { opacity: 0; transform: translateY(-8px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dropdown-item {
+          transition: all 0.2s ease;
+          cursor: pointer;
+        }
+        
+        .dropdown-item:hover {
+          background: var(--cream);
+          color: var(--brown);
+          padding-left: 1.25rem;
+        }
+      `}</style>
+
+      <header
+        ref={navRef}
+        className="fixed top-0 left-0 right-0 z-50 bg-white transition-all duration-300"
+        style={{
+          borderBottom: '1px solid #f0ece8',
+          boxShadow: scrolled ? '0 2px 24px rgba(61,35,20,0.07)' : '0 1px 0 #f0ece8',
+        }}
+      >
+        <div className="max-w-7xl mx-auto px-6 lg:px-10">
+          <div className="flex items-center justify-between h-16 lg:h-20">
+
+            {/* ── Logo ── */}
+            <Link to="/" className="flex items-center gap-3 flex-shrink-0">
+              <img
+                src="/image.png"
+                alt="Sirkin Mota"
+                className="h-10 lg:h-12 w-auto object-contain"
+              />
+              <span className="font-display text-lg lg:text-xl tracking-tight hidden sm:block" style={{ color: 'var(--brown-dark)' }}>
+                Sirkin Mota
+              </span>
             </Link>
 
-            {/* Desktop Nav Links */}
-            <nav className="hidden md:flex items-center gap-8">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.to}
-                  to={link.to}
-                  className={`text-sm font-medium transition ${
-                    isActive(link.to)
-                      ? 'text-red-500'
-                      : 'text-gray-600 hover:text-red-500'
-                  }`}
+            {/* ── Desktop Nav ── */}
+            <nav className="hidden lg:flex items-center gap-8">
+              {/* Cars dropdown - Text only */}
+              <div className="relative">
+                <button
+                  onMouseEnter={() => setActiveDropdown('cars')}
+                  className="nav-underline text-sm font-medium py-1"
+                  style={{ color: 'var(--text)', fontFamily: "'Roboto', sans-serif" }}
                 >
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
+                  Cars
+                </button>
 
-            {/* Desktop Right Side */}
-            <div className="hidden md:flex items-center gap-6">
-              {/* Contact */}
-              <div className="flex items-center gap-3 text-sm text-gray-500">
-                <div className="flex items-center gap-1">
-                  <i className="fas fa-phone-alt text-gray-400 text-xs"></i>
-                  <span>+1234567890</span>
-                </div>
+                {activeDropdown === 'cars' && (
+                  <div
+                    className="dropdown-fade absolute top-8 left-0 bg-white rounded-lg py-2 min-w-[200px]"
+                    style={{
+                      border: '1px solid #ede8e2',
+                      boxShadow: '0 10px 30px rgba(61,35,20,0.08)',
+                    }}
+                    onMouseLeave={() => setActiveDropdown(null)}
+                  >
+                    <div className="flex flex-col">
+                      <Link
+                        to="/cars"
+                        className="dropdown-item px-4 py-2.5 text-sm"
+                        style={{ color: 'var(--text)' }}
+                      >
+                        All Cars
+                      </Link>
+                      <Link
+                        to="/cars?filter=new"
+                        className="dropdown-item px-4 py-2.5 text-sm"
+                        style={{ color: 'var(--text)' }}
+                      >
+                        New Arrivals
+                      </Link>
+                      <Link
+                        to="/cars?filter=luxury"
+                        className="dropdown-item px-4 py-2.5 text-sm"
+                        style={{ color: 'var(--text)' }}
+                      >
+                        Luxury Collection
+                      </Link>
+                      <Link
+                        to="/cars?filter=suv"
+                        className="dropdown-item px-4 py-2.5 text-sm"
+                        style={{ color: 'var(--text)' }}
+                      >
+                        SUVs
+                      </Link>
+                      <div className="border-t my-1" style={{ borderColor: '#f0ece8' }} />
+                      <Link
+                        to="/sell"
+                        className="dropdown-item px-4 py-2.5 text-sm"
+                        style={{ color: 'var(--text)' }}
+                      >
+                        Sell Your Car
+                      </Link>
+                    </div>
+                  </div>
+                )}
               </div>
 
-              {/* Auth */}
-              {isAuthenticated ? (
-                <div className="relative" ref={dropdownRef}>
-                  <button
-                    onClick={() => setDropdownOpen(!dropdownOpen)}
-                    className="flex items-center gap-2 hover:opacity-80 transition"
+              {/* About link */}
+              <Link
+                to="/about"
+                className="nav-underline text-sm font-medium py-1"
+                style={{ color: 'var(--text)', fontFamily: "'Roboto', sans-serif" }}
+              >
+                About
+              </Link>
+
+              {/* Work/Portfolio link */}
+              <Link
+                to="/work"
+                className="nav-underline text-sm font-medium py-1"
+                style={{ color: 'var(--text)', fontFamily: "'Roboto', sans-serif" }}
+              >
+                Work
+              </Link>
+
+              {/* Contact dropdown - Text only */}
+              <div className="relative">
+                <button
+                  onMouseEnter={() => setActiveDropdown('contact')}
+                  className="nav-underline text-sm font-medium py-1"
+                  style={{ color: 'var(--text)', fontFamily: "'Roboto', sans-serif" }}
+                >
+                  Contact
+                </button>
+
+                {activeDropdown === 'contact' && (
+                  <div
+                    className="dropdown-fade absolute top-8 left-0 bg-white rounded-lg py-2 min-w-[180px]"
+                    style={{
+                      border: '1px solid #ede8e2',
+                      boxShadow: '0 10px 30px rgba(61,35,20,0.08)',
+                    }}
+                    onMouseLeave={() => setActiveDropdown(null)}
                   >
-                    <div className="w-9 h-9 rounded-full bg-red-100 flex items-center justify-center">
-                      <span className="text-red-500 font-bold text-sm">
-                        {user?.username?.charAt(0).toUpperCase()}
-                      </span>
-                    </div>
-                    <span className="text-sm font-medium text-gray-700">{user?.username?.split(' ')[0]}</span>
-                    <i className={`fas fa-chevron-down text-xs text-gray-400 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`}></i>
+                    <Link
+                      to="/contact"
+                      className="dropdown-item px-4 py-2.5 text-sm"
+                      style={{ color: 'var(--text)' }}
+                    >
+                      Send Message
+                    </Link>
+                    <a
+                      href="tel:+2348000000000"
+                      className="dropdown-item px-4 py-2.5 text-sm block"
+                      style={{ color: 'var(--text)' }}
+                    >
+                      Call Us
+                    </a>
+                    <Link
+                      to="/contact#location"
+                      className="dropdown-item px-4 py-2.5 text-sm"
+                      style={{ color: 'var(--text)' }}
+                    >
+                      Visit Showroom
+                    </Link>
+                  </div>
+                )}
+              </div>
+            </nav>
+
+            {/* ── Desktop Auth ── */}
+            <div className="hidden lg:flex items-center gap-4">
+              {isAuthenticated ? (
+                <div className="relative">
+                  <button
+                    onClick={() => setActiveDropdown(activeDropdown === 'profile' ? null : 'profile')}
+                    className="flex items-center gap-2 text-sm font-medium py-1"
+                    style={{ color: 'var(--brown)' }}
+                  >
+                    <span>{user?.username?.split(' ')[0]}</span>
+                    <svg
+                      className={`w-3.5 h-3.5 transition-transform duration-200 ${activeDropdown === 'profile' ? 'rotate-180' : ''}`}
+                      fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                    </svg>
                   </button>
 
-                  {/* Dropdown */}
-                  {dropdownOpen && (
-                    <div className="absolute right-0 top-12 w-52 bg-white rounded-2xl shadow-xl border border-gray-100 py-2 z-50">
-                      <div className="px-4 py-3 border-b border-gray-100">
-                        <p className="text-sm font-semibold text-gray-900">{user?.username}</p>
-                        <p className="text-xs text-gray-400 truncate">{user?.email}</p>
-                      </div>
-
-                      <div className="py-1">
-                        <Link to="/profile"
-                          onClick={() => setDropdownOpen(false)}
-                          className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition">
-                          <i className="fas fa-user w-4 text-gray-400"></i> Profile
+                  {activeDropdown === 'profile' && (
+                    <div
+                      className="dropdown-fade absolute right-0 top-8 bg-white rounded-lg py-2 min-w-[160px]"
+                      style={{
+                        border: '1px solid #ede8e2',
+                        boxShadow: '0 10px 30px rgba(61,35,20,0.08)',
+                      }}
+                    >
+                      <Link
+                        to="/profile"
+                        onClick={() => setActiveDropdown(null)}
+                        className="dropdown-item px-4 py-2.5 text-sm block"
+                        style={{ color: 'var(--text)' }}
+                      >
+                        Profile
+                      </Link>
+                      <Link
+                        to="/saved"
+                        onClick={() => setActiveDropdown(null)}
+                        className="dropdown-item px-4 py-2.5 text-sm block"
+                        style={{ color: 'var(--text)' }}
+                      >
+                        Saved Cars
+                      </Link>
+                      <Link
+                        to="/orders"
+                        onClick={() => setActiveDropdown(null)}
+                        className="dropdown-item px-4 py-2.5 text-sm block"
+                        style={{ color: 'var(--text)' }}
+                      >
+                        My Orders
+                      </Link>
+                      {user?.isAdmin && (
+                        <Link
+                          to="/admin"
+                          onClick={() => setActiveDropdown(null)}
+                          className="dropdown-item px-4 py-2.5 text-sm block"
+                          style={{ color: 'var(--text)' }}
+                        >
+                          Admin Panel
                         </Link>
-                        <Link to="/saved"
-                          onClick={() => setDropdownOpen(false)}
-                          className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition">
-                          <i className="fas fa-heart w-4 text-gray-400"></i> Saved Cars
-                        </Link>
-                        <Link to="/orders"
-                          onClick={() => setDropdownOpen(false)}
-                          className="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition">
-                          <i className="fas fa-receipt w-4 text-gray-400"></i> My Orders
-                        </Link>
-                        {user?.isAdmin && (
-                          <Link to="/admin"
-                            onClick={() => setDropdownOpen(false)}
-                            className="flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition">
-                            <i className="fas fa-shield-alt w-4"></i> Admin Panel
-                          </Link>
-                        )}
-                      </div>
-
-                      <div className="border-t border-gray-100 py-1">
-                        <button
-                          onClick={handleLogout}
-                          className="flex items-center gap-3 px-4 py-2.5 text-sm text-red-500 hover:bg-red-50 transition w-full text-left">
-                          <i className="fas fa-sign-out-alt w-4"></i> Log Out
-                        </button>
-                      </div>
+                      )}
+                      <div className="border-t my-1" style={{ borderColor: '#f0ece8' }} />
+                      <button
+                        onClick={handleLogout}
+                        className="dropdown-item px-4 py-2.5 text-sm w-full text-left"
+                        style={{ color: '#dc2626' }}
+                      >
+                        Log Out
+                      </button>
                     </div>
                   )}
                 </div>
               ) : (
-                <div className="flex items-center gap-3">
-                  <Link to="/login"
-                    className="text-sm font-medium text-gray-600 hover:text-red-500 transition">
-                    Login
+                <>
+                  <Link
+                    to="/login"
+                    className="text-sm font-medium py-1 transition hover:opacity-70"
+                    style={{ color: 'var(--brown)' }}
+                  >
+                    Log In
                   </Link>
-                  <Link to="/signup"
-                    className="bg-red-500 text-white px-5 py-2 rounded-full text-sm font-semibold hover:bg-red-600 transition">
+                  <Link
+                    to="/signup"
+                    className="px-5 py-2 rounded-full text-sm font-medium text-white transition hover:opacity-90"
+                    style={{ background: 'var(--brown)' }}
+                  >
                     Sign Up
                   </Link>
-                </div>
+                </>
               )}
             </div>
 
-            {/* Mobile Menu Button */}
+            {/* ── Mobile Hamburger ── */}
             <button
               onClick={() => setMenuOpen(!menuOpen)}
-              className="md:hidden text-gray-600 text-2xl p-1"
+              className="lg:hidden flex flex-col gap-1.5 p-2"
+              aria-label="Toggle menu"
             >
-              <i className={`fas ${menuOpen ? 'fa-times' : 'fa-bars'}`}></i>
+              <span
+                className={`block h-0.5 w-6 transition-all duration-300 origin-center ${menuOpen ? 'rotate-45 translate-y-2' : ''}`}
+                style={{ background: 'var(--brown-dark)' }}
+              />
+              <span
+                className={`block h-0.5 w-6 transition-all duration-300 ${menuOpen ? 'opacity-0 scale-x-0' : ''}`}
+                style={{ background: 'var(--brown-dark)' }}
+              />
+              <span
+                className={`block h-0.5 w-6 transition-all duration-300 origin-center ${menuOpen ? '-rotate-45 -translate-y-2' : ''}`}
+                style={{ background: 'var(--brown-dark)' }}
+              />
             </button>
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* ── Mobile Menu (Minimalist) ── */}
         {menuOpen && (
-          <div className="md:hidden border-t border-gray-100 bg-white">
-            <div className="max-w-7xl mx-auto px-6 py-4 space-y-1">
-
-              {/* Nav Links */}
-              {navLinks.map((link) => (
+          <div
+            className="mobile-slide lg:hidden border-t bg-white"
+            style={{ borderColor: '#f0ece8' }}
+          >
+            <div className="px-6 py-6 space-y-4">
+              {/* Mobile Nav Links */}
+              <div className="space-y-1">
                 <Link
-                  key={link.to}
-                  to={link.to}
-                  className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition ${
-                    isActive(link.to)
-                      ? 'bg-red-50 text-red-500'
-                      : 'text-gray-700 hover:bg-gray-50'
-                  }`}
+                  to="/cars"
+                  className="block py-3 text-base font-medium border-b"
+                  style={{ color: 'var(--text)', borderColor: '#f0ece8' }}
+                  onClick={() => setMenuOpen(false)}
                 >
-                  {link.label}
+                  Cars
                 </Link>
-              ))}
+                <Link
+                  to="/about"
+                  className="block py-3 text-base font-medium border-b"
+                  style={{ color: 'var(--text)', borderColor: '#f0ece8' }}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  About
+                </Link>
+                <Link
+                  to="/work"
+                  className="block py-3 text-base font-medium border-b"
+                  style={{ color: 'var(--text)', borderColor: '#f0ece8' }}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Work
+                </Link>
+                <Link
+                  to="/contact"
+                  className="block py-3 text-base font-medium border-b"
+                  style={{ color: 'var(--text)', borderColor: '#f0ece8' }}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  Contact
+                </Link>
+              </div>
 
-              <div className="border-t border-gray-100 pt-3 mt-3">
+              {/* Mobile Auth */}
+              <div className="pt-4">
                 {isAuthenticated ? (
                   <>
-                    {/* User Info */}
-                    <div className="flex items-center gap-3 px-4 py-3 mb-1">
-                      <div className="w-10 h-10 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
-                        <span className="text-red-500 font-bold">
-                          {user?.username?.charAt(0).toUpperCase()}
-                        </span>
-                      </div>
-                      <div>
-                        <p className="text-sm font-semibold text-gray-900">{user?.username}</p>
-                        <p className="text-xs text-gray-400">{user?.email}</p>
-                      </div>
+                    <div className="py-3 mb-2">
+                      <p className="text-sm font-semibold" style={{ color: 'var(--text)' }}>{user?.username}</p>
+                      <p className="text-xs" style={{ color: 'var(--text-muted)' }}>{user?.email}</p>
                     </div>
-
-                    <Link to="/profile"
-                      className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-gray-700 hover:bg-gray-50 transition">
-                      <i className="fas fa-user w-4 text-gray-400"></i> Profile
+                    <Link
+                      to="/profile"
+                      className="block py-3 text-base font-medium border-b"
+                      style={{ color: 'var(--text)', borderColor: '#f0ece8' }}
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      Profile
                     </Link>
-                    <Link to="/saved"
-                      className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-gray-700 hover:bg-gray-50 transition">
-                      <i className="fas fa-heart w-4 text-gray-400"></i> Saved Cars
+                    <Link
+                      to="/saved"
+                      className="block py-3 text-base font-medium border-b"
+                      style={{ color: 'var(--text)', borderColor: '#f0ece8' }}
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      Saved Cars
                     </Link>
-                    <Link to="/orders"
-                      className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-gray-700 hover:bg-gray-50 transition">
-                      <i className="fas fa-receipt w-4 text-gray-400"></i> My Orders
+                    <Link
+                      to="/orders"
+                      className="block py-3 text-base font-medium border-b"
+                      style={{ color: 'var(--text)', borderColor: '#f0ece8' }}
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      My Orders
                     </Link>
-                    {user?.isAdmin && (
-                      <Link to="/admin"
-                        className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-red-500 hover:bg-red-50 transition">
-                        <i className="fas fa-shield-alt w-4"></i> Admin Panel
-                      </Link>
-                    )}
                     <button
-                      onClick={handleLogout}
-                      className="flex items-center gap-3 px-4 py-3 rounded-xl text-sm text-red-500 hover:bg-red-50 transition w-full text-left mt-1">
-                      <i className="fas fa-sign-out-alt w-4"></i> Log Out
+                      onClick={() => {
+                        handleLogout()
+                        setMenuOpen(false)
+                      }}
+                      className="block py-3 text-base font-medium w-full text-left"
+                      style={{ color: '#dc2626' }}
+                    >
+                      Log Out
                     </button>
                   </>
                 ) : (
-                  <div className="flex flex-col gap-2 px-4">
-                    <Link to="/login"
-                      className="w-full text-center border border-gray-200 text-gray-700 font-medium py-3 rounded-xl hover:bg-gray-50 transition text-sm">
-                      Login
+                  <div className="flex flex-col gap-3">
+                    <Link
+                      to="/login"
+                      className="text-center py-3 rounded-full border text-base font-medium transition hover:opacity-80"
+                      style={{ borderColor: 'var(--brown)', color: 'var(--brown)' }}
+                      onClick={() => setMenuOpen(false)}
+                    >
+                      Log In
                     </Link>
-                    <Link to="/signup"
-                      className="w-full text-center bg-red-500 text-white font-semibold py-3 rounded-xl hover:bg-red-600 transition text-sm">
+                    <Link
+                      to="/signup"
+                      className="text-center py-3 rounded-full text-base font-medium text-white transition hover:opacity-90"
+                      style={{ background: 'var(--brown)' }}
+                      onClick={() => setMenuOpen(false)}
+                    >
                       Sign Up
                     </Link>
                   </div>

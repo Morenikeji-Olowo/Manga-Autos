@@ -59,7 +59,7 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex">
-      {/* Left Side */}
+      {/* Left Side - Keep original gradient */}
       <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-red-900 to-red-700">
         <div className="absolute inset-0 bg-black/30 z-10"></div>
         <img
@@ -96,7 +96,7 @@ export default function Login() {
           {/* Mobile Logo */}
           <div className="lg:hidden text-center mb-8">
             <Link to="/" className="inline-flex items-center gap-2">
-              <i className="fas fa-car-side text-2xl text-red-500"></i>
+              <i className="fas fa-car-side text-2xl" style={{ color: '#6B4226' }}></i>
               <span className="font-bold text-xl text-gray-900">Dribe</span>
             </Link>
           </div>
@@ -105,13 +105,13 @@ export default function Login() {
             <h1 className="text-3xl font-bold text-gray-900">Log In</h1>
             <p className="text-gray-500 mt-2">
               Don't have an account?{' '}
-              <Link to="/signup" className="text-red-500 font-semibold hover:text-red-600">
+              <Link to="/signup" className="font-semibold hover:opacity-80" style={{ color: '#6B4226' }}>
                 Sign Up
               </Link>
             </p>
           </div>
 
-          {/* General Error Banner */}
+          {/* General Error Banner - Keep red for errors */}
           {errors.general && (
             <div className="flex items-center gap-3 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-6 text-sm">
               <i className="fas fa-exclamation-circle flex-shrink-0"></i>
@@ -136,7 +136,7 @@ export default function Login() {
                     className={`w-full pl-11 pr-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition ${
                       errors.email
                         ? 'border-red-400 focus:ring-red-300 bg-red-50'
-                        : 'border-gray-200 focus:ring-red-500'
+                        : 'border-gray-200 focus:ring-[#6B4226] focus:border-[#6B4226]'
                     }`}
                   />
                 </div>
@@ -161,7 +161,7 @@ export default function Login() {
                     className={`w-full pl-11 pr-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition ${
                       errors.password
                         ? 'border-red-400 focus:ring-red-300 bg-red-50'
-                        : 'border-gray-200 focus:ring-red-500'
+                        : 'border-gray-200 focus:ring-[#6B4226] focus:border-[#6B4226]'
                     }`}
                   />
                 </div>
@@ -175,19 +175,22 @@ export default function Login() {
               {/* Remember & Forgot */}
               <div className="flex items-center justify-between">
                 <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" className="w-4 h-4 text-red-500 rounded border-gray-300" />
+                  <input type="checkbox" className="w-4 h-4 rounded border-gray-300" style={{ accentColor: '#6B4226' }} />
                   <span className="text-sm text-gray-600">Remember me</span>
                 </label>
-                <Link to="/auth/forgot-password" className="text-sm text-red-500 hover:text-red-600">
+                <Link to="/auth/forgot-password" className="text-sm hover:opacity-80" style={{ color: '#6B4226' }}>
                   Forgot Password?
                 </Link>
               </div>
 
-              {/* Submit */}
+              {/* Submit Button - Brown */}
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-3 rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="w-full text-white font-semibold py-3 rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                style={{ background: '#6B4226' }}
+                onMouseEnter={(e) => e.currentTarget.style.background = '#8B5E3C'}
+                onMouseLeave={(e) => e.currentTarget.style.background = '#6B4226'}
               >
                 {isLoading ? (
                   <><i className="fas fa-spinner fa-spin"></i> Logging in...</>
@@ -206,7 +209,7 @@ export default function Login() {
             </div>
           </div>
 
-          {/* Social */}
+          {/* Social - Keep original colors for Google and Apple */}
           <div className="space-y-3">
             <button className="w-full flex items-center justify-center gap-3 py-3 border border-gray-200 rounded-xl hover:bg-gray-50 transition">
               <i className="fab fa-google text-red-500"></i>
@@ -220,8 +223,8 @@ export default function Login() {
 
           <p className="text-center text-xs text-gray-400 mt-8">
             By continuing, you agree to our{' '}
-            <a href="#" className="text-red-500">Terms of Service</a> and{' '}
-            <a href="#" className="text-red-500">Privacy Policy</a>
+            <a href="#" className="hover:opacity-80" style={{ color: '#6B4226' }}>Terms of Service</a> and{' '}
+            <a href="#" className="hover:opacity-80" style={{ color: '#6B4226' }}>Privacy Policy</a>
           </p>
         </div>
       </div>

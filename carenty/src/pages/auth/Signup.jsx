@@ -69,7 +69,7 @@ export default function Signup() {
 
   return (
     <div className="min-h-screen flex">
-      {/* Left Side */}
+      {/* Left Side - Keep original */}
       <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-red-900 to-red-700">
         <div className="absolute inset-0 bg-black/30 z-10"></div>
         <img
@@ -86,12 +86,12 @@ export default function Signup() {
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Sign Up</h1>
           <p className="text-gray-500 mb-6">
             Already have an account?{' '}
-            <Link to="/login" className="text-red-500 font-semibold hover:text-red-600">
+            <Link to="/login" className="font-semibold hover:opacity-80" style={{ color: '#6B4226' }}>
               Log In
             </Link>
           </p>
 
-          {/* General Error Banner */}
+          {/* General Error Banner - Keep red for errors */}
           {errors.general && (
             <div className="flex items-center gap-3 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-6 text-sm">
               <i className="fas fa-exclamation-circle flex-shrink-0"></i>
@@ -114,7 +114,7 @@ export default function Signup() {
                     className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition ${
                       errors.firstName
                         ? 'border-red-400 focus:ring-red-300 bg-red-50'
-                        : 'border-gray-200 focus:ring-red-500'
+                        : 'border-gray-200 focus:ring-[#6B4226] focus:border-[#6B4226]'
                     }`}
                   />
                   {errors.firstName && (
@@ -133,7 +133,7 @@ export default function Signup() {
                     className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition ${
                       errors.lastName
                         ? 'border-red-400 focus:ring-red-300 bg-red-50'
-                        : 'border-gray-200 focus:ring-red-500'
+                        : 'border-gray-200 focus:ring-[#6B4226] focus:border-[#6B4226]'
                     }`}
                   />
                   {errors.lastName && (
@@ -155,7 +155,7 @@ export default function Signup() {
                   className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition ${
                     errors.email
                       ? 'border-red-400 focus:ring-red-300 bg-red-50'
-                      : 'border-gray-200 focus:ring-red-500'
+                      : 'border-gray-200 focus:ring-[#6B4226] focus:border-[#6B4226]'
                   }`}
                 />
                 {errors.email && (
@@ -176,7 +176,7 @@ export default function Signup() {
                   className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition ${
                     errors.password
                       ? 'border-red-400 focus:ring-red-300 bg-red-50'
-                      : 'border-gray-200 focus:ring-red-500'
+                      : 'border-gray-200 focus:ring-[#6B4226] focus:border-[#6B4226]'
                   }`}
                 />
                 {errors.password && (
@@ -197,7 +197,7 @@ export default function Signup() {
                   className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition ${
                     errors.confirmPassword
                       ? 'border-red-400 focus:ring-red-300 bg-red-50'
-                      : 'border-gray-200 focus:ring-red-500'
+                      : 'border-gray-200 focus:ring-[#6B4226] focus:border-[#6B4226]'
                   }`}
                 />
                 {errors.confirmPassword && (
@@ -215,13 +215,14 @@ export default function Signup() {
                     name="agreeTerms"
                     checked={formData.agreeTerms}
                     onChange={handleChange}
-                    className="w-4 h-4 mt-0.5 text-red-500 rounded border-gray-300"
+                    className="w-4 h-4 mt-0.5 rounded border-gray-300"
+                    style={{ accentColor: '#6B4226' }}
                   />
                   <span className="text-sm text-gray-600">
                     I agree to the{' '}
-                    <a href="#" className="text-red-500 hover:text-red-600">Terms of Service</a>
+                    <a href="#" className="hover:opacity-80" style={{ color: '#6B4226' }}>Terms of Service</a>
                     {' '}and{' '}
-                    <a href="#" className="text-red-500 hover:text-red-600">Privacy Policy</a>
+                    <a href="#" className="hover:opacity-80" style={{ color: '#6B4226' }}>Privacy Policy</a>
                   </span>
                 </label>
                 {errors.agreeTerms && (
@@ -231,11 +232,14 @@ export default function Signup() {
                 )}
               </div>
 
-              {/* Submit */}
+              {/* Submit Button - Brown */}
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-3 rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="w-full text-white font-semibold py-3 rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                style={{ background: '#6B4226' }}
+                onMouseEnter={(e) => e.currentTarget.style.background = '#8B5E3C'}
+                onMouseLeave={(e) => e.currentTarget.style.background = '#6B4226'}
               >
                 {isLoading ? (
                   <><i className="fas fa-spinner fa-spin"></i> Creating account...</>

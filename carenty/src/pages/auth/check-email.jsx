@@ -30,7 +30,7 @@ export default function CheckEmail() {
 
   return (
     <div className="min-h-screen flex">
-      {/* Left Side - same image as Signup */}
+      {/* Left Side - Keep original */}
       <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-red-900 to-red-700">
         <div className="absolute inset-0 bg-black/30 z-10"></div>
         <img
@@ -44,9 +44,9 @@ export default function CheckEmail() {
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white">
         <div className="max-w-md w-full text-center">
 
-          {/* Icon */}
-          <div className="w-20 h-20 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-6">
-            <i className="fas fa-envelope text-red-500 text-3xl"></i>
+          {/* Icon - Updated to brown */}
+          <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6" style={{ background: '#F5EDE3' }}>
+            <i className="fas fa-envelope text-3xl" style={{ color: '#6B4226' }}></i>
           </div>
 
           {/* Text */}
@@ -62,8 +62,8 @@ export default function CheckEmail() {
             Click the link in the email to activate your account. If you don't see it, check your spam folder.
           </p>
 
-          {/* Steps */}
-          <div className="bg-gray-50 rounded-2xl p-5 mb-8 text-left space-y-4">
+          {/* Steps - Updated to brown */}
+          <div className="rounded-2xl p-5 mb-8 text-left space-y-4" style={{ background: '#FDF9F2' }}>
             {[
               { icon: 'fa-inbox', text: 'Open your email inbox' },
               { icon: 'fa-envelope-open-text', text: 'Find the email from us' },
@@ -71,19 +71,22 @@ export default function CheckEmail() {
               { icon: 'fa-check-circle', text: 'Your account is ready!' },
             ].map((step, idx) => (
               <div key={idx} className="flex items-center gap-4">
-                <div className="w-9 h-9 rounded-full bg-red-100 flex items-center justify-center flex-shrink-0">
-                  <i className={`fas ${step.icon} text-red-500 text-sm`}></i>
+                <div className="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0" style={{ background: '#F5EDE3' }}>
+                  <i className={`fas ${step.icon} text-sm`} style={{ color: '#6B4226' }}></i>
                 </div>
                 <span className="text-sm text-gray-600">{step.text}</span>
               </div>
             ))}
           </div>
 
-          {/* Actions */}
+          {/* Actions - Updated button to brown */}
           <div className="space-y-3">
             <Link
               to="/login"
-              className="block w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-3 rounded-xl transition"
+              className="block w-full text-white font-semibold py-3 rounded-xl transition"
+              style={{ background: '#6B4226' }}
+              onMouseEnter={(e) => e.currentTarget.style.background = '#8B5E3C'}
+              onMouseLeave={(e) => e.currentTarget.style.background = '#6B4226'}
             >
               Go to Login
             </Link>
@@ -100,7 +103,8 @@ export default function CheckEmail() {
             <button
               onClick={handleResend}
               disabled={resending || resent}
-              className="text-red-500 hover:text-red-600 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
+              className="font-medium disabled:opacity-50 disabled:cursor-not-allowed hover:opacity-80"
+              style={{ color: '#6B4226' }}
             >
               {resending ? 'Sending...' : resent ? 'Email sent ✓' : 'Resend email'}
             </button>

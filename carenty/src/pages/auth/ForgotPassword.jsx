@@ -27,7 +27,7 @@ export default function ForgotPassword() {
 
   return (
     <div className="min-h-screen flex">
-      {/* Left Side - Car Image */}
+      {/* Left Side - Keep original */}
       <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-red-900 to-red-700">
         <div className="absolute inset-0 bg-black/30 z-10"></div>
         <img 
@@ -57,7 +57,7 @@ export default function ForgotPassword() {
           {/* Mobile Logo */}
           <div className="lg:hidden text-center mb-8">
             <Link to="/" className="inline-flex items-center gap-2">
-              <i className="fas fa-car-side text-2xl text-red-500"></i>
+              <i className="fas fa-car-side text-2xl" style={{ color: '#6B4226' }}></i>
               <span className="font-bold text-xl text-gray-900">Dribe</span>
             </Link>
           </div>
@@ -67,7 +67,7 @@ export default function ForgotPassword() {
             <h1 className="text-3xl font-bold text-gray-900">Forgot Password?</h1>
             <p className="text-gray-500 mt-2">
               Remember your password?{' '}
-              <Link to="/auth/login" className="text-red-500 font-semibold hover:text-red-600">
+              <Link to="/auth/login" className="font-semibold hover:opacity-80" style={{ color: '#6B4226' }}>
                 Back to Login
               </Link>
             </p>
@@ -87,7 +87,7 @@ export default function ForgotPassword() {
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition"
+                      className="w-full pl-11 pr-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#6B4226] focus:border-transparent transition"
                       placeholder="you@example.com"
                     />
                   </div>
@@ -96,26 +96,30 @@ export default function ForgotPassword() {
                   </p>
                 </div>
 
-                {/* Submit Button */}
+                {/* Submit Button - Brown */}
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-3 rounded-xl transition disabled:opacity-50"
+                  className="w-full text-white font-semibold py-3 rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                  style={{ background: '#6B4226' }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = '#8B5E3C'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = '#6B4226'}
                 >
-                  {isLoading ? <i className="fas fa-spinner fa-spin"></i> : 'Send Reset Link'}
+                  {isLoading ? <><i className="fas fa-spinner fa-spin"></i> Sending...</> : 'Send Reset Link'}
                 </button>
               </div>
             </form>
           ) : (
-            <div className="text-center p-6 bg-green-50 rounded-xl">
-              <i className="fas fa-check-circle text-4xl text-green-500 mb-4"></i>
+            <div className="text-center p-6 rounded-xl" style={{ background: '#F5EDE3' }}>
+              <i className="fas fa-check-circle text-4xl mb-4" style={{ color: '#6B4226' }}></i>
               <h3 className="text-lg font-semibold text-gray-900 mb-2">Check Your Email</h3>
               <p className="text-gray-600 mb-4">
                 We've sent a password reset link to <strong>{email}</strong>
               </p>
               <Link
                 to="/auth/login"
-                className="inline-flex items-center gap-2 text-red-500 font-medium hover:text-red-600"
+                className="inline-flex items-center gap-2 font-medium hover:opacity-80"
+                style={{ color: '#6B4226' }}
               >
                 <i className="fas fa-arrow-left"></i>
                 Back to Login

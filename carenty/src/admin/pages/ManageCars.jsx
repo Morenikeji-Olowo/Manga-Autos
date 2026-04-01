@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Plus, Edit, Trash2, Eye, Search, Filter, ChevronLeft, ChevronRight } from 'lucide-react'
-import StatusBadge from '../../components/StatusBadge'
+import StatusBadge from '../components/StatusBadge'
 
 export default function ManageCars() {
   const [cars, setCars] = useState([])

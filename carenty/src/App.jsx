@@ -11,12 +11,15 @@ import VerifyEmail from "./pages/auth/verify-email";
 import Navbar from "./components/layout/Navbar";
 import ProtectedRoute from "./components/auth/ProtectedRoute";
 import Dashboard from "./admin/pages/Dashboard";
-import AdminCars from "./admin/pages/Cars";
+import AdminCars from "./admin/pages/ManageCars";
 import AdminOrders from "./admin/pages/Orders";
 import AdminPayments from "./admin/pages/Payments";
 import AdminSettings from "./admin/pages/Settings";
 import AdminLayout from "./admin/AdminLayout";
 import Users from "./admin/pages/Users";
+import ManageCars from "./admin/pages/ManageCars";
+import AddCar from "./admin/pages/AddCar";
+import EditCar from "./admin/pages/EditCar";
 
 function App() {
   return (
@@ -56,7 +59,9 @@ function App() {
           }
         >
           <Route index element={<Dashboard />} />
-          <Route path="cars" element={<AdminCars />} />
+          <Route path="cars" element={<ManageCars />} />
+          <Route path="cars/add" element={<AddCar />} />  
+          <Route path="cars/:id/edit" element={<EditCar />} />
           <Route path="orders" element={<AdminOrders />} />
           <Route path="users" element={<Users />} />
           <Route path="payments" element={<AdminPayments />} />

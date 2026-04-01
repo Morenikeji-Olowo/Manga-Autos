@@ -1,26 +1,32 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 // Pages (we'll create these)
-import Home from './pages/Home'
-import Cars from './pages/Cars'
-import CarDetail from './pages/CarDetail'
-import Login from './pages/auth/Login'
-import Signup from './pages/auth/Signup'
-import CheckEmail from './pages/auth/check-email'
-import VerifyEmail from './pages/auth/verify-email'
-import Navbar from './components/layout/Navbar'
+import Home from "./pages/Home";
+import Cars from "./pages/Cars";
+import CarDetail from "./pages/CarDetail";
+import Login from "./pages/auth/Login";
+import Signup from "./pages/auth/Signup";
+import CheckEmail from "./pages/auth/check-email";
+import VerifyEmail from "./pages/auth/verify-email";
+import Navbar from "./components/layout/Navbar";
+import ProtectedRoute from "./components/auth/ProtectedRoute";
+import Dashboard from "./admin/pages/Dashboard";
+import AdminCars from "./admin/pages/Cars";
+import AdminOrders from "./admin/pages/Orders";
+import AdminPayments from "./admin/pages/Payments";
+import AdminSettings from "./admin/pages/Settings";
 
 function App() {
   return (
     <BrowserRouter>
-    <Navbar />
+      <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/cars" element={<Cars />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/signup' element={<Signup />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="/cars/:id" element={<CarDetail />} />
-        <Route path='/auth/check-email' element={<CheckEmail />} />
+        <Route path="/auth/check-email" element={<CheckEmail />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
 
         {/* Protected - login required
@@ -37,10 +43,26 @@ function App() {
         {/* Admin only */}
         {/* <Route path="/admin" element={
           <ProtectedRoute adminOnly><AdminDashboard /></ProtectedRoute>
-        } /> */} 
+        } /> */}
+
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute adminOnly>
+              <AdminLayout />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<Dashboard />} />
+          <Route path="cars" element={<AdminCars />} />
+          <Route path="orders" element={<AdminOrders />} />
+          <Route path="users" element={<Users />} />
+          <Route path="payments" element={<AdminPayments />} />
+          <Route path="settings" element={<AdminSettings />} />
+        </Route>
       </Routes>
     </BrowserRouter>
-  )
+  );
 }
 
-export default App
+export default App;

@@ -27,7 +27,7 @@ const navigation = [
 
 export default function Sidebar({ collapsed, setCollapsed }) {
   const navigate = useNavigate()
-  const [logout] = useAuthStore();
+  const { logout } = useAuthStore()
   const location = useLocation()
   const [mobileOpen, setMobileOpen] = useState(false)
 

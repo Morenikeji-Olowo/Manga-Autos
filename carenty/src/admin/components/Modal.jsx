@@ -1,24 +1,32 @@
-import { X } from 'lucide-react'
+export default function Button({ children, onClick, type = 'button', variant = 'primary', icon, disabled, fullWidth, size = 'md' }) {
+  const variants = {
+    primary: 'bg-purple-600 hover:bg-purple-700 text-white',
+    secondary: 'bg-gray-100 hover:bg-gray-200 text-gray-700',
+    danger: 'bg-red-500 hover:bg-red-600 text-white',
+    outline: 'border border-gray-300 hover:bg-gray-50 text-gray-700',
+  }
 
-export default function Modal({ isOpen, onClose, title, children }) {
-  if (!isOpen) return null
+  const sizes = {
+    sm: 'px-3 py-1.5 text-sm',
+    md: 'px-4 py-2',
+    lg: 'px-6 py-3 text-lg',
+  }
 
   return (
-    <>
-      <div className="fixed inset-0 bg-black/50 z-40" onClick={onClose} />
-      <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-lg z-50">
-        <div className="bg-white rounded-2xl shadow-xl">
-          <div className="flex justify-between items-center p-6 border-b">
-            <h2 className="text-xl font-semibold">{title}</h2>
-            <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded-lg">
-              <X size={20} />
-            </button>
-          </div>
-          <div className="p-6">
-            {children}
-          </div>
-        </div>
-      </div>
-    </>
+    <button
+      type={type}
+      onClick={onClick}
+      disabled={disabled}
+      className={`
+        rounded-xl font-medium transition-all duration-200 flex items-center justify-center gap-2
+        ${variants[variant]}
+        ${sizes[size]}
+        ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
+        ${fullWidth ? 'w-full' : ''}
+      `}
+    >
+      {icon}
+      {children}
+    </button>
   )
 }

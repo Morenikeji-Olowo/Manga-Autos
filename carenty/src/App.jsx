@@ -20,47 +20,30 @@ import Users from "./admin/pages/Users";
 import ManageCars from "./admin/pages/ManageCars";
 import AddCar from "./admin/pages/AddCar";
 import EditCar from "./admin/pages/EditCar";
+import AdminNavbar from "./admin/components/Navbar";
 
 function App() {
   return (
     <BrowserRouter>
-      <Navbar />
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/cars" element={<Cars />} />
+        {/* Public routes — have main Navbar */}
+        <Route path="/" element={<><Navbar /><Home /></>} />
+        <Route path="/cars" element={<><Navbar /><Cars /></>} />
+        <Route path="/cars/:id" element={<><Navbar /><CarDetail /></>} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/cars/:id" element={<CarDetail />} />
         <Route path="/auth/check-email" element={<CheckEmail />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
 
-        {/* Protected - login required
-        <Route path="/profile" element={
-          <ProtectedRoute><div>Profile page coming soon</div></ProtectedRoute>
-        } />
-        <Route path="/saved" element={
-          <ProtectedRoute><div>Saved cars coming soon</div></ProtectedRoute>
-        } />
-        <Route path="/orders" element={
-          <ProtectedRoute><div>Orders coming soon</div></ProtectedRoute>
-        } />
-
-        {/* Admin only */}
-        {/* <Route path="/admin" element={
-          <ProtectedRoute adminOnly><AdminDashboard /></ProtectedRoute>
-        } /> */}
-
-        <Route
-          path="/admin"
-          element={
-            <ProtectedRoute adminOnly>
-              <AdminLayout />
-            </ProtectedRoute>
-          }
-        >
+        {/* Admin routes — AdminLayout handles its own navbar */}
+        <Route path="/admin" element={
+          <ProtectedRoute adminOnly>
+            <AdminLayout />
+          </ProtectedRoute>
+        }>
           <Route index element={<Dashboard />} />
           <Route path="cars" element={<ManageCars />} />
-          <Route path="cars/add" element={<AddCar />} />  
+          <Route path="cars/add" element={<AddCar />} />
           <Route path="cars/:id/edit" element={<EditCar />} />
           <Route path="orders" element={<AdminOrders />} />
           <Route path="users" element={<Users />} />
@@ -69,7 +52,7 @@ function App() {
         </Route>
       </Routes>
     </BrowserRouter>
-  );
+  )
 }
 
 export default App;

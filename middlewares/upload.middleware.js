@@ -3,7 +3,7 @@ import cloudinary from "../config/cloudinary.js";
 
 const storage = multer.memoryStorage();
 
-const fileFilter = (req, res, cb)=>{
+const fileFilter = (req, file, cb)=>{
     const allowed = ["image/png", "image/jpeg", "image/jpg"];
 
     if(allowed.includes(file.mimetype)){

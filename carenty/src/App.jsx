@@ -16,6 +16,7 @@ import AdminOrders from "./admin/pages/Orders";
 import AdminPayments from "./admin/pages/Payments";
 import AdminSettings from "./admin/pages/Settings";
 import AdminLayout from "./admin/AdminLayout";
+import Users from "./admin/pages/Users";
 
 function App() {
   return (

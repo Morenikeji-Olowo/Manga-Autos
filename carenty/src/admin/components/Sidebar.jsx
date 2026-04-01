@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import { NavLink, useNavigate, useLocation } from 'react-router-dom'
+import { useAuthStore } from '../../stores/authStore'
+
 import { 
   LayoutDashboard, 
   Car, 
@@ -25,6 +27,7 @@ const navigation = [
 
 export default function Sidebar({ collapsed, setCollapsed }) {
   const navigate = useNavigate()
+  const [logout] = useAuthStore();
   const location = useLocation()
   const [mobileOpen, setMobileOpen] = useState(false)
 
@@ -44,11 +47,11 @@ export default function Sidebar({ collapsed, setCollapsed }) {
     return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  const handleLogout = () => {
-    // Handle logout logic
-    navigate('/login')
+  const handleLogout = async () => {
+    await logout();
+    navigate('/')
   }
-
+s
   const sidebarContent = (
     <>
       {/* Logo Section */}

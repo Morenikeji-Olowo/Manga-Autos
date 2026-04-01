@@ -51,7 +51,7 @@ export default function Sidebar({ collapsed, setCollapsed }) {
     await logout();
     navigate('/')
   }
-s
+
   const sidebarContent = (
     <>
       {/* Logo Section */}

@@ -2,20 +2,6 @@ import { useState, useEffect, useRef } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../../stores/authStore'
 
-const brands = [
-  { name: 'BMW', logo: '/brands/bmw.png' },
-  { name: 'Mercedes-Benz', logo: '/brands/mercedes.png' },
-  { name: 'Audi', logo: '/brands/audi.png' },
-  { name: 'Porsche', logo: '/brands/porsche.png' },
-  { name: 'Lexus', logo: '/brands/lexus.png' },
-  { name: 'Toyota', logo: '/brands/toyota.png' },
-  { name: 'Ferrari', logo: '/brands/ferrari.png' },
-  { name: 'Lamborghini', logo: '/brands/lamborghini.png' },
-  { name: 'Bentley', logo: '/brands/bentley.png' },
-  { name: 'Range Rover', logo: '/brands/rangerover.png' },
-  { name: 'Maserati', logo: '/brands/maserati.png' },
-  { name: 'Jaguar', logo: '/brands/jaguar.png' },
-]
 
 export default function Navbar() {
   const location = useLocation()
@@ -398,6 +384,16 @@ export default function Navbar() {
             <div className="px-6 py-6 space-y-4">
               {/* Mobile Nav Links */}
               <div className="space-y-1">
+                {user?.isAdmin && (
+                        <Link
+                          to="/admin"
+                          onClick={() => setActiveDropdown(null)}
+                          className="dropdown-item px-4 py-2.5 text-sm block"
+                          style={{ color: 'var(--text)' }}
+                        >
+                          Admin Panel
+                        </Link>
+                )}
                 <Link
                   to="/cars"
                   className="block py-3 text-base font-medium border-b"

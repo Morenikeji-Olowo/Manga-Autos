@@ -56,6 +56,7 @@ logout: async () => {
           localStorage.removeItem('accessToken')
           localStorage.removeItem('refreshToken')
           set({ user: null, isAuthenticated: false })
+          window.location.reload() 
           toast.success('Logged out successfully')
         }
       },

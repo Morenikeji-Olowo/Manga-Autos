@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { useAuthStore } from "../../stores/authStore";
 import {
   ArrowLeft,
   ArrowRight,
@@ -16,6 +17,7 @@ import {
   Save,
   Eye,
 } from "lucide-react";
+import carService from "../../services/carsService";
 
 const steps = [
   {
@@ -110,6 +112,8 @@ export default function AddCar() {
     benefits: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+    const { login, user } = useAuthStore();
+
 
   const handleInputChange = (field, value) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -163,19 +167,17 @@ export default function AddCar() {
     }
   };
 
-  const handleSubmit = async () => {
-    setIsSubmitting(true);
-    try {
-      // Here you would make API call to save the car
-      console.log("Form Data:", formData);
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API call
-      navigate("/admin/cars");
-    } catch (error) {
-      console.error("Error saving car:", error);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+const handleSubmit = async () => {
+  setIsSubmitting(true)
+  try {
+    await carService.addCar(formData)
+    navigate('/admin/cars')
+  } catch (error) {
+    console.error('Error saving car:', error)
+  } finally {
+    setIsSubmitting(false)
+  }
+}
 
   const renderStepContent = () => {
     switch (currentStep) {

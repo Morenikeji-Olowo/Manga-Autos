@@ -43,7 +43,36 @@ const carService = {
     return response.data;
   },
   addCar: async () => {},
-  updateCar: async () => {},
+  updateCar: async (id, formData) => {
+    const token = localStorage.getItem("accessToken");
+
+    const data = new FormData();
+
+    // Append everything except images and image-tracking fields
+    const excluded = ["images", "existingImages", "originalImages"];
+    Object.entries(formData).forEach(([key, value]) => {
+      if (excluded.includes(key)) return;
+      if (Array.isArray(value) || typeof value === "object") {
+        data.append(key, JSON.stringify(value));
+      } else {
+        data.append(key, value);
+      }
+    });
+
+    // Images to remove
+    const removeImages = (formData.originalImages || []).filter(
+      (url) => !(formData.existingImages || []).includes(url),
+    );
+    data.append("removeImages", JSON.stringify(removeImages));
+
+    // New image files
+    formData.images?.forEach((file) => data.append("images", file));
+
+    const res = await axios.put(`${API_BASE_URL}/api/admin/cars/${id}`, data, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+  },
   deleteCar: async () => {},
   markAsSold: async () => {},
 };

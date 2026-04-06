@@ -368,7 +368,7 @@ const handleSubmit = async () => {
 }
 
 // Step 1: Listing Basics Component
-function ListingBasics({ formData, handleInputChange }) {
+export function ListingBasics({ formData, handleInputChange }) {
   return (
     <div className="space-y-5">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -497,7 +497,7 @@ function ListingBasics({ formData, handleInputChange }) {
 }
 
 // Step 2: Basic Details Component
-function BasicDetails({ formData, handleInputChange }) {
+export function BasicDetails({ formData, handleInputChange }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
       <div>
@@ -637,7 +637,7 @@ function BasicDetails({ formData, handleInputChange }) {
 }
 
 // Step 3: Image Upload Component
-function ImageUpload({ imagePreviewUrls, handleImageUpload, removeImage }) {
+export function ImageUpload({ imagePreviewUrls, handleImageUpload, removeImage }) {
   return (
     <div className="space-y-5">
       <div
@@ -686,7 +686,7 @@ function ImageUpload({ imagePreviewUrls, handleImageUpload, removeImage }) {
 }
 
 // Step 4: Features Component
-function FeaturesSection({
+export function FeaturesSection({
   formData,
   tagInputs,
   setTagInputs,
@@ -748,7 +748,7 @@ function FeaturesSection({
 }
 
 // Step 5: Vehicle History Component
-function VehicleHistory({ formData, handleInputChange }) {
+export function VehicleHistory({ formData, handleInputChange }) {
   const historyItems = [
     { key: "accidentsOrDamages", label: "Has accidents or damages" },
     { key: "oneOwnerVehicle", label: "One owner vehicle" },
@@ -778,7 +778,7 @@ function VehicleHistory({ formData, handleInputChange }) {
 }
 
 // Step 6: Benefits Component
-function BenefitsSection({
+export function BenefitsSection({
   formData,
   tagInputs,
   setTagInputs,

@@ -186,7 +186,7 @@ const filteredCars = cars.filter(car =>
                         </td>
                         <td className="px-6 py-4">
                           <span className="font-semibold text-gray-900">
-                            ${car.price?.toLocaleString()}
+                            ₦{car.price?.toLocaleString()}
                           </span>
                         </td>
                         <td className="px-6 py-4 text-gray-600">

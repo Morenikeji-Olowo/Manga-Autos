@@ -21,6 +21,7 @@ import ManageCars from "./admin/pages/ManageCars";
 import AddCar from "./admin/pages/AddCar";
 import EditCar from "./admin/pages/EditCar";
 import AdminNavbar from "./admin/components/Navbar";
+import AdminProfile from "./admin/pages/AdminProfile";
 
 function App() {
   return (
@@ -49,6 +50,7 @@ function App() {
           <Route path="users" element={<Users />} />
           <Route path="payments" element={<AdminPayments />} />
           <Route path="settings" element={<AdminSettings />} />
+          <Route path="profile" element={<AdminProfile />} />
         </Route>
       </Routes>
     </BrowserRouter>

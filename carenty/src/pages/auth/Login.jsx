@@ -5,6 +5,7 @@ import { useAuthStore } from "../../stores/authStore";
 export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [showPassword, setShowPassword] = useState(false);
   const from = location.state?.from || "/";
   const { login, user, isLoading } = useAuthStore();
 
@@ -184,17 +185,26 @@ export default function Login() {
                     className={`fas fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-sm ${errors.password ? "text-red-400" : "text-gray-400"}`}
                   ></i>
                   <input
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
                     placeholder="••••••••"
-                    className={`w-full pl-11 pr-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition ${
+                    className={`w-full pl-11 pr-12 py-3 border rounded-xl focus:outline-none focus:ring-2 transition ${
                       errors.password
                         ? "border-red-400 focus:ring-red-300 bg-red-50"
                         : "border-gray-200 focus:ring-[#6B4226] focus:border-[#6B4226]"
                     }`}
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    <i
+                      className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"}`}
+                    ></i>
+                  </button>
                 </div>
                 {errors.password && (
                   <p className="mt-1.5 text-xs text-red-500 flex items-center gap-1">

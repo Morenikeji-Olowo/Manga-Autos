@@ -1,47 +1,58 @@
-import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
-import { useAuthStore } from '../../stores/authStore'
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuthStore } from "../../stores/authStore";
 
 export default function Signup() {
-  const navigate = useNavigate()
-  const { signup, isLoading } = useAuthStore()
+  const navigate = useNavigate();
+  const { signup, isLoading } = useAuthStore();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
     agreeTerms: false,
-  })
-  const [errors, setErrors] = useState({})
+  });
+  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target
-    setFormData(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }))
-    if (errors[name]) setErrors(prev => ({ ...prev, [name]: '' }))
-  }
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+    if (errors[name]) setErrors((prev) => ({ ...prev, [name]: "" }));
+  };
 
   const validate = () => {
-    const newErrors = {}
-    if (!formData.firstName.trim()) newErrors.firstName = 'First name is required'
-    if (!formData.lastName.trim()) newErrors.lastName = 'Last name is required'
-    if (!formData.email) newErrors.email = 'Email is required'
-    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Enter a valid email'
-    if (!formData.password) newErrors.password = 'Password is required'
-    else if (formData.password.length < 6) newErrors.password = 'Password must be at least 6 characters'
-    if (!formData.confirmPassword) newErrors.confirmPassword = 'Please confirm your password'
-    else if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = 'Passwords do not match'
-    if (!formData.agreeTerms) newErrors.agreeTerms = 'You must agree to the Terms and Conditions'
-    return newErrors
-  }
+    const newErrors = {};
+    if (!formData.firstName.trim())
+      newErrors.firstName = "First name is required";
+    if (!formData.lastName.trim()) newErrors.lastName = "Last name is required";
+    if (!formData.email) newErrors.email = "Email is required";
+    else if (!/\S+@\S+\.\S+/.test(formData.email))
+      newErrors.email = "Enter a valid email";
+    if (!formData.password) newErrors.password = "Password is required";
+    else if (formData.password.length < 6)
+      newErrors.password = "Password must be at least 6 characters";
+    if (!formData.confirmPassword)
+      newErrors.confirmPassword = "Please confirm your password";
+    else if (formData.password !== formData.confirmPassword)
+      newErrors.confirmPassword = "Passwords do not match";
+    if (!formData.agreeTerms)
+      newErrors.agreeTerms = "You must agree to the Terms and Conditions";
+    return newErrors;
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    const validationErrors = validate()
+    e.preventDefault();
+    const validationErrors = validate();
     if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors)
-      return
+      setErrors(validationErrors);
+      return;
     }
 
     try {
@@ -49,23 +60,23 @@ export default function Signup() {
         username: `${formData.firstName} ${formData.lastName}`,
         email: formData.email,
         password: formData.password,
-      })
+      });
 
       if (result?.success) {
-        navigate('/auth/check-email', { state: { email: formData.email } })
+        navigate("/auth/check-email", { state: { email: formData.email } });
       }
     } catch (error) {
-      const message = error?.response?.data?.message || 'Something went wrong'
+      const message = error?.response?.data?.message || "Something went wrong";
       // map backend errors to fields
-      if (message.toLowerCase().includes('email')) {
-        setErrors({ email: message })
-      } else if (message.toLowerCase().includes('username')) {
-        setErrors({ firstName: message })
+      if (message.toLowerCase().includes("email")) {
+        setErrors({ email: message });
+      } else if (message.toLowerCase().includes("username")) {
+        setErrors({ firstName: message });
       } else {
-        setErrors({ general: message })
+        setErrors({ general: message });
       }
     }
-  }
+  };
 
   return (
     <div className="min-h-screen flex">
@@ -82,11 +93,14 @@ export default function Signup() {
       {/* Right Side */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white overflow-y-auto">
         <div className="max-w-md w-full py-8">
-
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Sign Up</h1>
           <p className="text-gray-500 mb-6">
-            Already have an account?{' '}
-            <Link to="/login" className="font-semibold hover:opacity-80" style={{ color: '#6B4226' }}>
+            Already have an account?{" "}
+            <Link
+              to="/login"
+              className="font-semibold hover:opacity-80"
+              style={{ color: "#6B4226" }}
+            >
               Log In
             </Link>
           </p>
@@ -101,7 +115,6 @@ export default function Signup() {
 
           <form onSubmit={handleSubmit}>
             <div className="space-y-4">
-
               {/* First & Last Name */}
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -113,13 +126,14 @@ export default function Signup() {
                     placeholder="First Name"
                     className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition ${
                       errors.firstName
-                        ? 'border-red-400 focus:ring-red-300 bg-red-50'
-                        : 'border-gray-200 focus:ring-[#6B4226] focus:border-[#6B4226]'
+                        ? "border-red-400 focus:ring-red-300 bg-red-50"
+                        : "border-gray-200 focus:ring-[#6B4226] focus:border-[#6B4226]"
                     }`}
                   />
                   {errors.firstName && (
                     <p className="mt-1.5 text-xs text-red-500 flex items-center gap-1">
-                      <i className="fas fa-exclamation-circle"></i> {errors.firstName}
+                      <i className="fas fa-exclamation-circle"></i>{" "}
+                      {errors.firstName}
                     </p>
                   )}
                 </div>
@@ -132,13 +146,14 @@ export default function Signup() {
                     placeholder="Last Name"
                     className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition ${
                       errors.lastName
-                        ? 'border-red-400 focus:ring-red-300 bg-red-50'
-                        : 'border-gray-200 focus:ring-[#6B4226] focus:border-[#6B4226]'
+                        ? "border-red-400 focus:ring-red-300 bg-red-50"
+                        : "border-gray-200 focus:ring-[#6B4226] focus:border-[#6B4226]"
                     }`}
                   />
                   {errors.lastName && (
                     <p className="mt-1.5 text-xs text-red-500 flex items-center gap-1">
-                      <i className="fas fa-exclamation-circle"></i> {errors.lastName}
+                      <i className="fas fa-exclamation-circle"></i>{" "}
+                      {errors.lastName}
                     </p>
                   )}
                 </div>
@@ -154,8 +169,8 @@ export default function Signup() {
                   placeholder="Email"
                   className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition ${
                     errors.email
-                      ? 'border-red-400 focus:ring-red-300 bg-red-50'
-                      : 'border-gray-200 focus:ring-[#6B4226] focus:border-[#6B4226]'
+                      ? "border-red-400 focus:ring-red-300 bg-red-50"
+                      : "border-gray-200 focus:ring-[#6B4226] focus:border-[#6B4226]"
                   }`}
                 />
                 {errors.email && (
@@ -167,42 +182,66 @@ export default function Signup() {
 
               {/* Password */}
               <div>
-                <input
-                  type="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleChange}
-                  placeholder="Password"
-                  className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition ${
-                    errors.password
-                      ? 'border-red-400 focus:ring-red-300 bg-red-50'
-                      : 'border-gray-200 focus:ring-[#6B4226] focus:border-[#6B4226]'
-                  }`}
-                />
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    placeholder="Password"
+                    className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition pr-12 ${
+                      errors.password
+                        ? "border-red-400 focus:ring-red-300 bg-red-50"
+                        : "border-gray-200 focus:ring-[#6B4226] focus:border-[#6B4226]"
+                    }`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    <i
+                      className={`fas ${showPassword ? "fa-eye-slash" : "fa-eye"}`}
+                    ></i>
+                  </button>
+                </div>
                 {errors.password && (
                   <p className="mt-1.5 text-xs text-red-500 flex items-center gap-1">
-                    <i className="fas fa-exclamation-circle"></i> {errors.password}
+                    <i className="fas fa-exclamation-circle"></i>{" "}
+                    {errors.password}
                   </p>
                 )}
               </div>
 
               {/* Confirm Password */}
               <div>
-                <input
-                  type="password"
-                  name="confirmPassword"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  placeholder="Confirm Password"
-                  className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition ${
-                    errors.confirmPassword
-                      ? 'border-red-400 focus:ring-red-300 bg-red-50'
-                      : 'border-gray-200 focus:ring-[#6B4226] focus:border-[#6B4226]'
-                  }`}
-                />
+                <div className="relative">
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    placeholder="Confirm Password"
+                    className={`w-full px-4 py-3 border rounded-xl focus:outline-none focus:ring-2 transition pr-12 ${
+                      errors.confirmPassword
+                        ? "border-red-400 focus:ring-red-300 bg-red-50"
+                        : "border-gray-200 focus:ring-[#6B4226] focus:border-[#6B4226]"
+                    }`}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    <i
+                      className={`fas ${showConfirmPassword ? "fa-eye-slash" : "fa-eye"}`}
+                    ></i>
+                  </button>
+                </div>
                 {errors.confirmPassword && (
                   <p className="mt-1.5 text-xs text-red-500 flex items-center gap-1">
-                    <i className="fas fa-exclamation-circle"></i> {errors.confirmPassword}
+                    <i className="fas fa-exclamation-circle"></i>{" "}
+                    {errors.confirmPassword}
                   </p>
                 )}
               </div>
@@ -216,18 +255,31 @@ export default function Signup() {
                     checked={formData.agreeTerms}
                     onChange={handleChange}
                     className="w-4 h-4 mt-0.5 rounded border-gray-300"
-                    style={{ accentColor: '#6B4226' }}
+                    style={{ accentColor: "#6B4226" }}
                   />
                   <span className="text-sm text-gray-600">
-                    I agree to the{' '}
-                    <a href="#" className="hover:opacity-80" style={{ color: '#6B4226' }}>Terms of Service</a>
-                    {' '}and{' '}
-                    <a href="#" className="hover:opacity-80" style={{ color: '#6B4226' }}>Privacy Policy</a>
+                    I agree to the{" "}
+                    <a
+                      href="#"
+                      className="hover:opacity-80"
+                      style={{ color: "#6B4226" }}
+                    >
+                      Terms of Service
+                    </a>{" "}
+                    and{" "}
+                    <a
+                      href="#"
+                      className="hover:opacity-80"
+                      style={{ color: "#6B4226" }}
+                    >
+                      Privacy Policy
+                    </a>
                   </span>
                 </label>
                 {errors.agreeTerms && (
                   <p className="mt-1.5 text-xs text-red-500 flex items-center gap-1">
-                    <i className="fas fa-exclamation-circle"></i> {errors.agreeTerms}
+                    <i className="fas fa-exclamation-circle"></i>{" "}
+                    {errors.agreeTerms}
                   </p>
                 )}
               </div>
@@ -237,18 +289,27 @@ export default function Signup() {
                 type="submit"
                 disabled={isLoading}
                 className="w-full text-white font-semibold py-3 rounded-xl transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                style={{ background: '#6B4226' }}
-                onMouseEnter={(e) => e.currentTarget.style.background = '#8B5E3C'}
-                onMouseLeave={(e) => e.currentTarget.style.background = '#6B4226'}
+                style={{ background: "#6B4226" }}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.background = "#8B5E3C")
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.background = "#6B4226")
+                }
               >
                 {isLoading ? (
-                  <><i className="fas fa-spinner fa-spin"></i> Creating account...</>
-                ) : 'Create an Account'}
+                  <>
+                    <i className="fas fa-spinner fa-spin"></i> Creating
+                    account...
+                  </>
+                ) : (
+                  "Create an Account"
+                )}
               </button>
             </div>
           </form>
         </div>
       </div>
     </div>
-  )
+  );
 }

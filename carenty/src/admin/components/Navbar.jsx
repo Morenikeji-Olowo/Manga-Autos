@@ -1,24 +1,21 @@
 import { useState } from 'react'
 import { Search, Bell, Moon, Sun, ChevronDown } from 'lucide-react'
-import { useAuthStore } from '../../stores/authStore'
 import { useNavigate } from 'react-router-dom'
+import { useAuthStore } from '../../stores/authStore'
 
 
 export default function AdminNavbar({ darkMode, setDarkMode }) {
   const [showProfileDropdown, setShowProfileDropdown] = useState(false)
   const [showNotifications, setShowNotifications] = useState(false)
-  const { logout } = useAuthStore()
   const navigate = useNavigate();
+  const {user} = useAuthStore();
   const admin = {
     name: 'John Doe',
     email: 'admin@autodeal.com',
     avatar: 'https://ui-avatars.com/api/?name=John+Doe&background=000000&color=fff'
   }
 
-    const handleLogout = async () => {
-    await logout()
-    navigate('/')
-  }
+
   const notifications = [
     { id: 1, title: 'New order received', time: '5 min ago', read: false },
     { id: 2, title: 'Car listing approved', time: '1 hour ago', read: false },
@@ -99,13 +96,13 @@ export default function AdminNavbar({ darkMode, setDarkMode }) {
               className="flex items-center gap-2 lg:gap-3 p-1 lg:p-2 rounded-lg hover:bg-gray-100 transition-colors"
             >
               <img
-                src={admin.avatar}
-                alt={admin.name}
+                src={user?.avatar}
+                alt={user?.name}
                 className="w-8 h-8 rounded-full object-cover"
               />
               <div className="hidden lg:block text-left">
-                <p className="text-sm font-medium text-gray-900">{admin.name}</p>
-                <p className="text-xs text-gray-500">{admin.email}</p>
+                <p className="text-sm font-medium text-gray-900">{user?.name}</p>
+                <p className="text-xs text-gray-500">{user?.email}</p>
               </div>
               <ChevronDown size={14} className="hidden lg:block text-gray-400" />
             </button>
@@ -119,10 +116,8 @@ export default function AdminNavbar({ darkMode, setDarkMode }) {
                     <p className="text-xs text-gray-500">{admin.email}</p>
                   </div>
                   <div className="py-2">
-                    <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50">Profile Settings</button>
-                    <button className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50">Account Settings</button>
+                      <button onClick={() => navigate("/profile")} className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50">Profile Settings</button>
                     <hr className="my-1" />
-                    <button onClick={handleLogout} className="w-full px-4 py-2 text-left text-sm text-red-600 hover:bg-red-50">Logout</button>
                   </div>
                 </div>
               </>

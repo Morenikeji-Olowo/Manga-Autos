@@ -116,7 +116,7 @@ export default function AdminNavbar({ darkMode, setDarkMode }) {
                     <p className="text-xs text-gray-500">{admin.email}</p>
                   </div>
                   <div className="py-2">
-                      <button onClick={() => navigate("/profile")} className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50">Profile Settings</button>
+                      <button onClick={() => navigate("/admin/profile")} className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50">Profile Settings</button>
                     <hr className="my-1" />
                   </div>
                 </div>

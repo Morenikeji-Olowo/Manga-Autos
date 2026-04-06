@@ -65,6 +65,7 @@ export default function EditCar() {
   const [isFetching, setIsFetching] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { loading, loadingText, withLoading } = useLoading();
+  const [existingImageUrls, setExistingImageUrls] = useState([]);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -153,6 +154,7 @@ export default function EditCar() {
           benefits: car.benefits || [],
         });
         // existing images shown as previews
+        setExistingImageUrls(car.images || []);
         setImagePreviewUrls(car.images || []);
       } catch (error) {
         console.error("Error fetching car:", error);
@@ -194,17 +196,29 @@ export default function EditCar() {
   };
 
   const removeImage = (index) => {
-    setFormData((prev) => ({
-      ...prev,
-      images: prev.images.filter((_, i) => i !== index),
-    }));
+    const totalExisting = existingImageUrls.length;
+
+    if (index < totalExisting) {
+      // Removing an existing (already-uploaded) image
+      setExistingImageUrls((prev) => prev.filter((_, i) => i !== index));
+    } else {
+      // Removing a newly added File
+      const newFileIndex = index - totalExisting;
+      setFormData((prev) => ({
+        ...prev,
+        images: prev.images.filter((_, i) => i !== newFileIndex),
+      }));
+    }
     setImagePreviewUrls((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleSubmit = async () => {
     setIsSubmitting(true);
     try {
-      await carService.updateCar(id, formData);
+      await carService.updateCar(id, {
+        ...formData,
+        existingImages: existingImageUrls, // tell backend which URLs to retain
+      });
       navigate("/admin/cars");
     } catch (error) {
       console.error("Error updating car:", error);

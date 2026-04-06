@@ -1,7 +1,7 @@
 import Car from "../models/Car.js";
 
 export const builFilter = (query) => {
-  const filter = { status: "active" };
+  const filter = { status: query.status || "active" };
 
   if (query.make) filter.make = { $regex: query.make, $options: "i" };
   if (query.model) filter.model = { $regex: query.model, $options: "i" };
@@ -42,48 +42,42 @@ export const buildSort = (query) => {
     mostViewed: { views: -1 },
   };
 
-  return sorts[sortParam] || { createdAt: -1 };
+  return sorts[query.sort] || { createdAt: -1 };
 };
 
+export const getAllListings = async (query) => {
+  const filter = builFilter(query);
+  const sort = buildSort(query);
 
-export const getAllListings = async (query) =>{
-    const filter = builFilter(query);
-    const sort = buildSort(query);
+  const page = Math.max(1, Number(query.page) || 1);
+  const limit = Math.max(1, Number(query.limit) || 10);
+  const skip = (page - 1) * limit;
 
-    const page = Math.max(1, Number(query.page) || 1);
-    const limit = Math.max(1, Number(query.limit) || 10);
-    const skip = (page - 1) * limit;
+  const [total, listings] = await Promise.all([
+    Car.countDocuments(filter),
+    Car.find(filter).sort(sort).skip(skip).limit(limit).select("-__v").lean(),
+  ]);
 
-    const [total, listings] = await Promise.all([
-        Car.countDocuments(filter),
-        Car.find(filter)
-        .sort(sort)
-        .skip(skip)
-        .limit(limit)
-        .select("-__v")
-        .lean(),
-    ])
-
-    return {
-        listings, 
-        pagination: {
-            total,
-            page,
-            pages: Math.ceil(total / limit),
-            limit
-        },
-    };
+  return {
+    listings,
+    pagination: {
+      total,
+      page,
+      pages: Math.ceil(total / limit),
+      limit,
+    },
+  };
 };
 
-export const getListingById = async (id) =>{
-    const listing = await Car.findById(id).select("-__v").lean();
-    if(!listing){
-        const error = new Error("Car not found");
-        error.status = 404;
-        throw error
-    }
-    return listing;
-}
+export const getListingById = async (id) => {
+  const listing = await Car.findById(id).select("-__v").lean();
+  if (!listing) {
+    const error = new Error("Car not found");
+    error.status = 404;
+    throw error;
+  }
+  return listing;
+};
 
 export const incrementViews = async (id) => {
   await Car.findByIdAndUpdate(id, { $inc: { views: 1 } });
@@ -116,7 +110,7 @@ export const deleteListing = async (id) => {
   }
   return listing;
 };
- 
+
 export const markAsSold = async (id) => {
   return updateListing(id, { status: "sold" });
 };
@@ -125,7 +119,7 @@ export const getListingsByStatus = async (status, query) => {
   const page = Math.max(1, Number(query.page) || 1);
   const limit = Math.min(50, Number(query.limit) || 12);
   const skip = (page - 1) * limit;
- 
+
   const [total, listings] = await Promise.all([
     Car.countDocuments({ status }),
     Car.find({ status })
@@ -135,7 +129,7 @@ export const getListingsByStatus = async (status, query) => {
       .select("-__v")
       .lean(),
   ]);
- 
+
   return {
     listings,
     pagination: { total, page, pages: Math.ceil(total / limit), limit },

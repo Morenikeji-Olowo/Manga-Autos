@@ -1,5 +1,5 @@
 import express from "express";
-import { createCar, deleteCar, manageCars, markCarAsSold, updateCar } from "../controllers/admin.controller.js";
+import { createCar, deleteCar, getCarById, manageCars, markCarAsSold, updateCar } from "../controllers/admin.controller.js";
 import authMiddleware from "../middlewares/auth.middleware.js";
 import { multerUpload, uploadToCloudinary } from "../middlewares/upload.middleware.js";
 import { getAdminMessages, getListingMessages, removeMessage, unreadCount } from "../controllers/message.controller.js";
@@ -8,6 +8,7 @@ const adminRouter = express.Router();
 adminRouter.use(authMiddleware.protect, authMiddleware.admin);
 
 adminRouter.get("/cars", manageCars);
+adminRouter.get("/cars/:id", getCarById);
 adminRouter.post(
   "/cars",
   multerUpload.array("images", 15),

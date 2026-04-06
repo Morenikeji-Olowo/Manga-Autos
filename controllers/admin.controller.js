@@ -23,6 +23,20 @@ export const createCar = async (req, res) => {
   }
 };
 
+export const getCarById = async (req, res) => {
+  try {
+    const listing = await getListingById(req.params.id);
+    res.status(200).json({
+      success: true,
+      listing,
+    });
+  } catch (error) {
+    res.status(error.statusCode || 500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+}
 export const updateCar = async (req, res) => {
   try {
     const existing = await getListingById(req.params.id);

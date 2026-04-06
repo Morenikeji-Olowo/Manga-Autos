@@ -3,35 +3,36 @@ import axios from "axios";
 const API_BASE_URL = "https://manga-autos.onrender.com";
 
 const carService = {
-  addCar: async (formData) => {
+  // Public — for Cars.jsx browse page (filters, search, pagination)
+  getCars: async (filters = {}, sortBy = 'newest') => {
     const token = localStorage.getItem('accessToken')
-    const data = new FormData()
-
-    // append all text fields
-    Object.entries(formData).forEach(([key, value]) => {
-      if (key === 'images') return // handle separately
-      if (typeof value === 'object' && !Array.isArray(value)) {
-        data.append(key, JSON.stringify(value))
-      } else if (Array.isArray(value)) {
-        data.append(key, JSON.stringify(value))
-      } else {
-        data.append(key, value)
+    const params = new URLSearchParams()
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value && value !== 'All' && value !== 'All Brands') {
+        params.append(key, value)
       }
     })
-
-    // append images
-    formData.images.forEach((image) => {
-      data.append('images', image)
-    })
-
-    const res = await axios.post(`${API_BASE_URL}/api/admin/cars`, data, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'multipart/form-data',
-      },
+    params.append('sort', sortBy)
+    const res = await axios.get(`${API_BASE_URL}/api/cars?${params.toString()}`, {
+      headers: { Authorization: `Bearer ${token}` }
     })
     return res.data
   },
-};
+
+  // Admin — for ManageCars.jsx (by status)
+  getAdminCars: async (status = 'active', page = 1) => {
+    const token = localStorage.getItem('accessToken')
+    const res = await axios.get(`${API_BASE_URL}/api/admin/cars?status=${status}&page=${page}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    return res.data
+  },
+
+  // rest of your methods...
+  addCar: async () => {  },
+  updateCar: async () => {  },
+  deleteCar: async () => {  },
+  markAsSold: async () => {  },
+}
 
 export default carService;

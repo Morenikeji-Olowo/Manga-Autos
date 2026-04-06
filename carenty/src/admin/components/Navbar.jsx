@@ -9,11 +9,7 @@ export default function AdminNavbar({ darkMode, setDarkMode }) {
   const [showNotifications, setShowNotifications] = useState(false)
   const navigate = useNavigate();
   const {user} = useAuthStore();
-  const admin = {
-    name: 'John Doe',
-    email: 'admin@autodeal.com',
-    avatar: 'https://ui-avatars.com/api/?name=John+Doe&background=000000&color=fff'
-  }
+
 
 
   const notifications = [

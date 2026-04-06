@@ -73,7 +73,13 @@ const carService = {
     });
     return res.data;
   },
-  deleteCar: async () => {},
+  deleteCar: async (id) => {
+    const token = localStorage.getItem("accessToken");
+    const res = await axios.delete(`${API_BASE_URL}/api/admin/cars/${id}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return res.data;
+  },
   markAsSold: async () => {},
 };
 

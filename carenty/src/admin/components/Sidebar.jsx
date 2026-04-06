@@ -15,6 +15,8 @@ import {
   Menu,
   X
 } from 'lucide-react'
+import { useLoading } from '../../hooks/useLoading'
+import LoadingOverlay from '../../components/ui/LoadingOverlay'
 
 const navigation = [
   { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
@@ -30,6 +32,7 @@ export default function Sidebar({ collapsed, setCollapsed }) {
   const { logout } = useAuthStore()
   const location = useLocation()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const {withLoading, loadingText, loading} = useLoading()
 
   // Close mobile sidebar when route changes
   useEffect(() => {
@@ -48,12 +51,15 @@ export default function Sidebar({ collapsed, setCollapsed }) {
   }, [])
 
   const handleLogout = async () => {
-    await logout();
+    withLoading(async()=>{
+          await logout();
     navigate('/')
+    }, "Logging out...")
   }
 
   const sidebarContent = (
     <>
+    {loading && <LoadingOverlay text={loadingText} />}
       {/* Logo Section */}
       <div className="flex h-16 items-center justify-between px-4 border-b border-gray-200">
         {!collapsed && (

@@ -29,6 +29,11 @@ const carService = {
   },
 
   // rest of your methods...
+  getCarById: async (id) => {
+  const response = await axios.get(`${API_BASE_URL}/api/admin/cars/${id}`);
+  console.log(response);
+  return response.data;
+},
   addCar: async () => {  },
   updateCar: async () => {  },
   deleteCar: async () => {  },

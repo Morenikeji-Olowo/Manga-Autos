@@ -1,10 +1,9 @@
 import Car from "../models/Car.js";
 
 export const builFilter = (query) => {
-  const filter = { status: query.status || "active" };
-
-  if (query.status && query.status !== 'all') {
-    filter.status = query.status
+  const filter = {};
+  if (query.status && query.status !== "all") {
+    filter.status = query.status;
   }
   if (query.make) filter.make = { $regex: query.make, $options: "i" };
   if (query.model) filter.model = { $regex: query.model, $options: "i" };

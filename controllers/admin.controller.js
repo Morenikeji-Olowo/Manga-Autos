@@ -1,5 +1,5 @@
 import { deleteFromCloudinary } from "../middlewares/upload.middleware.js";
-import { createListing, deleteListing, getListingsByStatus, markAsSold, updateListing } from "../services/listing.service.js";
+import { createListing, deleteListing, getAllListings, getListingById, markAsSold, updateListing } from "../services/listing.service.js"
 
 
 export const createCar = async (req, res) => {

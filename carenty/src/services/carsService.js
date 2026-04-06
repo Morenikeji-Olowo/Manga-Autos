@@ -25,6 +25,7 @@ const carService = {
     const res = await axios.get(`${API_BASE_URL}/api/admin/cars?status=${status}&page=${page}`, {
       headers: { Authorization: `Bearer ${token}` }
     })
+    console.log("Fetched admin cars:", res.data)
     return res.data
   },
 

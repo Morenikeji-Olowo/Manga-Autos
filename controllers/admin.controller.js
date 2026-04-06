@@ -82,22 +82,20 @@ export const deleteCar = async (req, res) => {
   }
 };
 
-export const manageCars = async (req, res)=>{
-    try{
-        const status = req.query.status || 'active';
-        const result = await getListingsByStatus(status, req.query);
-        res.status(200).json({
-            success: true,
-            ...result
-        })
-
-    }
-    catch(error){
-        res.status(500).json({
-            success: false,
-            message: error.message,
-        })
-    }
+export const manageCars = async (req, res) => {
+  console.log('Query received:', req.query)
+  try {
+    const result = await getAllListings(req.query)
+    res.status(200).json({
+      success: true,
+      ...result
+    })
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    })
+  }
 }
 
 

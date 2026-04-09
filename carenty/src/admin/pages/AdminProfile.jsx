@@ -36,10 +36,9 @@ import {
   CreditCard,
 } from "lucide-react";
 import { useLoading } from "../../hooks/useLoading";
-import userService from "../../services/userService";
 import { useAuthStore } from "../../stores/authStore";
-import { useNavigate } from "react-router-dom";
 import LoadingOverlay from "../../components/ui/LoadingOverlay";
+import adminService from "../../services/adminService";
 
 export default function AdminProfile() {
   const [activeTab, setActiveTab] = useState("personal");
@@ -51,7 +50,6 @@ export default function AdminProfile() {
   const fileInputRef = useRef(null);
   const { loading, loadingText, withLoading } = useLoading();
   const { user } = useAuthStore();
-  const navigate = useNavigate();
 
   // Admin Data
   const [admin, setAdmin] = useState({
@@ -149,7 +147,7 @@ useEffect(() => {
 }, [user])
   const handleProfileUpdate = async () => {
     await withLoading(async () => {
-      const res = await userService.updateProfile({
+      const res = await adminService.updateProfile({
         fullName: formData.name,
         phone: formData.phone,
         address: formData.address,
@@ -200,7 +198,7 @@ useEffect(() => {
     const file = e.target.files[0];
     if (!file) return;
     await withLoading(async () => {
-      const res = await userService.updateAvatar(file);
+      const res = await adminService.updateAvatar(file);
       setAdmin((prev) => ({
         ...prev,
         profilePicture: res.user.profile.profilePicture,

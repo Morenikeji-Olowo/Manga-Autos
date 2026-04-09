@@ -1,38 +1,34 @@
-import { api } from './api/client'
-import { API_ENDPOINTS } from './api/endpoints'
+import axios from "axios";
 
+const API_BASE_URL = "https://manga-autos.onrender.com";
 
-// get all admin cars
-export const getAdminCars = async () => {
-  return api.get(API_ENDPOINTS.ADMIN_CARS.LIST);
+export const updateProfile = async ({ fullName, phone, address }) => {
+  const token = localStorage.getItem("accessToken");
+  const res = await axios.put(
+    `${API_BASE_URL}/api/admin/profile`,
+    { fullName, phone, address },
+    { headers: { Authorization: `Bearer ${token}` } },
+  );
+  return res.data;
 };
 
-// create a car (with images)
-export const createCar = async (formData) => {
-  return api.upload(API_ENDPOINTS.ADMIN_CARS.CREATE, formData);
+export const updateAvatar = async (file) => {
+  const token = localStorage.getItem("accessToken");
+  const data = new FormData();
+  data.append("avatar", file);
+  const res = await axios.put(`${API_BASE_URL}/api/admin/profile/avatar`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return res.data;
 };
 
-// update car
-export const updateCar = async (id, formData) => {
-  return api.upload(API_ENDPOINTS.ADMIN_CARS.UPDATE(id), formData);
-};
-
-// delete car
-export const deleteCar = async (id) => {
-  return api.delete(API_ENDPOINTS.ADMIN_CARS.DELETE(id));
-};
-
-// mark as sold
-export const markCarSold = async (id) => {
-  return api.patch(API_ENDPOINTS.ADMIN_CARS.MARK_SOLD(id));
-};
 
 const adminService = {
-  getAdminCars,
-  createCar,
-  updateCar,
-  deleteCar,
-  markCarSold,
+  updateAvatar,
+  updateProfile,
 };
 
 export default adminService;

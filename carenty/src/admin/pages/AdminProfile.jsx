@@ -39,6 +39,7 @@ import { useLoading } from "../../hooks/useLoading";
 import userService from "../../services/userService";
 import { useAuthStore } from "../../stores/authStore";
 import { useNavigate } from "react-router-dom";
+import LoadingOverlay from "../../components/LoadingOverlay";
 
 export default function AdminProfile() {
   const [activeTab, setActiveTab] = useState("personal");
@@ -116,6 +117,8 @@ export default function AdminProfile() {
     phone: admin.phone,
     address: { ...admin.address },
   });
+  const [isFetching, setIsFetching] = useState(true)
+
 
   const [passwordData, setPasswordData] = useState({
     currentPassword: "",
@@ -123,24 +126,27 @@ export default function AdminProfile() {
     confirmPassword: "",
   });
 
-  useEffect(() => {
-    const getDetails = async () => {
-      const u = user; // from useAuthStore
-      if (u) {
-        setAdmin((prev) => ({
-          ...prev,
-          name: u.profile?.fullName || u.username,
-          email: u.email,
-          phone: u.profile?.phone || "",
-          profilePicture: u.profile?.profilePicture || prev.profilePicture,
-          address: u.profile?.address || prev.address,
-          isMfaActive: u.isMfaActive,
-          trustedDevices: u.trustedDevices || [],
-        }));
-      }
-    };
-    getDetails();
-  }, [user]);
+useEffect(() => {
+  if (user) {
+    setAdmin(prev => ({
+      ...prev,
+      name: user.profile?.fullName || user.username,
+      email: user.email,
+      phone: user.profile?.phone || '',
+      profilePicture: user.profile?.profilePicture || prev.profilePicture,
+      address: user.profile?.address || prev.address,
+      isMfaActive: user.isMfaActive,
+      trustedDevices: user.trustedDevices || [],
+    }))
+    setFormData({
+      name: user.profile?.fullName || user.username,
+      email: user.email,
+      phone: user.profile?.phone || '',
+      address: user.profile?.address || prev.address,
+    })
+  }
+  setIsFetching(false)
+}, [user])
   const handleProfileUpdate = async () => {
     await withLoading(async () => {
       const res = await userService.updateProfile({
@@ -156,7 +162,6 @@ export default function AdminProfile() {
       }));
       setIsEditing(false);
     }, "Saving profile...");
-    navigate("/admin/cars");
   };
 
   const handlePasswordChange = () => {
@@ -214,7 +219,7 @@ export default function AdminProfile() {
   return (
     <>
       {loading && <LoadingOverlay text={loadingText} />}
-
+      {isFetching && <LoadingOverlay text="Loading profile..." />}
       <div className="min-h-screen bg-gray-50">
         {/* Header - Clean */}
         <div className="bg-white border-b border-gray-100 sticky top-0 z-10">

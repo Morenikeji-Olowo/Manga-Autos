@@ -115,8 +115,7 @@ export default function AdminProfile() {
     phone: admin.phone,
     address: { ...admin.address },
   });
-  const [isFetching, setIsFetching] = useState(true)
-
+  const [isFetching, setIsFetching] = useState(true);
 
   const [passwordData, setPasswordData] = useState({
     currentPassword: "",
@@ -124,27 +123,27 @@ export default function AdminProfile() {
     confirmPassword: "",
   });
 
-useEffect(() => {
-  if (user) {
-    setAdmin(prev => ({
-      ...prev,
-      name: user.profile?.fullName || user.username,
-      email: user.email,
-      phone: user.profile?.phone || '',
-      profilePicture: user.profile?.profilePicture || prev.profilePicture,
-      address: user.profile?.address || prev.address,
-      isMfaActive: user.isMfaActive,
-      trustedDevices: user.trustedDevices || [],
-    }))
-    setFormData({
-      name: user.profile?.fullName || user.username,
-      email: user.email,
-      phone: user.profile?.phone || '',
-      address: user.profile?.address || prev.address,
-    })
-  }
-  setIsFetching(false)
-}, [user])
+  useEffect(() => {
+    if (user) {
+      setAdmin((prev) => ({
+        ...prev,
+        name: user.profile?.fullName || user.username,
+        email: user.email,
+        phone: user.profile?.phone || "",
+        profilePicture: user.profile?.profilePicture || prev.profilePicture,
+        address: user.profile?.address || prev.address,
+        isMfaActive: user.isMfaActive,
+        trustedDevices: user.trustedDevices || [],
+      }));
+      setFormData({
+        name: user.profile?.fullName || user.username,
+        email: user.email,
+        phone: user.profile?.phone || "",
+        address: user.profile?.address || admin.address, // ← use admin directly
+      });
+    }
+    setIsFetching(false);
+  }, [user]);
   const handleProfileUpdate = async () => {
     await withLoading(async () => {
       const res = await adminService.updateProfile({

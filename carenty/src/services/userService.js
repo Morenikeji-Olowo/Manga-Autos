@@ -1,31 +1,32 @@
-import { api } from './api/client'
-import { API_ENDPOINTS } from './api/endpoints'
-// get all cars
-export const getAllCars = async () => {
-  return api.get(API_ENDPOINTS.USER_CARS.LIST);
+import axios from "axios";
+
+const API_BASE_URL = "https://manga-autos.onrender.com";
+
+export const updateProfile = async ({ fullName, phone, address }) => {
+  const token = localStorage.getItem("accessToken");
+  const res = await axios.put(
+    `${API_BASE_URL}/api/user/profile`,
+    { fullName, phone, address },
+    { headers: { Authorization: `Bearer ${token}` } },
+  );
+  return res.data;
 };
 
-// get car by id
-export const getCarById = async (id) => {
-  return api.get(API_ENDPOINTS.USER_CARS.DETAIL(id));
+export const updateAvatar = async (file) => {
+  const token = localStorage.getItem("accessToken");
+  const data = new FormData();
+  data.append("avatar", file);
+  const res = await axios.put(`${API_BASE_URL}/api/user/profile/avatar`, data, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return res.data;
 };
 
-// search cars
-export const searchCars = async (query) => {
-  return api.post(API_ENDPOINTS.USER_CARS.SEARCH, query);
-};
-
-export const updateProfile = async () => {
-
-}
-export const updateAvatar = async () => {
-
-}
 const userService = {
-  getAllCars,
-  getCarById,
-  searchCars,
   updateAvatar,
-  updateProfile
-}
+  updateProfile,
+};
 export default userService;

@@ -58,14 +58,26 @@ export const updateCar = async (req, res) => {
     // keep existing except removed ones, then add newly uploaded ones
     const keptImages = existing.images.filter((url) => !removeImages.includes(url));
     const newImages = req.uploadedImages || [];
-    const updatedImages = [...keptImages, ...newImages];
- 
+
+    const arrayFields = ['comfort', 'multimedia', 'safety', 'security', 'benefits'];
+    const parsedArrayFields = {};
+
+    arrayFields.forEach((field)=>{
+      if(req.body[field]){
+        try{
+          parsedArrayFields[field] = JSON.parse(req.body[field]);
+        }catch{
+          parsedArrayFields[field] = [];
+        }
+      }
+    })
+
     const data = {
       ...req.body,
-      images: updatedImages,
+      ...parsedArrayFields,
+      images: [...keptImages, ...newImages],
     };
  
-    // Clean up — removeImages is not a Car schema field
     delete data.removeImages;
  
     const listing = await updateListing(req.params.id, data);

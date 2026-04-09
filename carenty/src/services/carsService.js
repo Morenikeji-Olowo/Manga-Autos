@@ -43,6 +43,7 @@ const carService = {
     return response.data;
   },
   addCar: async () => {},
+
   updateCar: async (id, formData) => {
     const token = localStorage.getItem("accessToken");
 

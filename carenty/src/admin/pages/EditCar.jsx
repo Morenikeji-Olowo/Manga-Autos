@@ -63,6 +63,7 @@ export default function EditCar() {
   const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [isFetching, setIsFetching] = useState(true);
+  const [originalImageUrls, setOriginalImageUrls] = useState([]); // to track which images were originally associated with the car
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { loading, loadingText, withLoading } = useLoading();
   const [existingImageUrls, setExistingImageUrls] = useState([]);
@@ -156,6 +157,7 @@ export default function EditCar() {
         // existing images shown as previews
         setExistingImageUrls(car.images || []);
         setImagePreviewUrls(car.images || []);
+        setOriginalImageUrls(car.images || []); // keep track of original images to know which ones were removed later
       } catch (error) {
         console.error("Error fetching car:", error);
       } finally {
@@ -217,6 +219,7 @@ export default function EditCar() {
     try {
       await carService.updateCar(id, {
         ...formData,
+        originalImages: originalImageUrls, // send original images to backend for comparison
         existingImages: existingImageUrls, // tell backend which URLs to retain
       });
       navigate("/admin/cars");

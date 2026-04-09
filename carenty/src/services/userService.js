@@ -14,3 +14,18 @@ export const getCarById = async (id) => {
 export const searchCars = async (query) => {
   return api.post(API_ENDPOINTS.USER_CARS.SEARCH, query);
 };
+
+export const updateProfile = async () => {
+
+}
+export const updateAvatar = async () => {
+
+}
+const userService = {
+  getAllCars,
+  getCarById,
+  searchCars,
+  updateAvatar,
+  updateProfile
+}
+export default userService;

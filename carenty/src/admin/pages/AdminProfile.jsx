@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { 
   User, Mail, Phone, MapPin, Calendar, Clock, 
   Shield, Lock, Key, Smartphone, Laptop, 
@@ -8,6 +8,9 @@ import {
   ChevronRight, Eye, EyeOff, LogOut,
   Home, Building, Globe, CreditCard
 } from 'lucide-react'
+import { useLoading } from '../../hooks/useLoading'
+import userService from '../../services/userService'
+import { useAuthStore } from '../../stores/authStore'
 
 export default function AdminProfile() {
   const [activeTab, setActiveTab] = useState('personal')
@@ -17,6 +20,9 @@ export default function AdminProfile() {
   const [showDeactivateModal, setShowDeactivateModal] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const fileInputRef = useRef(null)
+  const { loading, loadingText, withLoading } = useLoading();
+  const {user} = useAuthStore();
+  
 
   // Admin Data
   const [admin, setAdmin] = useState({
@@ -76,17 +82,32 @@ export default function AdminProfile() {
     confirmPassword: '',
   })
 
-  const handleProfileUpdate = () => {
-    setAdmin({ 
-      ...admin, 
-      name: formData.name,
-      email: formData.email,
-      phone: formData.phone,
-      address: formData.address
-    })
-    setIsEditing(false)
-    alert('Profile updated successfully!')
+  useEffect(() => {
+  const u = user // from useAuthStore
+  if (u) {
+    setAdmin(prev => ({
+      ...prev,
+      name: u.profile?.fullName || u.username,
+      email: u.email,
+      phone: u.profile?.phone || '',
+      profilePicture: u.profile?.profilePicture || prev.profilePicture,
+      address: u.profile?.address || prev.address,
+      isMfaActive: u.isMfaActive,
+      trustedDevices: u.trustedDevices || [],
+    }))
   }
+}, [user])
+const handleProfileUpdate = async () => {
+  await withLoading(async () => {
+    const res = await userService.updateProfile({
+      fullName: formData.name,
+      phone: formData.phone,
+      address: formData.address,
+    })
+    setAdmin(prev => ({ ...prev, name: formData.name, phone: formData.phone, address: formData.address }))
+    setIsEditing(false)
+  }, 'Saving profile...')
+}
 
   const handlePasswordChange = () => {
     if (passwordData.newPassword !== passwordData.confirmPassword) {
@@ -115,16 +136,15 @@ export default function AdminProfile() {
     })
   }
 
-  const handleProfilePictureChange = (e) => {
-    const file = e.target.files[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        setAdmin({ ...admin, profilePicture: reader.result })
-      }
-      reader.readAsDataURL(file)
-    }
-  }
+// find this function and replace it
+const handleProfilePictureChange = async (e) => {
+  const file = e.target.files[0]
+  if (!file) return
+  await withLoading(async () => {
+    const res = await userService.updateAvatar(file)
+    setAdmin(prev => ({ ...prev, profilePicture: res.user.profile.profilePicture }))
+  }, 'Updating profile picture...')
+}
 
   const tabs = [
     { id: 'personal', label: 'Personal Info', icon: User },
@@ -135,7 +155,10 @@ export default function AdminProfile() {
   ]
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <>
+    {loading && <LoadingOverlay text={loadingText} />}
+
+        <div className="min-h-screen bg-gray-50">
       {/* Header - Clean */}
       <div className="bg-white border-b border-gray-100 sticky top-0 z-10">
         <div className="max-w-6xl mx-auto px-6 py-5">
@@ -771,6 +794,7 @@ export default function AdminProfile() {
         </>
       )}
     </div>
+    </>
   )
 }
 

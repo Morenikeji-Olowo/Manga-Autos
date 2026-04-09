@@ -3,6 +3,7 @@ import { createCar, deleteCar, getCarById, manageCars, markCarAsSold, updateCar 
 import authMiddleware from "../middlewares/auth.middleware.js";
 import { multerUpload, uploadToCloudinary } from "../middlewares/upload.middleware.js";
 import { getAdminMessages, getListingMessages, removeMessage, unreadCount } from "../controllers/message.controller.js";
+import { updateAvatar, updateProfile } from "../controllers/profile.controller.js";
 
 const adminRouter = express.Router();
 adminRouter.use(authMiddleware.protect, authMiddleware.admin);
@@ -24,6 +25,8 @@ adminRouter.put(
 adminRouter.delete("/cars/:id",deleteCar );
 adminRouter.patch("/cars/:id/sold",markCarAsSold );
 
+adminRouter.put('/profile', updateProfile);
+adminRouter.put('/profile/avatar', multerUpload.single('avatar'), uploadToCloudinary, updateAvatar);
 
 adminRouter.get("/messages/unread-count", unreadCount);
 adminRouter.get("/messages/listing/:listingId", getListingMessages);

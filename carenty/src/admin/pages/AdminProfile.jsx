@@ -39,7 +39,7 @@ import { useLoading } from "../../hooks/useLoading";
 import userService from "../../services/userService";
 import { useAuthStore } from "../../stores/authStore";
 import { useNavigate } from "react-router-dom";
-import LoadingOverlay from "../../components/LoadingOverlay";
+import LoadingOverlay from "../../components/ui/LoadingOverlay";
 
 export default function AdminProfile() {
   const [activeTab, setActiveTab] = useState("personal");

@@ -5,7 +5,8 @@ import {
   Bell, Moon, Sun, AlertTriangle, Save, 
   Camera, Edit2, Check, X, Plus, Trash2,
   Activity, Car, ShoppingBag, Users, 
-  ChevronRight, Eye, EyeOff, LogOut
+  ChevronRight, Eye, EyeOff, LogOut,
+  Home, Building, Globe, CreditCard
 } from 'lucide-react'
 
 export default function AdminProfile() {
@@ -24,8 +25,16 @@ export default function AdminProfile() {
     email: 'john.doe@autodeal.com',
     phone: '+234 801 234 5678',
     profilePicture: 'https://ui-avatars.com/api/?name=John+Doe&background=1a1a1a&color=fff&size=128',
-    location: 'Lagos, Nigeria',
     role: 'Super Admin',
+    
+    // Address
+    address: {
+      street: '123 Ahmadu Bello Way',
+      city: 'Victoria Island',
+      state: 'Lagos',
+      zip: '101241',
+      country: 'Nigeria'
+    },
     
     // Account Stats
     totalCarsListed: 156,
@@ -51,14 +60,14 @@ export default function AdminProfile() {
       orderUpdates: true,
       marketingEmails: false,
     },
-    theme: 'light', // light, dark, system
+    theme: 'light',
   })
 
   const [formData, setFormData] = useState({
     name: admin.name,
     email: admin.email,
     phone: admin.phone,
-    location: admin.location,
+    address: { ...admin.address },
   })
 
   const [passwordData, setPasswordData] = useState({
@@ -68,9 +77,14 @@ export default function AdminProfile() {
   })
 
   const handleProfileUpdate = () => {
-    setAdmin({ ...admin, ...formData })
+    setAdmin({ 
+      ...admin, 
+      name: formData.name,
+      email: formData.email,
+      phone: formData.phone,
+      address: formData.address
+    })
     setIsEditing(false)
-    // Show success toast
     alert('Profile updated successfully!')
   }
 
@@ -83,7 +97,6 @@ export default function AdminProfile() {
       alert('Password must be at least 6 characters!')
       return
     }
-    // Handle password change API call
     alert('Password changed successfully!')
     setShowPasswordModal(false)
     setPasswordData({ currentPassword: '', newPassword: '', confirmPassword: '' })
@@ -115,40 +128,39 @@ export default function AdminProfile() {
 
   const tabs = [
     { id: 'personal', label: 'Personal Info', icon: User },
-    { id: 'security', label: 'Account Security', icon: Shield },
-    { id: 'activity', label: 'Activity Overview', icon: Activity },
+    { id: 'security', label: 'Security', icon: Shield },
+    { id: 'activity', label: 'Activity', icon: Activity },
     { id: 'preferences', label: 'Preferences', icon: Bell },
     { id: 'danger', label: 'Danger Zone', icon: AlertTriangle },
   ]
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white border-b border-gray-200 sticky top-0 z-10">
-        <div className="max-w-7xl mx-auto px-6 py-6">
-          <h1 className="text-2xl font-bold text-gray-900">Admin Profile</h1>
-          <p className="text-gray-500 mt-1">Manage your account settings and preferences</p>
+      {/* Header - Clean */}
+      <div className="bg-white border-b border-gray-100 sticky top-0 z-10">
+        <div className="max-w-6xl mx-auto px-6 py-5">
+          <h1 className="text-xl font-semibold text-gray-900">Profile</h1>
+          <p className="text-sm text-gray-500 mt-0.5">Manage your account settings</p>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Sidebar */}
-          <div className="lg:col-span-1">
-            {/* Profile Card */}
-            <div className="bg-white rounded-2xl border border-gray-200 p-6 mb-6 sticky top-24">
+      <div className="max-w-6xl mx-auto px-6 py-8">
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Sidebar - Minimal */}
+          <div className="lg:w-72 flex-shrink-0">
+            <div className="bg-white rounded-xl p-6">
               <div className="text-center">
                 <div className="relative inline-block">
                   <img
                     src={admin.profilePicture}
                     alt={admin.name}
-                    className="w-24 h-24 rounded-full object-cover mx-auto border-4 border-white shadow-lg"
+                    className="w-20 h-20 rounded-full object-cover"
                   />
                   <button
                     onClick={() => fileInputRef.current?.click()}
-                    className="absolute bottom-0 right-0 p-1.5 bg-gray-900 rounded-full text-white hover:bg-gray-800 transition-colors"
+                    className="absolute -bottom-1 -right-1 p-1.5 bg-gray-900 rounded-full text-white hover:bg-gray-700 transition-colors"
                   >
-                    <Camera size={14} />
+                    <Camera size={12} />
                   </button>
                   <input
                     ref={fileInputRef}
@@ -158,31 +170,30 @@ export default function AdminProfile() {
                     className="hidden"
                   />
                 </div>
-                <h2 className="text-xl font-bold text-gray-900 mt-4">{admin.name}</h2>
-                <p className="text-sm text-gray-500">{admin.role}</p>
-                <div className="mt-3 flex items-center justify-center gap-2 text-sm text-gray-500">
-                  <Mail size={14} />
+                <h2 className="text-base font-semibold text-gray-900 mt-3">{admin.name}</h2>
+                <p className="text-xs text-gray-500">{admin.role}</p>
+                <div className="mt-2 flex items-center justify-center gap-1 text-xs text-gray-400">
+                  <Mail size={12} />
                   <span>{admin.email}</span>
                 </div>
               </div>
 
-              <div className="border-t border-gray-200 mt-6 pt-6">
-                <div className="space-y-1">
+              <div className="mt-6 pt-6 border-t border-gray-100">
+                <div className="space-y-0.5">
                   {tabs.map(tab => (
                     <button
                       key={tab.id}
                       onClick={() => setActiveTab(tab.id)}
                       className={`
-                        w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all
+                        w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all
                         ${activeTab === tab.id 
                           ? 'bg-gray-100 text-gray-900' 
                           : 'text-gray-600 hover:bg-gray-50'
                         }
                       `}
                     >
-                      <tab.icon size={18} />
-                      <span className="text-sm font-medium">{tab.label}</span>
-                      {activeTab === tab.id && <ChevronRight size={16} className="ml-auto" />}
+                      <tab.icon size={16} />
+                      <span>{tab.label}</span>
                     </button>
                   ))}
                 </div>
@@ -190,106 +201,198 @@ export default function AdminProfile() {
             </div>
           </div>
 
-          {/* Main Content */}
-          <div className="lg:col-span-2">
+          {/* Main Content - Clean Design */}
+          <div className="flex-1">
             {/* Personal Info Tab */}
             {activeTab === 'personal' && (
-              <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-                <div className="p-6 border-b border-gray-200 flex justify-between items-center">
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900">Personal Information</h3>
-                    <p className="text-sm text-gray-500">Update your personal details</p>
+              <div className="space-y-6">
+                {/* Basic Info */}
+                <div className="bg-white rounded-xl p-6">
+                  <div className="flex justify-between items-center mb-5">
+                    <div>
+                      <h3 className="text-base font-semibold text-gray-900">Basic Information</h3>
+                      <p className="text-xs text-gray-500 mt-0.5">Your personal details</p>
+                    </div>
+                    {!isEditing ? (
+                      <button
+                        onClick={() => setIsEditing(true)}
+                        className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50 rounded-lg transition-colors"
+                      >
+                        <Edit2 size={14} />
+                        Edit
+                      </button>
+                    ) : (
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => setIsEditing(false)}
+                          className="p-1.5 text-gray-400 hover:text-gray-600 rounded-lg"
+                        >
+                          <X size={14} />
+                        </button>
+                        <button
+                          onClick={handleProfileUpdate}
+                          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-white bg-gray-900 rounded-lg hover:bg-gray-800"
+                        >
+                          <Save size={14} />
+                          Save
+                        </button>
+                      </div>
+                    )}
                   </div>
-                  {!isEditing ? (
-                    <button
-                      onClick={() => setIsEditing(true)}
-                      className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
-                    >
-                      <Edit2 size={16} />
-                      Edit Profile
-                    </button>
-                  ) : (
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => setIsEditing(false)}
-                        className="p-2 text-gray-500 hover:bg-gray-100 rounded-lg"
-                      >
-                        <X size={18} />
-                      </button>
-                      <button
-                        onClick={handleProfileUpdate}
-                        className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg hover:bg-gray-800 transition-colors"
-                      >
-                        <Save size={16} />
-                        Save
-                      </button>
+                  
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-medium text-gray-500 mb-1">Full Name</label>
+                        {isEditing ? (
+                          <input
+                            type="text"
+                            value={formData.name}
+                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                            className="w-full px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400"
+                          />
+                        ) : (
+                          <div className="flex items-center gap-2 text-sm text-gray-900">
+                            <User size={14} className="text-gray-400" />
+                            <span>{admin.name}</span>
+                          </div>
+                        )}
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-gray-500 mb-1">Email</label>
+                        {isEditing ? (
+                          <input
+                            type="email"
+                            value={formData.email}
+                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                            className="w-full px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400"
+                          />
+                        ) : (
+                          <div className="flex items-center gap-2 text-sm text-gray-900">
+                            <Mail size={14} className="text-gray-400" />
+                            <span>{admin.email}</span>
+                          </div>
+                        )}
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-gray-500 mb-1">Phone</label>
+                        {isEditing ? (
+                          <input
+                            type="tel"
+                            value={formData.phone}
+                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                            className="w-full px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400"
+                          />
+                        ) : (
+                          <div className="flex items-center gap-2 text-sm text-gray-900">
+                            <Phone size={14} className="text-gray-400" />
+                            <span>{admin.phone}</span>
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  )}
+                  </div>
                 </div>
-                
-                <div className="p-6 space-y-5">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+                {/* Address Section */}
+                <div className="bg-white rounded-xl p-6">
+                  <div className="flex items-center gap-2 mb-5">
+                    <Home size={16} className="text-gray-400" />
+                    <h3 className="text-base font-semibold text-gray-900">Address</h3>
+                  </div>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                      <label className="block text-xs font-medium text-gray-500 mb-1">Street</label>
                       {isEditing ? (
                         <input
                           type="text"
-                          value={formData.name}
-                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                          className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900"
+                          value={formData.address.street}
+                          onChange={(e) => setFormData({
+                            ...formData,
+                            address: { ...formData.address, street: e.target.value }
+                          })}
+                          className="w-full px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400"
+                          placeholder="Street address"
                         />
                       ) : (
-                        <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-lg">
-                          <User size={16} className="text-gray-400" />
-                          <span className="text-gray-900">{admin.name}</span>
+                        <div className="flex items-center gap-2 text-sm text-gray-900">
+                          <Building size={14} className="text-gray-400" />
+                          <span>{admin.address.street || '—'}</span>
                         </div>
                       )}
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
-                      {isEditing ? (
-                        <input
-                          type="email"
-                          value={formData.email}
-                          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                          className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900"
-                        />
-                      ) : (
-                        <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-lg">
-                          <Mail size={16} className="text-gray-400" />
-                          <span className="text-gray-900">{admin.email}</span>
-                        </div>
-                      )}
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
-                      {isEditing ? (
-                        <input
-                          type="tel"
-                          value={formData.phone}
-                          onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                          className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900"
-                        />
-                      ) : (
-                        <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-lg">
-                          <Phone size={16} className="text-gray-400" />
-                          <span className="text-gray-900">{admin.phone}</span>
-                        </div>
-                      )}
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Location</label>
+                      <label className="block text-xs font-medium text-gray-500 mb-1">City</label>
                       {isEditing ? (
                         <input
                           type="text"
-                          value={formData.location}
-                          onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                          className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900"
+                          value={formData.address.city}
+                          onChange={(e) => setFormData({
+                            ...formData,
+                            address: { ...formData.address, city: e.target.value }
+                          })}
+                          className="w-full px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400"
+                          placeholder="City"
                         />
                       ) : (
-                        <div className="flex items-center gap-2 px-4 py-2 bg-gray-50 rounded-lg">
-                          <MapPin size={16} className="text-gray-400" />
-                          <span className="text-gray-900">{admin.location}</span>
+                        <div className="flex items-center gap-2 text-sm text-gray-900">
+                          <MapPin size={14} className="text-gray-400" />
+                          <span>{admin.address.city || '—'}</span>
+                        </div>
+                      )}
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-500 mb-1">State</label>
+                      {isEditing ? (
+                        <input
+                          type="text"
+                          value={formData.address.state}
+                          onChange={(e) => setFormData({
+                            ...formData,
+                            address: { ...formData.address, state: e.target.value }
+                          })}
+                          className="w-full px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400"
+                          placeholder="State"
+                        />
+                      ) : (
+                        <div className="text-sm text-gray-900">{admin.address.state || '—'}</div>
+                      )}
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-500 mb-1">Zip Code</label>
+                      {isEditing ? (
+                        <input
+                          type="text"
+                          value={formData.address.zip}
+                          onChange={(e) => setFormData({
+                            ...formData,
+                            address: { ...formData.address, zip: e.target.value }
+                          })}
+                          className="w-full px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400"
+                          placeholder="Zip code"
+                        />
+                      ) : (
+                        <div className="text-sm text-gray-900">{admin.address.zip || '—'}</div>
+                      )}
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-gray-500 mb-1">Country</label>
+                      {isEditing ? (
+                        <input
+                          type="text"
+                          value={formData.address.country}
+                          onChange={(e) => setFormData({
+                            ...formData,
+                            address: { ...formData.address, country: e.target.value }
+                          })}
+                          className="w-full px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400"
+                          placeholder="Country"
+                        />
+                      ) : (
+                        <div className="flex items-center gap-2 text-sm text-gray-900">
+                          <Globe size={14} className="text-gray-400" />
+                          <span>{admin.address.country || '—'}</span>
                         </div>
                       )}
                     </div>
@@ -298,98 +401,71 @@ export default function AdminProfile() {
               </div>
             )}
 
-            {/* Security Tab */}
+            {/* Security Tab - Minimal */}
             {activeTab === 'security' && (
-              <div className="space-y-6">
-                {/* Change Password */}
-                <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-                  <div className="p-6 border-b border-gray-200">
+              <div className="space-y-4">
+                <div className="bg-white rounded-xl p-6">
+                  <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="p-2 bg-gray-100 rounded-lg">
-                        <Lock size={20} className="text-gray-700" />
-                      </div>
+                      <Lock size={18} className="text-gray-400" />
                       <div>
-                        <h3 className="text-lg font-semibold text-gray-900">Change Password</h3>
-                        <p className="text-sm text-gray-500">Update your password to keep your account secure</p>
+                        <h3 className="text-sm font-semibold text-gray-900">Change Password</h3>
+                        <p className="text-xs text-gray-500">Update your password</p>
                       </div>
                     </div>
-                  </div>
-                  <div className="p-6">
                     <button
                       onClick={() => setShowPasswordModal(true)}
-                      className="px-5 py-2.5 bg-gray-900 text-white rounded-lg hover:bg-gray-800 transition-colors"
+                      className="px-3 py-1.5 text-xs font-medium text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50"
                     >
-                      Change Password
+                      Change
                     </button>
                   </div>
                 </div>
 
-                {/* Two-Factor Authentication */}
-                <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-                  <div className="p-6 border-b border-gray-200">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 bg-gray-100 rounded-lg">
-                          <Key size={20} className="text-gray-700" />
-                        </div>
-                        <div>
-                          <h3 className="text-lg font-semibold text-gray-900">Two-Factor Authentication</h3>
-                          <p className="text-sm text-gray-500">Add an extra layer of security to your account</p>
-                        </div>
-                      </div>
-                      <div className={`px-3 py-1 rounded-full text-xs font-medium ${admin.isMfaActive ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600'}`}>
-                        {admin.isMfaActive ? 'Enabled' : 'Disabled'}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <button
-                      onClick={() => setShow2FAModal(true)}
-                      className="px-5 py-2.5 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-                    >
-                      {admin.isMfaActive ? 'Manage 2FA' : 'Enable 2FA'}
-                    </button>
-                  </div>
-                </div>
-
-                {/* Trusted Devices */}
-                <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-                  <div className="p-6 border-b border-gray-200">
+                <div className="bg-white rounded-xl p-6">
+                  <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="p-2 bg-gray-100 rounded-lg">
-                        <Smartphone size={20} className="text-gray-700" />
-                      </div>
+                      <Key size={18} className="text-gray-400" />
                       <div>
-                        <h3 className="text-lg font-semibold text-gray-900">Trusted Devices</h3>
-                        <p className="text-sm text-gray-500">Devices that have access to your account</p>
+                        <h3 className="text-sm font-semibold text-gray-900">Two-Factor Authentication</h3>
+                        <p className="text-xs text-gray-500">Add extra security to your account</p>
                       </div>
                     </div>
+                    <div className="flex items-center gap-3">
+                      <span className={`text-xs ${admin.isMfaActive ? 'text-green-600' : 'text-gray-400'}`}>
+                        {admin.isMfaActive ? 'Enabled' : 'Disabled'}
+                      </span>
+                      <button
+                        onClick={() => setShow2FAModal(true)}
+                        className="px-3 py-1.5 text-xs font-medium text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50"
+                      >
+                        {admin.isMfaActive ? 'Manage' : 'Enable'}
+                      </button>
+                    </div>
                   </div>
-                  <div className="divide-y divide-gray-200">
+                </div>
+
+                <div className="bg-white rounded-xl p-6">
+                  <div className="flex items-center gap-3 mb-4">
+                    <Smartphone size={18} className="text-gray-400" />
+                    <h3 className="text-sm font-semibold text-gray-900">Trusted Devices</h3>
+                  </div>
+                  <div className="space-y-3">
                     {admin.trustedDevices.map(device => (
-                      <div key={device.id} className="p-6 flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                          <div className="p-2 bg-gray-100 rounded-lg">
-                            <Laptop size={18} className="text-gray-600" />
-                          </div>
-                          <div>
-                            <p className="font-medium text-gray-900">{device.device}</p>
-                            <div className="flex items-center gap-3 mt-1">
-                              <span className="text-xs text-gray-500">{device.location}</span>
-                              <span className="text-xs text-gray-400">•</span>
-                              <span className="text-xs text-gray-500">Last used: {device.lastUsed}</span>
-                            </div>
-                          </div>
+                      <div key={device.id} className="flex items-center justify-between py-2 border-t border-gray-50">
+                        <div>
+                          <p className="text-sm text-gray-900">{device.device}</p>
+                          <p className="text-xs text-gray-400">{device.location} • Last used {device.lastUsed}</p>
                         </div>
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2">
                           {device.isCurrent && (
-                            <span className="text-xs text-green-600 bg-green-50 px-2 py-1 rounded-full">Current</span>
+                            <span className="text-xs text-green-600">Current</span>
                           )}
                           <button
                             onClick={() => handleRemoveDevice(device.id)}
-                            className="p-1 text-gray-400 hover:text-red-500 transition-colors"
+                            className="p-1 text-gray-400 hover:text-red-500"
                           >
-                            <Trash2 size={16} />
+                            <Trash2 size={14} />
                           </button>
                         </div>
                       </div>
@@ -399,68 +475,53 @@ export default function AdminProfile() {
               </div>
             )}
 
-            {/* Activity Tab */}
+            {/* Activity Tab - Clean Stats */}
             {activeTab === 'activity' && (
               <div className="space-y-6">
-                {/* Stats Cards */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  <div className="bg-white rounded-2xl border border-gray-200 p-5">
-                    <div className="flex items-center justify-between mb-3">
-                      <Car size={20} className="text-gray-400" />
-                    </div>
-                    <p className="text-2xl font-bold text-gray-900">{admin.totalCarsListed}</p>
-                    <p className="text-sm text-gray-500 mt-1">Cars Listed</p>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                  <div className="bg-white rounded-xl p-4">
+                    <Car size={18} className="text-gray-400 mb-2" />
+                    <p className="text-xl font-semibold text-gray-900">{admin.totalCarsListed}</p>
+                    <p className="text-xs text-gray-500">Cars Listed</p>
                   </div>
-                  <div className="bg-white rounded-2xl border border-gray-200 p-5">
-                    <div className="flex items-center justify-between mb-3">
-                      <ShoppingBag size={20} className="text-gray-400" />
-                    </div>
-                    <p className="text-2xl font-bold text-gray-900">{admin.totalOrdersManaged}</p>
-                    <p className="text-sm text-gray-500 mt-1">Orders Managed</p>
+                  <div className="bg-white rounded-xl p-4">
+                    <ShoppingBag size={18} className="text-gray-400 mb-2" />
+                    <p className="text-xl font-semibold text-gray-900">{admin.totalOrdersManaged}</p>
+                    <p className="text-xs text-gray-500">Orders</p>
                   </div>
-                  <div className="bg-white rounded-2xl border border-gray-200 p-5">
-                    <div className="flex items-center justify-between mb-3">
-                      <Users size={20} className="text-gray-400" />
-                    </div>
-                    <p className="text-2xl font-bold text-gray-900">{admin.totalUsersManaged}</p>
-                    <p className="text-sm text-gray-500 mt-1">Users Managed</p>
+                  <div className="bg-white rounded-xl p-4">
+                    <Users size={18} className="text-gray-400 mb-2" />
+                    <p className="text-xl font-semibold text-gray-900">{admin.totalUsersManaged}</p>
+                    <p className="text-xs text-gray-500">Users</p>
                   </div>
-                  <div className="bg-white rounded-2xl border border-gray-200 p-5">
-                    <div className="flex items-center justify-between mb-3">
-                      <Activity size={20} className="text-gray-400" />
-                    </div>
-                    <p className="text-2xl font-bold text-gray-900">${(admin.totalRevenueManaged / 1000000).toFixed(1)}M</p>
-                    <p className="text-sm text-gray-500 mt-1">Revenue Managed</p>
+                  <div className="bg-white rounded-xl p-4">
+                    <CreditCard size={18} className="text-gray-400 mb-2" />
+                    <p className="text-xl font-semibold text-gray-900">${(admin.totalRevenueManaged / 1000000).toFixed(1)}M</p>
+                    <p className="text-xs text-gray-500">Revenue</p>
                   </div>
                 </div>
 
-                {/* Activity Timeline */}
-                <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-                  <div className="p-6 border-b border-gray-200">
-                    <h3 className="text-lg font-semibold text-gray-900">Recent Activity</h3>
-                  </div>
-                  <div className="p-6 space-y-4">
-                    <div className="flex items-start gap-4">
-                      <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-gray-900">Last Login</p>
-                        <p className="text-sm text-gray-500">{admin.lastLogin}</p>
+                <div className="bg-white rounded-xl p-6">
+                  <h3 className="text-sm font-semibold text-gray-900 mb-4">Recent Activity</h3>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between py-2">
+                      <div>
+                        <p className="text-sm text-gray-900">Last Login</p>
+                        <p className="text-xs text-gray-500">{admin.lastLogin}</p>
                       </div>
-                      <div className="text-xs text-gray-400">Today</div>
+                      <span className="text-xs text-green-600">Today</span>
                     </div>
-                    <div className="flex items-start gap-4">
-                      <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-gray-900">Account Created</p>
-                        <p className="text-sm text-gray-500">{admin.accountCreated}</p>
+                    <div className="flex items-center justify-between py-2 border-t border-gray-50">
+                      <div>
+                        <p className="text-sm text-gray-900">Account Created</p>
+                        <p className="text-xs text-gray-500">{admin.accountCreated}</p>
                       </div>
-                      <div className="text-xs text-gray-400">Joined</div>
+                      <span className="text-xs text-gray-400">Joined</span>
                     </div>
-                    <div className="flex items-start gap-4">
-                      <div className="w-2 h-2 bg-purple-500 rounded-full mt-2"></div>
-                      <div className="flex-1">
-                        <p className="text-sm font-medium text-gray-900">Total Sessions</p>
-                        <p className="text-sm text-gray-500">{admin.trustedDevices.length} active devices</p>
+                    <div className="flex items-center justify-between py-2 border-t border-gray-50">
+                      <div>
+                        <p className="text-sm text-gray-900">Active Sessions</p>
+                        <p className="text-xs text-gray-500">{admin.trustedDevices.length} devices</p>
                       </div>
                     </div>
                   </div>
@@ -468,34 +529,20 @@ export default function AdminProfile() {
               </div>
             )}
 
-            {/* Preferences Tab */}
+            {/* Preferences Tab - Minimal Toggles */}
             {activeTab === 'preferences' && (
-              <div className="space-y-6">
-                {/* Notification Settings */}
-                <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-                  <div className="p-6 border-b border-gray-200">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-gray-100 rounded-lg">
-                        <Bell size={20} className="text-gray-700" />
-                      </div>
-                      <div>
-                        <h3 className="text-lg font-semibold text-gray-900">Notification Preferences</h3>
-                        <p className="text-sm text-gray-500">Choose what notifications you want to receive</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="p-6 space-y-4">
+              <div className="space-y-4">
+                <div className="bg-white rounded-xl p-6">
+                  <h3 className="text-sm font-semibold text-gray-900 mb-4">Notifications</h3>
+                  <div className="space-y-3">
                     {[
-                      { key: 'emailNotifications', label: 'Email Notifications', desc: 'Receive notifications via email' },
-                      { key: 'pushNotifications', label: 'Push Notifications', desc: 'Receive push notifications in browser' },
-                      { key: 'orderUpdates', label: 'Order Updates', desc: 'Get notified about new orders and status changes' },
-                      { key: 'marketingEmails', label: 'Marketing Emails', desc: 'Receive promotional emails and updates' },
+                      { key: 'emailNotifications', label: 'Email Notifications' },
+                      { key: 'pushNotifications', label: 'Push Notifications' },
+                      { key: 'orderUpdates', label: 'Order Updates' },
+                      { key: 'marketingEmails', label: 'Marketing Emails' },
                     ].map(item => (
-                      <label key={item.key} className="flex items-center justify-between cursor-pointer py-2">
-                        <div>
-                          <p className="font-medium text-gray-900">{item.label}</p>
-                          <p className="text-sm text-gray-500">{item.desc}</p>
-                        </div>
+                      <label key={item.key} className="flex items-center justify-between py-2 cursor-pointer">
+                        <span className="text-sm text-gray-700">{item.label}</span>
                         <div className="relative">
                           <input
                             type="checkbox"
@@ -506,94 +553,71 @@ export default function AdminProfile() {
                             })}
                             className="sr-only peer"
                           />
-                          <div className="w-10 h-5 bg-gray-200 rounded-full peer peer-checked:bg-gray-900 transition-colors"></div>
-                          <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full transition-transform peer-checked:translate-x-5"></div>
+                          <div className="w-8 h-4 bg-gray-200 rounded-full peer peer-checked:bg-gray-900 transition-colors"></div>
+                          <div className="absolute left-0.5 top-0.5 w-3 h-3 bg-white rounded-full transition-transform peer-checked:translate-x-4"></div>
                         </div>
                       </label>
                     ))}
                   </div>
                 </div>
 
-                {/* Theme Preference */}
-                <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
-                  <div className="p-6 border-b border-gray-200">
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-gray-100 rounded-lg">
-                        <Sun size={20} className="text-gray-700" />
-                      </div>
-                      <div>
-                        <h3 className="text-lg font-semibold text-gray-900">Theme Preference</h3>
-                        <p className="text-sm text-gray-500">Choose your preferred theme</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="p-6">
-                    <div className="grid grid-cols-3 gap-4">
-                      {[
-                        { value: 'light', label: 'Light', icon: Sun },
-                        { value: 'dark', label: 'Dark', icon: Moon },
-                        { value: 'system', label: 'System', icon: Monitor },
-                      ].map(theme => (
-                        <button
-                          key={theme.value}
-                          onClick={() => setAdmin({ ...admin, theme: theme.value })}
-                          className={`
-                            p-4 rounded-xl border-2 transition-all
-                            ${admin.theme === theme.value 
-                              ? 'border-gray-900 bg-gray-50' 
-                              : 'border-gray-200 hover:border-gray-300'
-                            }
-                          `}
-                        >
-                          <theme.icon size={24} className={`mx-auto mb-2 ${admin.theme === theme.value ? 'text-gray-900' : 'text-gray-500'}`} />
-                          <p className={`text-sm font-medium ${admin.theme === theme.value ? 'text-gray-900' : 'text-gray-600'}`}>
-                            {theme.label}
-                          </p>
-                        </button>
-                      ))}
-                    </div>
+                <div className="bg-white rounded-xl p-6">
+                  <h3 className="text-sm font-semibold text-gray-900 mb-4">Theme</h3>
+                  <div className="flex gap-2">
+                    {[
+                      { value: 'light', label: 'Light', icon: Sun },
+                      { value: 'dark', label: 'Dark', icon: Moon },
+                    ].map(theme => (
+                      <button
+                        key={theme.value}
+                        onClick={() => setAdmin({ ...admin, theme: theme.value })}
+                        className={`
+                          flex-1 flex items-center justify-center gap-2 px-3 py-2 text-sm rounded-lg border transition-all
+                          ${admin.theme === theme.value 
+                            ? 'border-gray-900 bg-gray-50 text-gray-900' 
+                            : 'border-gray-200 text-gray-500 hover:border-gray-300'
+                          }
+                        `}
+                      >
+                        <theme.icon size={14} />
+                        {theme.label}
+                      </button>
+                    ))}
                   </div>
                 </div>
               </div>
             )}
 
-            {/* Danger Zone Tab */}
+            {/* Danger Zone - Clean */}
             {activeTab === 'danger' && (
-              <div className="bg-white rounded-2xl border-2 border-red-200 overflow-hidden">
-                <div className="p-6 border-b border-red-100 bg-red-50">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-red-100 rounded-lg">
-                      <AlertTriangle size={20} className="text-red-600" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-red-900">Danger Zone</h3>
-                      <p className="text-sm text-red-700">Irreversible actions that affect your account</p>
-                    </div>
-                  </div>
+              <div className="bg-white rounded-xl p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <AlertTriangle size={16} className="text-red-500" />
+                  <h3 className="text-sm font-semibold text-red-600">Danger Zone</h3>
                 </div>
-                <div className="p-6 space-y-4">
+                <div className="space-y-3">
                   <div className="flex items-center justify-between py-3">
                     <div>
-                      <p className="font-medium text-gray-900">Deactivate Account</p>
-                      <p className="text-sm text-gray-500">Temporarily deactivate your admin account</p>
+                      <p className="text-sm text-gray-900">Deactivate Account</p>
+                      <p className="text-xs text-gray-500">Temporarily deactivate your account</p>
                     </div>
                     <button
                       onClick={() => setShowDeactivateModal(true)}
-                      className="px-5 py-2 border border-red-300 text-red-600 rounded-lg hover:bg-red-50 transition-colors"
+                      className="px-3 py-1.5 text-xs font-medium text-red-600 border border-red-200 rounded-lg hover:bg-red-50"
                     >
                       Deactivate
                     </button>
                   </div>
-                  <div className="flex items-center justify-between py-3 border-t border-gray-200">
+                  <div className="flex items-center justify-between py-3 border-t border-gray-100">
                     <div>
-                      <p className="font-medium text-gray-900">Delete Account</p>
-                      <p className="text-sm text-gray-500">Permanently delete your account and all data</p>
+                      <p className="text-sm text-gray-900">Delete Account</p>
+                      <p className="text-xs text-gray-500">Permanently delete your account</p>
                     </div>
                     <button
                       onClick={() => alert('This would delete your account')}
-                      className="px-5 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                      className="px-3 py-1.5 text-xs font-medium text-white bg-red-600 rounded-lg hover:bg-red-700"
                     >
-                      Delete Account
+                      Delete
                     </button>
                   </div>
                 </div>
@@ -603,66 +627,66 @@ export default function AdminProfile() {
         </div>
       </div>
 
-      {/* Change Password Modal */}
+      {/* Modals remain the same but simplified */}
       {showPasswordModal && (
         <>
-          <div className="fixed inset-0 bg-black/50 z-50" onClick={() => setShowPasswordModal(false)} />
+          <div className="fixed inset-0 bg-black/40 z-50" onClick={() => setShowPasswordModal(false)} />
           <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md z-50">
-            <div className="bg-white rounded-2xl shadow-xl">
-              <div className="p-6 border-b border-gray-200 flex justify-between items-center">
-                <h3 className="text-xl font-semibold text-gray-900">Change Password</h3>
-                <button onClick={() => setShowPasswordModal(false)} className="p-1 hover:bg-gray-100 rounded-lg">
-                  <X size={20} />
+            <div className="bg-white rounded-xl shadow-lg">
+              <div className="p-5 border-b border-gray-100 flex justify-between items-center">
+                <h3 className="text-base font-semibold text-gray-900">Change Password</h3>
+                <button onClick={() => setShowPasswordModal(false)} className="text-gray-400 hover:text-gray-600">
+                  <X size={18} />
                 </button>
               </div>
-              <div className="p-6 space-y-4">
+              <div className="p-5 space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Current Password</label>
                   <div className="relative">
                     <input
                       type={showPassword ? "text" : "password"}
                       value={passwordData.currentPassword}
                       onChange={(e) => setPasswordData({ ...passwordData, currentPassword: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900 pr-10"
+                      className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400 pr-9"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
                     >
-                      {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                      {showPassword ? <EyeOff size={14} /> : <Eye size={14} />}
                     </button>
                   </div>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">New Password</label>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">New Password</label>
                   <input
                     type="password"
                     value={passwordData.newPassword}
                     onChange={(e) => setPasswordData({ ...passwordData, newPassword: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900"
+                    className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Confirm New Password</label>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">Confirm Password</label>
                   <input
                     type="password"
                     value={passwordData.confirmPassword}
                     onChange={(e) => setPasswordData({ ...passwordData, confirmPassword: e.target.value })}
-                    className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-900"
+                    className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400"
                   />
                 </div>
               </div>
-              <div className="p-6 border-t border-gray-200 flex gap-3">
+              <div className="p-5 border-t border-gray-100 flex gap-3">
                 <button
                   onClick={handlePasswordChange}
-                  className="flex-1 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800"
+                  className="flex-1 px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg hover:bg-gray-800"
                 >
                   Update Password
                 </button>
                 <button
                   onClick={() => setShowPasswordModal(false)}
-                  className="flex-1 px-4 py-2 border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50"
+                  className="flex-1 px-3 py-2 text-sm font-medium text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50"
                 >
                   Cancel
                 </button>
@@ -675,36 +699,31 @@ export default function AdminProfile() {
       {/* 2FA Modal */}
       {show2FAModal && (
         <>
-          <div className="fixed inset-0 bg-black/50 z-50" onClick={() => setShow2FAModal(false)} />
+          <div className="fixed inset-0 bg-black/40 z-50" onClick={() => setShow2FAModal(false)} />
           <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md z-50">
-            <div className="bg-white rounded-2xl shadow-xl">
-              <div className="p-6 border-b border-gray-200">
-                <h3 className="text-xl font-semibold text-gray-900">
+            <div className="bg-white rounded-xl shadow-lg">
+              <div className="p-5 border-b border-gray-100">
+                <h3 className="text-base font-semibold text-gray-900">
                   {admin.isMfaActive ? 'Disable 2FA' : 'Enable Two-Factor Authentication'}
                 </h3>
               </div>
-              <div className="p-6">
-                <p className="text-gray-600 mb-4">
+              <div className="p-5">
+                <p className="text-sm text-gray-600 mb-4">
                   {admin.isMfaActive 
-                    ? 'Are you sure you want to disable two-factor authentication? This will make your account less secure.'
-                    : 'Two-factor authentication adds an extra layer of security to your account. You will be required to enter a verification code from your authenticator app when logging in.'}
+                    ? 'Are you sure you want to disable two-factor authentication?'
+                    : 'Add an extra layer of security to your account.'}
                 </p>
-                {!admin.isMfaActive && (
-                  <div className="bg-gray-50 rounded-lg p-4 mb-4">
-                    <p className="text-sm font-mono text-center">QR Code would appear here</p>
-                  </div>
-                )}
               </div>
-              <div className="p-6 border-t border-gray-200 flex gap-3">
+              <div className="p-5 border-t border-gray-100 flex gap-3">
                 <button
                   onClick={handle2FAToggle}
-                  className="flex-1 px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800"
+                  className="flex-1 px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg hover:bg-gray-800"
                 >
                   {admin.isMfaActive ? 'Disable 2FA' : 'Enable 2FA'}
                 </button>
                 <button
                   onClick={() => setShow2FAModal(false)}
-                  className="flex-1 px-4 py-2 border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50"
+                  className="flex-1 px-3 py-2 text-sm font-medium text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50"
                 >
                   Cancel
                 </button>
@@ -714,35 +733,35 @@ export default function AdminProfile() {
         </>
       )}
 
-      {/* Deactivate Account Modal */}
+      {/* Deactivate Modal */}
       {showDeactivateModal && (
         <>
-          <div className="fixed inset-0 bg-black/50 z-50" onClick={() => setShowDeactivateModal(false)} />
+          <div className="fixed inset-0 bg-black/40 z-50" onClick={() => setShowDeactivateModal(false)} />
           <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md z-50">
-            <div className="bg-white rounded-2xl shadow-xl">
-              <div className="p-6 border-b border-gray-200">
-                <h3 className="text-xl font-semibold text-red-600">Deactivate Account</h3>
+            <div className="bg-white rounded-xl shadow-lg">
+              <div className="p-5 border-b border-gray-100">
+                <h3 className="text-base font-semibold text-red-600">Deactivate Account</h3>
               </div>
-              <div className="p-6">
-                <p className="text-gray-600 mb-4">
-                  Are you sure you want to deactivate your account? You can reactivate it later by contacting support.
+              <div className="p-5">
+                <p className="text-sm text-gray-600 mb-3">
+                  Are you sure you want to deactivate your account?
                 </p>
-                <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
-                  <p className="text-sm text-yellow-800">
-                    <strong>Note:</strong> While deactivated, you won't be able to access the admin dashboard or manage listings.
+                <div className="bg-yellow-50 rounded-lg p-3">
+                  <p className="text-xs text-yellow-700">
+                    You won't be able to access the admin dashboard while deactivated.
                   </p>
                 </div>
               </div>
-              <div className="p-6 border-t border-gray-200 flex gap-3">
+              <div className="p-5 border-t border-gray-100 flex gap-3">
                 <button
                   onClick={() => alert('Account deactivated')}
-                  className="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700"
+                  className="flex-1 px-3 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700"
                 >
                   Deactivate
                 </button>
                 <button
                   onClick={() => setShowDeactivateModal(false)}
-                  className="flex-1 px-4 py-2 border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50"
+                  className="flex-1 px-3 py-2 text-sm font-medium text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50"
                 >
                   Cancel
                 </button>
@@ -755,7 +774,6 @@ export default function AdminProfile() {
   )
 }
 
-// Missing Monitor icon component
 function Monitor(props) {
   return (
     <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">

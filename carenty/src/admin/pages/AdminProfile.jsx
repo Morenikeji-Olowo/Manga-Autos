@@ -49,7 +49,7 @@ export default function AdminProfile() {
   const [showPassword, setShowPassword] = useState(false);
   const fileInputRef = useRef(null);
   const { loading, loadingText, withLoading } = useLoading();
-  const { user } = useAuthStore();
+  const { user, updateUser } = useAuthStore();
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [emailData, setEmailData] = useState({
     currentPassword: "",
@@ -163,6 +163,7 @@ export default function AdminProfile() {
         phone: formData.phone,
         address: formData.address,
       }));
+      updateUser(res.user); // ← sync back to auth store
       setIsEditing(false);
     }, "Saving profile...");
   };
@@ -226,6 +227,7 @@ export default function AdminProfile() {
         ...prev,
         profilePicture: res.user.profile.profilePicture,
       }));
+      updateUser(res.user); // ← sync back to auth store
     }, "Updating profile picture...");
   };
 

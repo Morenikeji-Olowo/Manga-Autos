@@ -2,13 +2,6 @@ import axios from "axios";
 
 const API_BASE_URL = "https://manga-autos.onrender.com";
 
-/*************  ✨ Windsurf Command ⭐  *************/
-/**
- * Update the current admin user's profile information
- * @param {{ fullName: string, phone: string, address: string }} data
- * @returns {Promise<Object>} response data
- */
-/*******  f72c5e41-95a0-4ad4-9ed0-4678cf79f7b0  *******/
 export const updateProfile = async ({ fullName, phone, address }) => {
   const token = localStorage.getItem("accessToken");
 

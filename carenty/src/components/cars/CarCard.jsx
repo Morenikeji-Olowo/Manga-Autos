@@ -1,53 +1,75 @@
 import { Link } from 'react-router-dom'
+import { MapPin, Fuel, Gauge, Calendar, Heart } from 'lucide-react'
 
 export default function CarCard({ car }) {
+  const details = car.basicDetails || {}
+  
   return (
-    <Link
-      key={car._id}
-      to={`/cars/${car._id}`}
-      className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300"
-    >
-      <div className="relative h-48 overflow-hidden bg-gray-100">
-        <img
-          src={car.images?.[0] || 'https://via.placeholder.com/400x300?text=No+Image'}
-          alt={car.name}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-        />
-        {car.used && (
-          <div className="absolute top-3 left-3">
-            <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-gray-900/80 text-white">
-              Used
+    <Link to={`/cars/${car._id}`} className="group">
+      <div className="bg-white rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100">
+        {/* Image Container */}
+        <div className="relative aspect-[4/3] overflow-hidden bg-gray-100">
+          <img
+            src={car.images?.[0] || `https://placehold.co/600x400/1a1a1a/white?text=${car.make}+${car.model}`}
+            alt={`${car.make} ${car.model}`}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
+          <button 
+            onClick={(e) => {
+              e.preventDefault()
+              // Handle wishlist toggle
+            }}
+            className="absolute top-3 right-3 p-2 bg-white/90 backdrop-blur rounded-full hover:bg-white transition z-10 shadow-sm"
+          >
+            <Heart className="w-4 h-4 text-gray-600 hover:text-red-500 transition" />
+          </button>
+          
+          {/* Status Badge */}
+          {car.used === false ? (
+            <span className="absolute bottom-3 left-3 px-2.5 py-1 bg-green-600/95 backdrop-blur text-white text-xs font-medium rounded-lg shadow-sm">
+              Brand New
             </span>
-          </div>
-        )}
-        {!car.used && (
-          <div className="absolute top-3 left-3">
-            <span className="text-xs font-semibold px-2.5 py-1 rounded-full" style={{ background: '#6B4226', color: 'white' }}>
-              New
+          ) : (
+            <span className="absolute bottom-3 left-3 px-2.5 py-1 bg-gray-900/95 backdrop-blur text-white text-xs font-medium rounded-lg shadow-sm">
+              Local Used
             </span>
-          </div>
-        )}
-      </div>
-
-      <div className="p-5">
-        <div className="flex justify-between items-start mb-2">
-          <div>
-            <h3 className="font-heading text-lg font-semibold mb-1" style={{ color: '#4B2E2B' }}>
-              {car.make} {car.model}
-            </h3>
-            <p className="text-xs text-gray-500 font-body">{car.year} · {car.transmission}</p>
-          </div>
-          <i className="far fa-heart text-gray-400 hover:text-red-500 transition cursor-pointer"></i>
+          )}
         </div>
 
-        <p className="text-2xl font-bold mt-2" style={{ color: '#6B4226' }}>
-          ${car.price.toLocaleString()}
-        </p>
+        {/* Content */}
+        <div className="p-5">
+          <div className="flex justify-between items-start mb-2">
+            <div>
+              <h3 className="font-semibold text-gray-900 text-lg">
+                {car.make} {car.model}
+              </h3>
+              <div className="flex items-center gap-2 mt-1">
+                <Calendar className="w-3.5 h-3.5 text-gray-400" />
+                <span className="text-xs text-gray-500">{details.year || '—'}</span>
+                <span className="w-1 h-1 bg-gray-300 rounded-full"></span>
+                <span className="text-xs text-gray-500 capitalize">{details.transmission || '—'}</span>
+              </div>
+            </div>
+            <p className="text-xl font-bold text-gray-900">
+              ₦{car.price?.toLocaleString()}
+            </p>
+          </div>
 
-        <div className="mt-4 pt-4 border-t flex items-center justify-between text-xs text-gray-500 font-body" style={{ borderColor: '#F0ECE8' }}>
-          <span><i className="fas fa-gas-pump mr-1"></i> {car.fuelType}</span>
-          <span><i className="fas fa-tachometer-alt mr-1"></i> {car.mileage?.toLocaleString()} km</span>
-          <span><i className="fas fa-map-marker-alt mr-1"></i> Lagos</span>
+          {/* Specs Row */}
+          <div className="flex items-center gap-4 mt-4 pt-4 border-t border-gray-100">
+            <div className="flex items-center gap-1.5">
+              <Fuel className="w-3.5 h-3.5 text-gray-400" />
+              <span className="text-xs text-gray-600 capitalize">{details.fuelType || '—'}</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <Gauge className="w-3.5 h-3.5 text-gray-400" />
+              <span className="text-xs text-gray-600">{details.mileage?.toLocaleString() || '—'} km</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <MapPin className="w-3.5 h-3.5 text-gray-400" />
+              <span className="text-xs text-gray-600">{car.currentLocation?.split(',')[0] || '—'}</span>
+            </div>
+          </div>
         </div>
       </div>
     </Link>

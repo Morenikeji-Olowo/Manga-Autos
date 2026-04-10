@@ -91,10 +91,54 @@ export const createListing = async (data, adminId) => {
 };
 
 export const updateListing = async (id, data) => {
-  const listing = await Car.findByIdAndUpdate(id, data, {
-    new: true,
+  const structured = {
+    name: data.name,
+    make: data.make,
+    model: data.model,
+    price: data.price,
+    negotiable: data.negotiable,
+    status: data.status,
+    used: data.used,
+    currentLocation: data.currentLocation,
+    description: data.description,
+    images: data.images,
+    comfort: data.comfort,
+    multimedia: data.multimedia,
+    safety: data.safety,
+    security: data.security,
+    benefits: data.benefits,
+
+    basicDetails: {
+      year: data.year,
+      mileage: data.mileage,
+      fuelType: data.fuelType,
+      transmission: data.transmission,
+      engineSize: data.engineSize,
+      drivetrain: data.drivetrain,
+      condition: data.condition,
+      exteriorColor: data.exteriorColor,
+      interiorColor: data.interiorColor,
+      grade: data.grade,
+      speed: data.speed,
+      vin: data.vin,
+      plateNumber: data.plateNumber,
+      isElectric: data.isElectric,
+    },
+
+    vechicleHistory: {
+      accidentsOrDamages: data.accidentsOrDamages,
+      oneOwnerVehicle: data.oneOwnerVehicle,
+      personalUseOnly: data.personalUseOnly,
+      serviceHistoryAvailable: data.serviceHistoryAvailable,
+      importedVehicle: data.importedVehicle,
+    },
+  };
+
+  const listing = await Car.findByIdAndUpdate(id, structured, {
+    returnDocument: 'after',  // fixes the mongoose deprecation warning too
     runValidators: true,
   });
+
   if (!listing) {
     const error = new Error("Car not found");
     error.statusCode = 404;

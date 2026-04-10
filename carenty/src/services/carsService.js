@@ -14,7 +14,7 @@ const carService = {
     });
     params.append("sort", sortBy);
     const res = await axios.get(
-      `${API_BASE_URL}/api/cars?${params.toString()}`,
+      `${API_BASE_URL}/api/user/cars?${params.toString()}`,
       {
         headers: { Authorization: `Bearer ${token}` },
       },

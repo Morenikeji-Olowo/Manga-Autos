@@ -12,8 +12,8 @@ import {
 } from "lucide-react";
 import StatusBadge from "../components/StatusBadge";
 import { useLoading } from "../../hooks/useLoading";
-import carService from "../../services/carsService";
 import LoadingOverlay from "../../components/ui/LoadingOverlay";
+import adminService from "../../services/adminService";
 
 export default function ManageCars() {
   const [cars, setCars] = useState([]);
@@ -26,7 +26,7 @@ export default function ManageCars() {
   useEffect(() => {
     const fetchCars = async () => {
       await withLoading(async () => {
-        const res = await carService.getAdminCars(statusFilter);
+        const res = await adminService.getAdminCars(statusFilter);
         setCars(res.listings);
       }, "Loading cars...");
     };
@@ -49,7 +49,7 @@ const filteredCars = cars.filter(car =>
   const handleDelete = (id) => {
     if (confirm("Are you sure you want to delete this car?")) {
       withLoading(async () => {
-        await carService.deleteCar(id);
+        await adminService.deleteCar(id);
         setCars((prev) => prev.filter((car) => car._id !== id));
       }, "Deleting car...");
     }

@@ -1,4 +1,3 @@
-import { CommandSucceededEvent } from "mongodb";
 import User from "../models/User.js";
 
 export const updateProfile = async (req, res) => {
@@ -9,7 +8,7 @@ export const updateProfile = async (req, res) => {
       req.user._id,
       {
         $set: {
-          "profile.fullname": fullname,
+          "profile.fullName": fullname,
           "profile.phone": phone,
           "profile.address": address,
         },

@@ -16,7 +16,7 @@ const signToken = (user) =>
       isAdmin: user.isAdmin,
     },
     process.env.JWT_SECRET,
-    { expiresIn: "1h" },
+    { expiresIn: "7d" },
   );
 
 const register = async (req, res) => {

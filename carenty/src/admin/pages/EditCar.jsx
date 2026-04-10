@@ -12,7 +12,6 @@ import {
   Shield,
   Heart,
 } from "lucide-react";
-import carService from "../../services/carsService";
 import LoadingOverlay from "../../components/ui/LoadingOverlay";
 import { useLoading } from "../../hooks/useLoading";
 import {

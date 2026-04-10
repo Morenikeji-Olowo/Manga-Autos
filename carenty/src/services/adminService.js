@@ -74,8 +74,7 @@ const getAdminCars = async (status = "active", page = 1) => {
 
 const getCarById = async (id) => {
     const token = localStorage.getItem("accessToken");
-
-    const response = await axios.get(`${API_BASE_URL}/api/user/cars/${id}`,{
+    const response = await axios.get(`${API_BASE_URL}/api/admin/cars/${id}`,{
       headers: { Authorization: `Bearer ${token}` },
     });
     return response.data;

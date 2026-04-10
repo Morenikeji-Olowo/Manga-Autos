@@ -23,7 +23,7 @@ const multerUpload = multer({
     }
 })
 
-export const uploadToCloudinary = async (req, res, next) => {
+const uploadToCloudinary = async (req, res, next) => {
   try {
     // handle both single and multiple file uploads
     const files = req.files || (req.file ? [req.file] : [])

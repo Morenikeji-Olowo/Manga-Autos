@@ -32,10 +32,7 @@ const carService = {
 
   // rest of your methods...
   getCarById: async (id) => {
-    const token = localStorage.getItem("accessToken");
-    const response = await axios.get(`${API_BASE_URL}/api/admin/cars/${id}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+    const response = await axios.get(`${API_BASE_URL}/api/user/cars/${id}`);
     return response.data;
   },
   addCar: async () => {},

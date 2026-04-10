@@ -27,6 +27,7 @@ export default function CarDetail() {
       setIsLoading(true)
       try {
         const data = await carService.getCarById(id)
+        console.log('Fetched car details:', data)
         setCar(data)
         // Fetch similar cars based on make/model
         const similar = await carService.getSimilarCars(id, data.make, data.model)

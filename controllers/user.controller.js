@@ -4,7 +4,7 @@
         const cars = await Car.find().sort({ listedAt: -1 });
         res.status(200).json({
           message: "Cars fetched successfully",
-          cars: cars,
+          listings: cars,
         });
       } catch (error) {
         res.status(500).json({

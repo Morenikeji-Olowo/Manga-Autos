@@ -84,7 +84,7 @@ export default function Cars() {
             </h1>
             <p className="text-gray-500 font-body">
               Browse through our curated collection of premium vehicles. 
-              Each car is handpicked and verified for quality.
+              
             </p>
           </div>
           

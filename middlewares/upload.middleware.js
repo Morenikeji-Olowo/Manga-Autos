@@ -23,48 +23,45 @@ const multerUpload = multer({
     }
 })
 
-const uploadToCloudinary = async (req, res, next )=>{
-    try{
-        if(!req.files || req.files.length === 0){
-            req.uploadedImages = [];
-            return next();
-        }
-        const uploadPromises = req.files.map((file)=>{
-            return new Promise((resolve, reject)=>{
-                const stream = cloudinary.uploader.upload_stream({
-                    folder: "carsales/Listings",
-                    resource_type: "image",
-                    transformation: [
-                        {width: 1200, crop: "scale"},
-                        {quality: "auto"},
-                        {fetch_format: "auto"}
-                    ],
-                },
-
-                (error, result)=>{
-                    if(error) return reject(error);
-                    resolve(result.secure_url);
-                }
-            );
-
-            stream.end(file.buffer);
-            });
-        });
-
-        const urls = await Promise.all(uploadPromises);
-        req.uploadedImages = urls;
-        next();
-    }
-    catch(error){
-        res.status(500).json({
-            success: false,
-            message: "upload failed",
-            error: error.message
-        })
-    }
+export const uploadToCloudinary = async (req, res, next) => {
+  try {
+    // handle both single and multiple file uploads
+    const files = req.files || (req.file ? [req.file] : [])
     
-}
+    if (!files || files.length === 0) {
+      req.uploadedImages = []
+      return next()
+    }
 
+    const uploadPromises = files.map((file) => {
+      return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream({
+          folder: "carsales/Listings",
+          resource_type: "image",
+          transformation: [
+            { width: 1200, crop: "scale" },
+            { quality: "auto" },
+            { fetch_format: "auto" }
+          ],
+        }, (error, result) => {
+          if (error) return reject(error)
+          resolve(result.secure_url)
+        })
+        stream.end(file.buffer)
+      })
+    })
+
+    const urls = await Promise.all(uploadPromises)
+    req.uploadedImages = urls
+    next()
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "upload failed",
+      error: error.message
+    })
+  }
+}
 
 export const deleteFromCloudinary = async (imageUrl) => {
   try {

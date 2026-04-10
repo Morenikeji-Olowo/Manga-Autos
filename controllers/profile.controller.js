@@ -2,13 +2,13 @@ import User from "../models/User.js";
 
 export const updateProfile = async (req, res) => {
   try {
-    const { fullname, phone, address } = req.body;
+    const { fullName, phone, address } = req.body;
 
     const user = await User.findByIdAndUpdate(
       req.user._id,
       {
         $set: {
-          "profile.fullName": fullname,
+          "profile.fullName": fullName,
           "profile.phone": phone,
           "profile.address": address,
         },

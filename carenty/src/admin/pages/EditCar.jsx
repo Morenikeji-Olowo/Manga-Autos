@@ -23,6 +23,7 @@ import {
   VehicleHistory,
   BenefitsSection,
 } from "./AddCar";
+import adminService from "../../services/adminService";
 
 const steps = [
   {
@@ -116,7 +117,7 @@ export default function EditCar() {
   useEffect(() => {
     const fetchCar = async () => {
       try {
-        const res = await carService.getCarById(id);
+        const res = await adminService.getCarById(id);
         const car = res.listing;
         setFormData({
           name: car.name || "",
@@ -217,7 +218,7 @@ export default function EditCar() {
   const handleSubmit = async () => {
     setIsSubmitting(true);
     try {
-      await carService.updateCar(id, {
+      await adminService.updateCar(id, {
         ...formData,
         originalImages: originalImageUrls, // send original images to backend for comparison
         existingImages: existingImageUrls, // tell backend which URLs to retain

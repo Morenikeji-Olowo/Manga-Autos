@@ -39,7 +39,8 @@ export default function CarDetail() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-white">
+      
+      <div className="min-h-screen bg-white overflow-x-hidden">
         <Navbar />
         <div className="flex items-center justify-center h-screen pt-20 px-4">
           <div className="text-center">

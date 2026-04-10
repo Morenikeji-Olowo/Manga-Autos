@@ -50,6 +50,12 @@ export default function AdminProfile() {
   const fileInputRef = useRef(null);
   const { loading, loadingText, withLoading } = useLoading();
   const { user } = useAuthStore();
+  const [showEmailModal, setShowEmailModal] = useState(false);
+  const [emailData, setEmailData] = useState({
+    currentPassword: "",
+    newEmail: "",
+    confirmEmail: "",
+  });
 
   // Admin Data
   const [admin, setAdmin] = useState({
@@ -161,6 +167,24 @@ export default function AdminProfile() {
     }, "Saving profile...");
   };
 
+  const handleEmailChange = () => {
+    if (emailData.newEmail !== emailData.confirmEmail) {
+      alert("Emails do not match!");
+      return;
+    }
+    if (!emailData.newEmail.match(/^\S+@\S+\.\S+$/)) {
+      alert("Please enter a valid email address!");
+      return;
+    }
+    // Handle email change API call
+    alert("Email changed successfully! Please verify your new email.");
+    setShowEmailModal(false);
+    setEmailData({
+      currentPassword: "",
+      newEmail: "",
+      confirmEmail: "",
+    });
+  };
   const handlePasswordChange = () => {
     if (passwordData.newPassword !== passwordData.confirmPassword) {
       alert("Passwords do not match!");
@@ -358,29 +382,6 @@ export default function AdminProfile() {
                         </div>
                         <div>
                           <label className="block text-xs font-medium text-gray-500 mb-1">
-                            Email
-                          </label>
-                          {isEditing ? (
-                            <input
-                              type="email"
-                              value={formData.email}
-                              onChange={(e) =>
-                                setFormData({
-                                  ...formData,
-                                  email: e.target.value,
-                                })
-                              }
-                              className="w-full px-3 py-1.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400"
-                            />
-                          ) : (
-                            <div className="flex items-center gap-2 text-sm text-gray-900">
-                              <Mail size={14} className="text-gray-400" />
-                              <span>{admin.email}</span>
-                            </div>
-                          )}
-                        </div>
-                        <div>
-                          <label className="block text-xs font-medium text-gray-500 mb-1">
                             Phone
                           </label>
                           {isEditing ? (
@@ -557,6 +558,7 @@ export default function AdminProfile() {
               {/* Security Tab - Minimal */}
               {activeTab === "security" && (
                 <div className="space-y-4">
+                  {/* Change Password */}
                   <div className="bg-white rounded-xl p-6">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
@@ -579,6 +581,30 @@ export default function AdminProfile() {
                     </div>
                   </div>
 
+                  {/* Change Email - SEPARATE SECTION */}
+                  <div className="bg-white rounded-xl p-6">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <Mail size={18} className="text-gray-400" />
+                        <div>
+                          <h3 className="text-sm font-semibold text-gray-900">
+                            Email Address
+                          </h3>
+                          <p className="text-xs text-gray-500">
+                            Current: {admin.email}
+                          </p>
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => setShowEmailModal(true)}
+                        className="px-3 py-1.5 text-xs font-medium text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50"
+                      >
+                        Change
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Two-Factor Authentication */}
                   <div className="bg-white rounded-xl p-6">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
@@ -608,6 +634,7 @@ export default function AdminProfile() {
                     </div>
                   </div>
 
+                  {/* Trusted Devices */}
                   <div className="bg-white rounded-xl p-6">
                     <div className="flex items-center gap-3 mb-4">
                       <Smartphone size={18} className="text-gray-400" />
@@ -944,6 +971,120 @@ export default function AdminProfile() {
                   </button>
                   <button
                     onClick={() => setShowPasswordModal(false)}
+                    className="flex-1 px-3 py-2 text-sm font-medium text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* Email Change Modal */}
+        {showEmailModal && (
+          <>
+            <div
+              className="fixed inset-0 bg-black/40 z-50"
+              onClick={() => setShowEmailModal(false)}
+            />
+            <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md z-50">
+              <div className="bg-white rounded-xl shadow-lg">
+                <div className="p-5 border-b border-gray-100 flex justify-between items-center">
+                  <h3 className="text-base font-semibold text-gray-900">
+                    Change Email
+                  </h3>
+                  <button
+                    onClick={() => setShowEmailModal(false)}
+                    className="text-gray-400 hover:text-gray-600"
+                  >
+                    <X size={18} />
+                  </button>
+                </div>
+                <div className="p-5 space-y-4">
+                  <div>
+                    <label className="block text-xs font-medium text-gray-600 mb-1">
+                      Current Email
+                    </label>
+                    <div className="flex items-center gap-2 px-3 py-2 text-sm bg-gray-50 rounded-lg">
+                      <Mail size={14} className="text-gray-400" />
+                      <span className="text-gray-900">{admin.email}</span>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-600 mb-1">
+                      Current Password
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        value={emailData.currentPassword}
+                        onChange={(e) =>
+                          setEmailData({
+                            ...emailData,
+                            currentPassword: e.target.value,
+                          })
+                        }
+                        className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400 pr-9"
+                        placeholder="Enter your password"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400"
+                      >
+                        {showPassword ? (
+                          <EyeOff size={14} />
+                        ) : (
+                          <Eye size={14} />
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-600 mb-1">
+                      New Email
+                    </label>
+                    <input
+                      type="email"
+                      value={emailData.newEmail}
+                      onChange={(e) =>
+                        setEmailData({
+                          ...emailData,
+                          newEmail: e.target.value,
+                        })
+                      }
+                      className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400"
+                      placeholder="Enter new email"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-600 mb-1">
+                      Confirm New Email
+                    </label>
+                    <input
+                      type="email"
+                      value={emailData.confirmEmail}
+                      onChange={(e) =>
+                        setEmailData({
+                          ...emailData,
+                          confirmEmail: e.target.value,
+                        })
+                      }
+                      className="w-full px-3 py-2 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-1 focus:ring-gray-400"
+                      placeholder="Confirm new email"
+                    />
+                  </div>
+                </div>
+                <div className="p-5 border-t border-gray-100 flex gap-3">
+                  <button
+                    onClick={handleEmailChange}
+                    className="flex-1 px-3 py-2 text-sm font-medium text-white bg-gray-900 rounded-lg hover:bg-gray-800"
+                  >
+                    Update Email
+                  </button>
+                  <button
+                    onClick={() => setShowEmailModal(false)}
                     className="flex-1 px-3 py-2 text-sm font-medium text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50"
                   >
                     Cancel

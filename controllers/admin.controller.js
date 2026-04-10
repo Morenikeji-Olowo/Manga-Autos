@@ -87,7 +87,8 @@ export const updateCar = async (req, res) => {
       listing,
     });
   } catch (error) {
-    res.status(error.statusCode || 500).json({ success: false, message: error.message });
+  console.log('Update error:', error.message, error.stack) 
+  res.status(error.statusCode || 500).json({ success: false, message: error.message });
   }
 };
 

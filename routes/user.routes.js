@@ -6,8 +6,8 @@ import { multerUpload, uploadToCloudinary } from "../middlewares/upload.middlewa
 const userRouter = express.Router();
 
 userRouter.get("/cars", userController.getAllCars);
-userRouter.get("/cars/:id", authMiddleware.protect, userController.getCarById);
-userRouter.post("/car/search", authMiddleware.protect, userController.searchCars);
+userRouter.get("/cars/:id", userController.getCarById);
+userRouter.post("/car/search", userController.searchCars);
 
 userRouter.put('/profile', authMiddleware.protect, updateProfile);
 userRouter.put('/profile/avatar', authMiddleware.protect, multerUpload.single('avatar'), uploadToCloudinary, updateAvatar);

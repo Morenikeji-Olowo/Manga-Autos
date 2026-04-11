@@ -28,7 +28,7 @@ export default function SavedCars() {
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [carToRemove, setCarToRemove] = useState(null);
   const [isRemovingMultiple, setIsRemovingMultiple] = useState(false);
-  const { isAuthenticated } = useAuthStore();
+const { isAuthenticated, user, updateUser } = useAuthStore()
 
   useEffect(() => {
     fetchSavedCars();
@@ -52,31 +52,29 @@ export default function SavedCars() {
     setShowConfirmModal(true);
   };
 
-  const confirmRemove = async () => {
-    setShowConfirmModal(false);
-    try {
-      if (isRemovingMultiple) {
-        // Remove multiple cars
-        for (const carId of selectedCars) {
-          await userService.removeFromWishlist(carId);
-        }
-        setSavedCars(savedCars.filter((car) => !selectedCars.includes(car._id)));
-        setSelectedCars([]);
-        toast.success(`${selectedCars.length} cars removed from wishlist`);
-      } else {
-        // Remove single car
-        await userService.removeFromWishlist(carToRemove);
-        setSavedCars(savedCars.filter((car) => car._id !== carToRemove));
-        setSelectedCars(selectedCars.filter((id) => id !== carToRemove));
-        toast.success("Removed from wishlist");
-      }
-    } catch (error) {
-      toast.error("Failed to remove car");
-    } finally {
-      setCarToRemove(null);
-      setIsRemovingMultiple(false);
+const confirmRemove = async () => {
+  setShowConfirmModal(false)
+  try {
+    if (isRemovingMultiple) {
+      await Promise.all(selectedCars.map(id => userService.removeFromWishlist(id)))
+      setSavedCars(savedCars.filter(car => !selectedCars.includes(car._id)))
+      updateUser({ wishlist: user.wishlist.filter(id => !selectedCars.includes(id)) }) // ← sync store
+      setSelectedCars([])
+      toast.success(`${selectedCars.length} cars removed from wishlist`)
+    } else {
+      await userService.removeFromWishlist(carToRemove)
+      setSavedCars(savedCars.filter(car => car._id !== carToRemove))
+      updateUser({ wishlist: user.wishlist.filter(id => id !== carToRemove) }) // ← sync store
+      setSelectedCars(selectedCars.filter(id => id !== carToRemove))
+      toast.success('Removed from wishlist')
     }
-  };
+  } catch (error) {
+    toast.error('Failed to remove car')
+  } finally {
+    setCarToRemove(null)
+    setIsRemovingMultiple(false)
+  }
+}
 
   const handleRemoveSelected = () => {
     if (selectedCars.length === 0) return;

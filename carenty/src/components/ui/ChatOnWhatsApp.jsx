@@ -1,10 +1,11 @@
+import { MessageCircle } from 'lucide-react'
 import React from "react";
 
 const ChatOnWhatsApp = ({ car }) => {
   const handleWhatsApp = () => {
     const phone = "2349133225255"; // admin's number without + or spaces
     const message = encodeURIComponent(
-      `Hi, I'm interested in the ${car.details?.year} ${car.make} ${car.model} listed for ₦${car.price?.toLocaleString()}. Can we discuss?\n\n${window.location.href}`,
+      `Hi, I'm interested in the ${car.basicDetails?.year} ${car.make} ${car.model} listed for ₦${car.price?.toLocaleString()}. Can we discuss?\n\n${window.location.href}`,
     );
     window.open(`https://wa.me/${phone}?text=${message}`, "_blank");
   };

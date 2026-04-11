@@ -561,7 +561,10 @@ export default function CarDetail() {
                 <Phone className="w-4 h-4" />
                 Show Contact
               </button>
-              <button className="w-full flex items-center justify-center gap-2 px-4 sm:px-6 py-3 sm:py-3.5 border border-gray-200 rounded-xl hover:bg-gray-50 transition font-medium text-gray-700 font-body text-sm sm:text-base">
+              <button
+                onClick={() => setShowContactModal(true)}
+                className="w-full flex items-center justify-center gap-2 px-4 sm:px-6 py-3 sm:py-3.5 border border-gray-200 rounded-xl hover:bg-gray-50 transition font-medium text-gray-700 font-body text-sm sm:text-base"
+              >
                 <MessageCircle className="w-4 h-4" />
                 Chat on WhatsApp
               </button>

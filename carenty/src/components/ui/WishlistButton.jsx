@@ -1,63 +1,83 @@
-import { useState, useEffect } from 'react'
-import { Heart, X, LogIn } from 'lucide-react'
-import { useAuthStore } from '../../stores/authStore'
-import { useNavigate } from 'react-router-dom'
+import { useState, useEffect } from "react";
+import { Heart, X, LogIn } from "lucide-react";
+import { useAuthStore } from "../../stores/authStore";
+import { useNavigate } from "react-router-dom";
+import userService from "../../services/userService";
 
-export default function WishlistButton({ carId, className = '', size = 'md', onToggle }) {
-  const [isWishlisted, setIsWishlisted] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
-  const [showToastPopup, setShowToastPopup] = useState(false)
-  const { isAuthenticated } = useAuthStore()
-  const navigate = useNavigate()
+export default function WishlistButton({
+  carId,
+  className = "",
+  size = "md",
+  onToggle,
+}) {
+  const [isWishlisted, setIsWishlisted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showToastPopup, setShowToastPopup] = useState(false);
+  const { isAuthenticated, user, updateUser } = useAuthStore();
+
+  const navigate = useNavigate();
 
   // Auto-hide popup after 5 seconds
   useEffect(() => {
     if (showToastPopup) {
-      const timer = setTimeout(() => setShowToastPopup(false), 5000)
-      return () => clearTimeout(timer)
+      const timer = setTimeout(() => setShowToastPopup(false), 5000);
+      return () => clearTimeout(timer);
     }
-  }, [showToastPopup])
+  }, [showToastPopup]);
 
   const sizeClasses = {
-    sm: 'p-1.5',
-    md: 'p-2 sm:p-2.5',
-    lg: 'p-3'
-  }
+    sm: "p-1.5",
+    md: "p-2 sm:p-2.5",
+    lg: "p-3",
+  };
 
   const iconSizes = {
-    sm: 'w-3 h-3 sm:w-4 sm:h-4',
-    md: 'w-4 h-4 sm:w-5 sm:h-5',
-    lg: 'w-5 h-5 sm:w-6 sm:h-6'
-  }
+    sm: "w-3 h-3 sm:w-4 sm:h-4",
+    md: "w-4 h-4 sm:w-5 sm:h-5",
+    lg: "w-5 h-5 sm:w-6 sm:h-6",
+  };
+
+  // check if already wishlisted on mount
+  useEffect(() => {
+    if (user?.wishlist) {
+      setIsWishlisted(user.wishlist.includes(carId));
+    }
+  }, [user, carId]);
 
   const handleWishlist = async (e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    
+    e.preventDefault();
+    e.stopPropagation();
+
     if (!isAuthenticated) {
-      setShowToastPopup(true)
-      return
+      setShowToastPopup(true);
+      return;
     }
 
-    setIsLoading(true)
+    setIsLoading(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 300))
-      const newState = !isWishlisted
-      setIsWishlisted(newState)
-      if (onToggle) onToggle(carId, newState)
+      if (isWishlisted) {
+        await userService.removeFromWishlist(carId);
+        updateUser({ wishlist: user.wishlist.filter((id) => id !== carId) });
+        setIsWishlisted(false);
+      } else {
+        await userService.addToWishlist(carId);
+        updateUser({ wishlist: [...(user.wishlist || []), carId] });
+        setIsWishlisted(true);
+      }
+      onToggle?.(); // call parent callback if provided
     } catch (error) {
-      console.error('Wishlist error:', error)
+      console.error("Wishlist error:", error);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   const handleLogin = () => {
-    sessionStorage.setItem('redirectAfterLogin', window.location.pathname)
-    sessionStorage.setItem('wishlistIntent', carId)
-    setShowToastPopup(false)
-    navigate('/login')
-  }
+    sessionStorage.setItem("redirectAfterLogin", window.location.pathname);
+    sessionStorage.setItem("wishlistIntent", carId);
+    setShowToastPopup(false);
+    navigate("/login");
+  };
 
   return (
     <>
@@ -74,17 +94,20 @@ export default function WishlistButton({ carId, className = '', size = 'md', onT
         `}
       >
         {isLoading ? (
-          <div className={`${iconSizes[size]} border-2 border-gray-300 border-t-gray-900 rounded-full animate-spin`} />
+          <div
+            className={`${iconSizes[size]} border-2 border-gray-300 border-t-gray-900 rounded-full animate-spin`}
+          />
         ) : (
-          <Heart 
+          <Heart
             className={`
               ${iconSizes[size]} 
               transition-all duration-200
-              ${isWishlisted 
-                ? 'fill-red-500 text-red-500' 
-                : 'text-gray-700 hover:text-red-500'
+              ${
+                isWishlisted
+                  ? "fill-red-500 text-red-500"
+                  : "text-gray-700 hover:text-red-500"
               }
-            `} 
+            `}
           />
         )}
       </button>
@@ -100,8 +123,12 @@ export default function WishlistButton({ carId, className = '', size = 'md', onT
                 </div>
               </div>
               <div className="flex-1">
-                <p className="text-white font-medium text-sm">Login to save this car</p>
-                <p className="text-gray-400 text-xs mt-0.5">Create an account to build your wishlist</p>
+                <p className="text-white font-medium text-sm">
+                  Login to save this car
+                </p>
+                <p className="text-gray-400 text-xs mt-0.5">
+                  Create an account to build your wishlist
+                </p>
               </div>
               <button
                 onClick={handleLogin}
@@ -136,5 +163,5 @@ export default function WishlistButton({ carId, className = '', size = 'md', onT
         }
       `}</style>
     </>
-  )
+  );
 }

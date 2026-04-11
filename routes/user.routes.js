@@ -12,4 +12,8 @@ userRouter.post("/car/search", userController.searchCars);
 userRouter.put('/profile', authMiddleware.protect, updateProfile);
 userRouter.put('/profile/avatar', authMiddleware.protect, multerUpload.single('avatar'), uploadToCloudinary, updateAvatar);
 
+userRouter.post('/wishlist', authMiddleware.protect, userController.addToWishlist)
+userRouter.delete('/wishlist', authMiddleware.protect, userController.removeFromWishlist)
+userRouter.get('/wishlist', authMiddleware.protect, userController.getWishlist)
+
 export default userRouter

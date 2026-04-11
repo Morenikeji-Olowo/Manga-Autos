@@ -55,6 +55,8 @@ const userSchema = new mongoose.Schema(
       type: Boolean, default: true
     },
 
+    wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Car', default: [] }],
+
     // USER PROFILE (FUTURE-PROOF)
     profile: {
       fullName: { type: String },

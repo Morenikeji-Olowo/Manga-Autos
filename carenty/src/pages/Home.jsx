@@ -166,19 +166,10 @@ export default function Home() {
 
       {/* LEFT — YOUR ORIGINAL TEXT */}
       <div>
-        {/* Badge */}
-        <div
-          className=" m-5 inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-widest mb-8"
-          style={{ background: '#3a2618', color: '#e6c3a3' }}
-        >
-          <span className="w-1.5 h-1.5 rounded-full bg-[#e6c3a3]"></span>
-          Nigeria's Premier Car Marketplace
-        </div>
-
         {/* HEADLINE (UNCHANGED TEXT, JUST STYLED BETTER) */}
         <div className="leading-[0.9] uppercase">
           <h1 className="text-5xl lg:text-7xl font-bold text-white">
-            My brotha,
+            My bratha,
           </h1>
           <h1 className="text-5xl lg:text-7xl font-extrabold italic text-[#e6c3a3]">
             get yourself

@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuthStore } from '../../stores/authStore'
 
-
 export default function Navbar() {
   const location = useLocation()
   const navigate = useNavigate()
@@ -115,10 +114,13 @@ export default function Navbar() {
 
       <header
         ref={navRef}
-        className="fixed top-0 left-0 right-0 z-50 bg-white transition-all duration-300"
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+          scrolled 
+            ? 'bg-white/95 backdrop-blur-md shadow-lg' 
+            : 'bg-white/0 backdrop-blur-none'
+        }`}
         style={{
-          borderBottom: '1px solid #f0ece8',
-          boxShadow: scrolled ? '0 2px 24px rgba(61,35,20,0.07)' : '0 1px 0 #f0ece8',
+          borderBottom: scrolled ? '1px solid #f0ece8' : 'none',
         }}
       >
         <div className="max-w-7xl mx-auto px-6 lg:px-10">
@@ -129,23 +131,30 @@ export default function Navbar() {
               <img
                 src="/image.png"
                 alt="Sirkin Mota"
-                className="h-10 lg:h-12 w-auto object-contain"
+                className="h-10 lg:h-12 w-auto object-contain transition-all duration-300"
               />
-              <span className="font-display text-lg lg:text-xl tracking-tight hidden sm:block" style={{ color: 'var(--brown-dark)' }}>
+              <span 
+                className={`font-display text-lg lg:text-xl tracking-tight hidden sm:block transition-all duration-300 ${
+                  scrolled ? 'text-gray-900' : 'text-white'
+                }`}
+                style={!scrolled ? { color: 'white' } : { color: 'var(--brown-dark)' }}
+              >
                 Sirkin Mota
               </span>
             </Link>
 
             {/* ── Desktop Nav ── */}
             <nav className="hidden lg:flex items-center gap-8">
-              {/* Cars dropdown - Text only */}
+              {/* Cars dropdown */}
               <div className="relative">
                 <button
                   onMouseEnter={() => setActiveDropdown('cars')}
-                  className="nav-underline text-sm font-medium py-1"
-                  style={{ color: 'var(--text)', fontFamily: "'Roboto', sans-serif" }}
+                  className={`nav-underline text-sm font-medium py-1 transition-all duration-300 ${
+                    scrolled ? 'text-gray-700' : 'text-white/90 hover:text-white'
+                  }`}
+                  style={{ fontFamily: "'Roboto', sans-serif" }}
                 >
-                  Cars
+                  VEHICLES
                 </button>
 
                 {activeDropdown === 'cars' && (
@@ -199,67 +208,105 @@ export default function Navbar() {
                 )}
               </div>
 
-              {/* About link */}
-              <Link
-                to="/about"
-                className="nav-underline text-sm font-medium py-1"
-                style={{ color: 'var(--text)', fontFamily: "'Roboto', sans-serif" }}
-              >
-                About
-              </Link>
-
-              {/* Work/Portfolio link */}
-              <Link
-                to="/work"
-                className="nav-underline text-sm font-medium py-1"
-                style={{ color: 'var(--text)', fontFamily: "'Roboto', sans-serif" }}
-              >
-                Work
-              </Link>
-
-              {/* Contact dropdown - Text only */}
+              {/* Ownership Tools */}
               <div className="relative">
                 <button
-                  onMouseEnter={() => setActiveDropdown('contact')}
-                  className="nav-underline text-sm font-medium py-1"
-                  style={{ color: 'var(--text)', fontFamily: "'Roboto', sans-serif" }}
+                  onMouseEnter={() => setActiveDropdown('ownership')}
+                  className={`nav-underline text-sm font-medium py-1 transition-all duration-300 ${
+                    scrolled ? 'text-gray-700' : 'text-white/90 hover:text-white'
+                  }`}
+                  style={{ fontFamily: "'Roboto', sans-serif" }}
                 >
-                  Contact
+                  OWNERSHIP TOOLS
                 </button>
 
-                {activeDropdown === 'contact' && (
+                {activeDropdown === 'ownership' && (
                   <div
-                    className="dropdown-fade absolute top-8 left-0 bg-white rounded-lg py-2 min-w-[180px]"
+                    className="dropdown-fade absolute top-8 left-0 bg-white rounded-lg py-2 min-w-[200px]"
                     style={{
                       border: '1px solid #ede8e2',
                       boxShadow: '0 10px 30px rgba(61,35,20,0.08)',
                     }}
                     onMouseLeave={() => setActiveDropdown(null)}
                   >
-                    <Link
-                      to="/contact"
-                      className="dropdown-item px-4 py-2.5 text-sm"
-                      style={{ color: 'var(--text)' }}
-                    >
-                      Send Message
-                    </Link>
-                    <a
-                      href="tel:+2348000000000"
-                      className="dropdown-item px-4 py-2.5 text-sm block"
-                      style={{ color: 'var(--text)' }}
-                    >
-                      Call Us
-                    </a>
-                    <Link
-                      to="/contact#location"
-                      className="dropdown-item px-4 py-2.5 text-sm"
-                      style={{ color: 'var(--text)' }}
-                    >
-                      Visit Showroom
-                    </Link>
+                    <Link to="/maintenance" className="dropdown-item px-4 py-2.5 text-sm block">Maintenance</Link>
+                    <Link to="/insurance" className="dropdown-item px-4 py-2.5 text-sm block">Insurance</Link>
+                    <Link to="/financing" className="dropdown-item px-4 py-2.5 text-sm block">Financing</Link>
                   </div>
                 )}
               </div>
+
+              {/* Sarkin Mota Network */}
+              <div className="relative">
+                <button
+                  onMouseEnter={() => setActiveDropdown('network')}
+                  className={`nav-underline text-sm font-medium py-1 transition-all duration-300 ${
+                    scrolled ? 'text-gray-700' : 'text-white/90 hover:text-white'
+                  }`}
+                  style={{ fontFamily: "'Roboto', sans-serif" }}
+                >
+                  SARKIN MOTA NETWORK
+                </button>
+
+                {activeDropdown === 'network' && (
+                  <div
+                    className="dropdown-fade absolute top-8 left-0 bg-white rounded-lg py-2 min-w-[200px]"
+                    style={{
+                      border: '1px solid #ede8e2',
+                      boxShadow: '0 10px 30px rgba(61,35,20,0.08)',
+                    }}
+                    onMouseLeave={() => setActiveDropdown(null)}
+                  >
+                    <Link to="/dealers" className="dropdown-item px-4 py-2.5 text-sm block">Our Dealers</Link>
+                    <Link to="/partners" className="dropdown-item px-4 py-2.5 text-sm block">Partners</Link>
+                    <Link to="/locations" className="dropdown-item px-4 py-2.5 text-sm block">Locations</Link>
+                  </div>
+                )}
+              </div>
+
+              {/* Sell or Swap */}
+              <Link
+                to="/sell-swap"
+                className={`nav-underline text-sm font-medium py-1 transition-all duration-300 ${
+                  scrolled ? 'text-gray-700' : 'text-white/90 hover:text-white'
+                }`}
+                style={{ fontFamily: "'Roboto', sans-serif" }}
+              >
+                SELL OR SWAP
+              </Link>
+
+              {/* News & Events */}
+              <Link
+                to="/news"
+                className={`nav-underline text-sm font-medium py-1 transition-all duration-300 ${
+                  scrolled ? 'text-gray-700' : 'text-white/90 hover:text-white'
+                }`}
+                style={{ fontFamily: "'Roboto', sans-serif" }}
+              >
+                NEWS & EVENTS
+              </Link>
+
+              {/* About */}
+              <Link
+                to="/about"
+                className={`nav-underline text-sm font-medium py-1 transition-all duration-300 ${
+                  scrolled ? 'text-gray-700' : 'text-white/90 hover:text-white'
+                }`}
+                style={{ fontFamily: "'Roboto', sans-serif" }}
+              >
+                ABOUT
+              </Link>
+
+              {/* Contact Us */}
+              <Link
+                to="/contact"
+                className={`nav-underline text-sm font-medium py-1 transition-all duration-300 ${
+                  scrolled ? 'text-gray-700' : 'text-white/90 hover:text-white'
+                }`}
+                style={{ fontFamily: "'Roboto', sans-serif" }}
+              >
+                CONTACT US
+              </Link>
             </nav>
 
             {/* ── Desktop Auth ── */}
@@ -268,8 +315,9 @@ export default function Navbar() {
                 <div className="relative">
                   <button
                     onClick={() => setActiveDropdown(activeDropdown === 'profile' ? null : 'profile')}
-                    className="flex items-center gap-2 text-sm font-medium py-1"
-                    style={{ color: 'var(--brown)' }}
+                    className={`flex items-center gap-2 text-sm font-medium py-1 transition-all duration-300 ${
+                      scrolled ? 'text-gray-700' : 'text-white/90 hover:text-white'
+                    }`}
                   >
                     <span>{user?.username?.split(' ')[0]}</span>
                     <svg
@@ -292,7 +340,6 @@ export default function Navbar() {
                         to="/profile"
                         onClick={() => setActiveDropdown(null)}
                         className="dropdown-item px-4 py-2.5 text-sm block"
-                        style={{ color: 'var(--text)' }}
                       >
                         Profile
                       </Link>
@@ -300,7 +347,6 @@ export default function Navbar() {
                         to="/wishlist"
                         onClick={() => setActiveDropdown(null)}
                         className="dropdown-item px-4 py-2.5 text-sm block"
-                        style={{ color: 'var(--text)' }}
                       >
                         Saved Cars
                       </Link>
@@ -308,7 +354,6 @@ export default function Navbar() {
                         to="/orders"
                         onClick={() => setActiveDropdown(null)}
                         className="dropdown-item px-4 py-2.5 text-sm block"
-                        style={{ color: 'var(--text)' }}
                       >
                         My Orders
                       </Link>
@@ -317,7 +362,6 @@ export default function Navbar() {
                           to="/admin"
                           onClick={() => setActiveDropdown(null)}
                           className="dropdown-item px-4 py-2.5 text-sm block"
-                          style={{ color: 'var(--text)' }}
                         >
                           Admin Panel
                         </Link>
@@ -337,15 +381,19 @@ export default function Navbar() {
                 <>
                   <Link
                     to="/login"
-                    className="text-sm font-medium py-1 transition hover:opacity-70"
-                    style={{ color: 'var(--brown)' }}
+                    className={`text-sm font-medium py-1 transition-all duration-300 ${
+                      scrolled ? 'text-gray-700' : 'text-white/90 hover:text-white'
+                    }`}
                   >
                     Log In
                   </Link>
                   <Link
                     to="/signup"
-                    className="px-5 py-2 rounded-full text-sm font-medium text-white transition hover:opacity-90"
-                    style={{ background: 'var(--brown)' }}
+                    className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                      scrolled 
+                        ? 'bg-gray-900 text-white hover:bg-gray-800' 
+                        : 'bg-white text-gray-900 hover:bg-gray-100'
+                    }`}
                   >
                     Sign Up
                   </Link>
@@ -360,39 +408,41 @@ export default function Navbar() {
               aria-label="Toggle menu"
             >
               <span
-                className={`block h-0.5 w-6 transition-all duration-300 origin-center ${menuOpen ? 'rotate-45 translate-y-2' : ''}`}
-                style={{ background: 'var(--brown-dark)' }}
+                className={`block h-0.5 w-6 transition-all duration-300 origin-center ${
+                  menuOpen ? 'rotate-45 translate-y-2' : ''
+                } ${scrolled ? 'bg-gray-900' : 'bg-white'}`}
               />
               <span
-                className={`block h-0.5 w-6 transition-all duration-300 ${menuOpen ? 'opacity-0 scale-x-0' : ''}`}
-                style={{ background: 'var(--brown-dark)' }}
+                className={`block h-0.5 w-6 transition-all duration-300 ${
+                  menuOpen ? 'opacity-0 scale-x-0' : ''
+                } ${scrolled ? 'bg-gray-900' : 'bg-white'}`}
               />
               <span
-                className={`block h-0.5 w-6 transition-all duration-300 origin-center ${menuOpen ? '-rotate-45 -translate-y-2' : ''}`}
-                style={{ background: 'var(--brown-dark)' }}
+                className={`block h-0.5 w-6 transition-all duration-300 origin-center ${
+                  menuOpen ? '-rotate-45 -translate-y-2' : ''
+                } ${scrolled ? 'bg-gray-900' : 'bg-white'}`}
               />
             </button>
           </div>
         </div>
 
-        {/* ── Mobile Menu (Minimalist) ── */}
+        {/* ── Mobile Menu ── */}
         {menuOpen && (
           <div
             className="mobile-slide lg:hidden border-t bg-white"
             style={{ borderColor: '#f0ece8' }}
           >
             <div className="px-6 py-6 space-y-4">
-              {/* Mobile Nav Links */}
               <div className="space-y-1">
                 {user?.isAdmin && (
-                        <Link
-                          to="/admin"
-                          onClick={() => setActiveDropdown(null)}
-                          className="dropdown-item px-4 py-2.5 text-sm block"
-                          style={{ color: 'var(--text)' }}
-                        >
-                          Admin Panel
-                        </Link>
+                  <Link
+                    to="/admin"
+                    onClick={() => setMenuOpen(false)}
+                    className="block py-3 text-base font-medium border-b"
+                    style={{ color: 'var(--text)', borderColor: '#f0ece8' }}
+                  >
+                    Admin Panel
+                  </Link>
                 )}
                 <Link
                   to="/cars"
@@ -400,7 +450,39 @@ export default function Navbar() {
                   style={{ color: 'var(--text)', borderColor: '#f0ece8' }}
                   onClick={() => setMenuOpen(false)}
                 >
-                  Cars
+                  VEHICLES
+                </Link>
+                <Link
+                  to="/ownership-tools"
+                  className="block py-3 text-base font-medium border-b"
+                  style={{ color: 'var(--text)', borderColor: '#f0ece8' }}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  OWNERSHIP TOOLS
+                </Link>
+                <Link
+                  to="/network"
+                  className="block py-3 text-base font-medium border-b"
+                  style={{ color: 'var(--text)', borderColor: '#f0ece8' }}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  SARKIN MOTA NETWORK
+                </Link>
+                <Link
+                  to="/sell-swap"
+                  className="block py-3 text-base font-medium border-b"
+                  style={{ color: 'var(--text)', borderColor: '#f0ece8' }}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  SELL OR SWAP
+                </Link>
+                <Link
+                  to="/news"
+                  className="block py-3 text-base font-medium border-b"
+                  style={{ color: 'var(--text)', borderColor: '#f0ece8' }}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  NEWS & EVENTS
                 </Link>
                 <Link
                   to="/about"
@@ -408,15 +490,7 @@ export default function Navbar() {
                   style={{ color: 'var(--text)', borderColor: '#f0ece8' }}
                   onClick={() => setMenuOpen(false)}
                 >
-                  About
-                </Link>
-                <Link
-                  to="/work"
-                  className="block py-3 text-base font-medium border-b"
-                  style={{ color: 'var(--text)', borderColor: '#f0ece8' }}
-                  onClick={() => setMenuOpen(false)}
-                >
-                  Work
+                  ABOUT
                 </Link>
                 <Link
                   to="/contact"
@@ -424,11 +498,10 @@ export default function Navbar() {
                   style={{ color: 'var(--text)', borderColor: '#f0ece8' }}
                   onClick={() => setMenuOpen(false)}
                 >
-                  Contact
+                  CONTACT US
                 </Link>
               </div>
 
-              {/* Mobile Auth */}
               <div className="pt-4">
                 {isAuthenticated ? (
                   <>
@@ -445,7 +518,7 @@ export default function Navbar() {
                       Profile
                     </Link>
                     <Link
-                      to="/saved"
+                      to="/wishlist"
                       className="block py-3 text-base font-medium border-b"
                       style={{ color: 'var(--text)', borderColor: '#f0ece8' }}
                       onClick={() => setMenuOpen(false)}
@@ -496,6 +569,9 @@ export default function Navbar() {
           </div>
         )}
       </header>
+      
+      {/* Spacer for fixed navbar */}
+      <div className="h-16 lg:h-20"></div>
     </>
   )
 }

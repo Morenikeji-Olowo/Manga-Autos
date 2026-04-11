@@ -42,7 +42,7 @@ export default function SavedCars() {
   const fetchSavedCars = async () => {
     setIsLoading(true);
     try {
-      const res = await userService.getWhishlist();
+      const res = await userService.getWishlist();
       setSavedCars(res.wishlist || []); // ← res.wishlist not res.data.wishlist
     } catch (error) {
       console.error("Error fetching saved cars:", error);

@@ -49,7 +49,7 @@ const removeFromWishlist = async (carId) => {
   return res.data
 }
 
-const getWhishlist = async () => {
+const getWishlist = async () => {
   const token = localStorage.getItem("accessToken");
 
   const res = await axios.get(`${API_BASE_URL}/api/user/wishlist`, {
@@ -65,6 +65,6 @@ const userService = {
   updateProfile,
   addToWishlist,
   removeFromWishlist,
-  getWhishlist,
+  getWishlist,
 };
 export default userService;

@@ -34,7 +34,7 @@ function App() {
         <Route path="/cars/:id" element={<><Navbar /><CarDetail /></>} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/wishlist" element={<SavedCars />} />
+        <Route path="/wishlist" element={<><Navbar /><SavedCars /></>} />
         <Route path="/auth/check-email" element={<CheckEmail />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
 

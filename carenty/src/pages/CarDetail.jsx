@@ -25,6 +25,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import WishlistButton from "../components/ui/WishlistButton";
+import ShareButton from "../components/ui/ShareButton";
 
 export default function CarDetail() {
   const { id } = useParams();
@@ -203,9 +204,7 @@ export default function CarDetail() {
               {/* Action Buttons - Responsive positioning */}
               <div className="absolute top-3 right-3 flex gap-2">
                 <WishlistButton carId={car._id} size="md" />
-                <button className="p-2 sm:p-2.5 bg-white/95 backdrop-blur rounded-full hover:bg-white transition shadow-sm">
-                  <Share2 className="w-4 h-4 sm:w-5 sm:h-5 text-gray-700" />
-                </button>
+                <ShareButton car={car} />
               </div>
             </div>
 

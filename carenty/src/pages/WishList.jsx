@@ -12,15 +12,7 @@ import {
   Calendar,
   Settings,
   X,
-  ChevronLeft,
-  ChevronRight,
-  Filter,
-  AlertCircle,
-  ShoppingCart,
-  TrendingUp,
-  Sparkles,
-  Award,
-  Shield,
+  AlertTriangle,
 } from "lucide-react";
 import { useAuthStore } from "../stores/authStore";
 import toast from "react-hot-toast";
@@ -32,8 +24,11 @@ export default function SavedCars() {
   const [selectedCars, setSelectedCars] = useState([]);
   const [filter, setFilter] = useState("all");
   const [sortBy, setSortBy] = useState("newest");
-  const [viewMode, setViewMode] = useState("grid"); // grid or list
-  const { isAuthenticated, user } = useAuthStore();
+  const [viewMode, setViewMode] = useState("grid");
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [carToRemove, setCarToRemove] = useState(null);
+  const [isRemovingMultiple, setIsRemovingMultiple] = useState(false);
+  const { isAuthenticated } = useAuthStore();
 
   useEffect(() => {
     fetchSavedCars();
@@ -43,7 +38,7 @@ export default function SavedCars() {
     setIsLoading(true);
     try {
       const res = await userService.getWishlist();
-      setSavedCars(res.wishlist || []); // ← res.wishlist not res.data.wishlist
+      setSavedCars(res.wishlist || []);
     } catch (error) {
       console.error("Error fetching saved cars:", error);
     } finally {
@@ -52,34 +47,48 @@ export default function SavedCars() {
   };
 
   const handleRemove = async (carId) => {
+    setCarToRemove(carId);
+    setIsRemovingMultiple(false);
+    setShowConfirmModal(true);
+  };
+
+  const confirmRemove = async () => {
+    setShowConfirmModal(false);
     try {
-      await userService.removeFromWishlist(carId);
-      setSavedCars(savedCars.filter((car) => car._id !== carId));
-      setSelectedCars(selectedCars.filter((id) => id !== carId));
-      toast.success("Removed from wishlist");
+      if (isRemovingMultiple) {
+        // Remove multiple cars
+        for (const carId of selectedCars) {
+          await userService.removeFromWishlist(carId);
+        }
+        setSavedCars(savedCars.filter((car) => !selectedCars.includes(car._id)));
+        setSelectedCars([]);
+        toast.success(`${selectedCars.length} cars removed from wishlist`);
+      } else {
+        // Remove single car
+        await userService.removeFromWishlist(carToRemove);
+        setSavedCars(savedCars.filter((car) => car._id !== carToRemove));
+        setSelectedCars(selectedCars.filter((id) => id !== carToRemove));
+        toast.success("Removed from wishlist");
+      }
     } catch (error) {
       toast.error("Failed to remove car");
+    } finally {
+      setCarToRemove(null);
+      setIsRemovingMultiple(false);
     }
   };
 
-  const handleRemoveSelected = async () => {
+  const handleRemoveSelected = () => {
     if (selectedCars.length === 0) return;
-
-    try {
-      // await wishlistService.removeMultiple(selectedCars)
-      setSavedCars(savedCars.filter((car) => !selectedCars.includes(car._id)));
-      setSelectedCars([]);
-      toast.success(`${selectedCars.length} cars removed from wishlist`);
-    } catch (error) {
-      toast.error("Failed to remove cars");
-    }
+    setIsRemovingMultiple(true);
+    setShowConfirmModal(true);
   };
 
   const toggleSelectCar = (carId) => {
     setSelectedCars((prev) =>
       prev.includes(carId)
         ? prev.filter((id) => id !== carId)
-        : [...prev, carId],
+        : [...prev, carId]
     );
   };
 
@@ -143,6 +152,12 @@ export default function SavedCars() {
       <div className="bg-white border-b border-gray-100 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">My Wishlist</h1>
+              <p className="text-gray-500 mt-1">
+                {savedCars.length} {savedCars.length === 1 ? "car" : "cars"} saved
+              </p>
+            </div>
 
             <div className="flex gap-3">
               {selectedCars.length > 0 && (
@@ -172,7 +187,6 @@ export default function SavedCars() {
         <div className="bg-white rounded-xl border border-gray-100 p-4 mb-6">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div className="flex flex-wrap items-center gap-3">
-              {/* Filter Buttons */}
               <div className="flex gap-2">
                 {[
                   { id: "all", label: "All Cars", count: savedCars.length },
@@ -204,7 +218,6 @@ export default function SavedCars() {
                 ))}
               </div>
 
-              {/* Select All Checkbox */}
               {savedCars.length > 0 && (
                 <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
                   <input
@@ -222,7 +235,6 @@ export default function SavedCars() {
             </div>
 
             <div className="flex items-center gap-3">
-              {/* Sort Dropdown */}
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
@@ -234,7 +246,6 @@ export default function SavedCars() {
                 <option value="price_low">Price: Low to High</option>
               </select>
 
-              {/* View Toggle */}
               <div className="flex border border-gray-200 rounded-lg overflow-hidden">
                 <button
                   onClick={() => setViewMode("grid")}
@@ -287,6 +298,47 @@ export default function SavedCars() {
           </div>
         )}
       </div>
+
+      {/* Confirmation Modal */}
+      {showConfirmModal && (
+        <>
+          <div
+            className="fixed inset-0 bg-black/50 z-50"
+            onClick={() => setShowConfirmModal(false)}
+          />
+          <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[calc(100%-2rem)] max-w-md z-50">
+            <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+              <div className="p-6 text-center">
+                <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <AlertTriangle className="w-8 h-8 text-red-500" />
+                </div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  Remove from Wishlist?
+                </h3>
+                <p className="text-gray-500 text-sm">
+                  {isRemovingMultiple
+                    ? `Are you sure you want to remove ${selectedCars.length} ${selectedCars.length === 1 ? "car" : "cars"} from your wishlist?`
+                    : "Are you sure you want to remove this car from your wishlist?"}
+                </p>
+              </div>
+              <div className="p-6 pt-0 flex gap-3">
+                <button
+                  onClick={confirmRemove}
+                  className="flex-1 px-4 py-2.5 bg-red-600 text-white rounded-xl hover:bg-red-700 transition font-medium"
+                >
+                  Yes, Remove
+                </button>
+                <button
+                  onClick={() => setShowConfirmModal(false)}
+                  className="flex-1 px-4 py-2.5 border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition font-medium"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
@@ -297,7 +349,6 @@ function WishlistCard({ car, isSelected, onSelect, onRemove }) {
 
   return (
     <div className="group bg-white rounded-2xl overflow-hidden hover:shadow-xl transition-all duration-300 border border-gray-100 relative">
-      {/* Selection Checkbox */}
       <div className="absolute top-3 left-3 z-10">
         <label className="relative cursor-pointer">
           <input
@@ -309,10 +360,9 @@ function WishlistCard({ car, isSelected, onSelect, onRemove }) {
         </label>
       </div>
 
-      {/* Remove Button */}
       <button
         onClick={onRemove}
-        className="absolute top-3 right-3 z-10 p-1.5 bg-white/95 backdrop-blur rounded-full hover:bg-red-50 transition shadow-sm group-hover:opacity-100"
+        className="absolute top-3 right-3 z-10 p-1.5 bg-white/95 backdrop-blur rounded-full hover:bg-red-50 transition shadow-sm"
       >
         <Trash2 className="w-3.5 h-3.5 text-gray-500 hover:text-red-500 transition" />
       </button>
@@ -372,7 +422,6 @@ function WishlistCard({ car, isSelected, onSelect, onRemove }) {
             </div>
           </div>
 
-          {/* Added Date Badge */}
           <div className="mt-3 flex items-center gap-1">
             <Clock className="w-3 h-3 text-gray-400" />
             <span className="text-xs text-gray-400">
@@ -392,7 +441,6 @@ function WishlistListItem({ car, isSelected, onSelect, onRemove }) {
   return (
     <div className="bg-white rounded-xl border border-gray-100 hover:shadow-md transition-all duration-300 overflow-hidden">
       <div className="flex flex-col sm:flex-row">
-        {/* Checkbox */}
         <div className="absolute sm:relative top-3 left-3 sm:top-auto sm:left-auto z-10 sm:flex sm:items-center sm:px-4 sm:py-4">
           <label className="cursor-pointer">
             <input
@@ -404,7 +452,6 @@ function WishlistListItem({ car, isSelected, onSelect, onRemove }) {
           </label>
         </div>
 
-        {/* Image */}
         <Link to={`/cars/${car._id}`} className="block sm:w-48">
           <div className="aspect-[4/3] sm:aspect-square overflow-hidden bg-gray-100">
             <img
@@ -418,7 +465,6 @@ function WishlistListItem({ car, isSelected, onSelect, onRemove }) {
           </div>
         </Link>
 
-        {/* Content */}
         <div className="flex-1 p-4 sm:p-4">
           <div className="flex flex-wrap justify-between gap-4">
             <div className="flex-1">

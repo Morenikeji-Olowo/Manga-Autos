@@ -22,6 +22,7 @@ import AddCar from "./admin/pages/AddCar";
 import EditCar from "./admin/pages/EditCar";
 import AdminNavbar from "./admin/components/Navbar";
 import AdminProfile from "./admin/pages/AdminProfile";
+import SavedCars from "./pages/WishList";
 
 function App() {
   return (
@@ -33,6 +34,7 @@ function App() {
         <Route path="/cars/:id" element={<><Navbar /><CarDetail /></>} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/wishlist" element={<SavedCars />} />
         <Route path="/auth/check-email" element={<CheckEmail />} />
         <Route path="/verify-email" element={<VerifyEmail />} />
 

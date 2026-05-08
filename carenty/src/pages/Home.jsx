@@ -35,6 +35,7 @@ export default function Home() {
     useEffect(()=>{
     getHomePageCars();
   },[])
+  
   return (
     <div style={{ background: 'var(--cream)', minHeight: '100vh' }}>
       <Navbar />

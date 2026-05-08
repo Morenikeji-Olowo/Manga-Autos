@@ -8,6 +8,7 @@ const userRouter = express.Router();
 userRouter.get("/cars", userController.getAllCars);
 userRouter.get("/cars/:id", userController.getCarById);
 userRouter.post("/car/search", userController.searchCars);
+userRouter.post("/cars/homepage", userController.getCarsForHomepage);
 
 userRouter.put('/profile', authMiddleware.protect, updateProfile);
 userRouter.put('/profile/avatar', authMiddleware.protect, multerUpload.single('avatar'), uploadToCloudinary, updateAvatar);

@@ -152,6 +152,23 @@ const getWishlist = async (req, res) => {
     });
   }
 };
+
+const getCarsForHomepage = async (req, res) =>{
+  try{
+    const cars = await Car.find().sort({ listedAt: -1 }).limit(4);
+    res.status(200).json({
+      success: true,
+      cars: cars,
+    });
+  }
+  catch(err){
+    res.status(500).json({
+      success: false,
+      message: "Error fetching cars for homepage",
+      error: err.message,
+    });
+  }
+}
 const userController = {
   getAllCars,
   getCarById,
@@ -159,5 +176,6 @@ const userController = {
   addToWishlist,
   removeFromWishlist,
   getWishlist,
+  getCarsForHomepage,
 };
 export default userController;

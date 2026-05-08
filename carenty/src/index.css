@@ -1,4 +1,12 @@
 :root {
+  --cream:       #f5ede3;
+  --cream-dark:  #e8d5c0;
+  --brown-light: #c9956a;
+  --brown:       #8B5E3C;
+  --brown-dark:  #2b1c12;
+}
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700&family=Roboto:wght@300;400;500;700;900&family=Poppins:wght@300;400;500;600;700;800&display=swap');
+:root {
   --text: #6b6375;
   --text-h: #08060d;
   --bg: #fff;

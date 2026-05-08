@@ -35,7 +35,7 @@ export default function Home() {
     useEffect(()=>{
     getHomePageCars();
   },[])
-  
+
   return (
     <div style={{ background: 'var(--cream)', minHeight: '100vh' }}>
       <Navbar />
@@ -43,7 +43,6 @@ export default function Home() {
       {/* Global Font Styles */}
       <style>{`
         /* Modern fonts - Roboto as primary, Poppins as secondary */
-        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700&family=Roboto:wght@300;400;500;700;900&family=Poppins:wght@300;400;500;600;700;800&display=swap');
         
         body {
           font-family: 'Roboto', 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -285,7 +284,7 @@ export default function Home() {
               style={{ background: 'white', animationDelay: `${idx * 0.1}s` }}
             >
               <div className="relative h-48 overflow-hidden">
-                <img src={car.image} alt={car.model}
+                <img src={car.images[0]} alt={car.model}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                 <div className="absolute top-3 left-3">
                   <span className="text-xs font-semibold px-2.5 py-1 rounded-full font-heading"

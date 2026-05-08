@@ -4,7 +4,7 @@ import authMiddleware from "../middlewares/auth.middleware.js";
 import { updateAvatar, updateProfile } from "../controllers/profile.controller.js";
 import { multerUpload, uploadToCloudinary } from "../middlewares/upload.middleware.js";
 const userRouter = express.Router();
-userRouter.post("/cars/homepage", userController.getCarsForHomepage);
+userRouter.get("/cars/homepage", userController.getCarsForHomepage);
 userRouter.get("/cars", userController.getAllCars);
 userRouter.get("/cars/:id", userController.getCarById);
 userRouter.post("/car/search", userController.searchCars);

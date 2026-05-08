@@ -79,9 +79,9 @@ export default function Signup() {
   };
 
   return (
-    <div className="min-h-screen flex">
-      {/* Left Side - Keep original */}
-      <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-red-900 to-red-700">
+    <div className="flex flex-col lg:flex-row">
+      {/* Left Side - Fixed/Sticky */}
+      <div className="hidden lg:block lg:w-1/2 relative bg-gradient-to-br from-red-900 to-red-700 h-screen sticky top-0">
         <div className="absolute inset-0 bg-black/30 z-10"></div>
         <img
           src="https://images.unsplash.com/photo-1555215695-3004980ad54e?w=800&h=1200&fit=crop"
@@ -90,9 +90,9 @@ export default function Signup() {
         />
       </div>
 
-      {/* Right Side */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white overflow-y-auto">
-        <div className="max-w-md w-full py-8">
+      {/* Right Side - Scrollable */}
+      <div className="w-full lg:w-1/2 bg-white">
+        <div className="max-w-md mx-auto px-8 py-12">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Sign Up</h1>
           <p className="text-gray-500 mb-6">
             Already have an account?{" "}
@@ -105,7 +105,7 @@ export default function Signup() {
             </Link>
           </p>
 
-          {/* General Error Banner - Keep red for errors */}
+          {/* General Error Banner */}
           {errors.general && (
             <div className="flex items-center gap-3 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-6 text-sm">
               <i className="fas fa-exclamation-circle flex-shrink-0"></i>
@@ -284,7 +284,7 @@ export default function Signup() {
                 )}
               </div>
 
-              {/* Submit Button - Brown */}
+              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={isLoading}

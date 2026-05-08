@@ -23,6 +23,10 @@ const carService = {
     const response = await axios.get(`${API_BASE_URL}/api/user/cars/${id}`);
     return response.data;
   },
+  getHomePageCars:async ()=>{
+    const res = await axios.get(`${API_BASE_URL}/api/user/cars/homepage`);
+    return res.data;
+  },
   addCar: async () => {},
 
 

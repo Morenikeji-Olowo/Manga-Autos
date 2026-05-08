@@ -71,16 +71,16 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex">
-      {/* Left Side - Keep original gradient */}
-      <div className="hidden lg:flex lg:w-1/2 relative bg-gradient-to-br from-red-900 to-red-700">
+    <div className="flex flex-col lg:flex-row">
+      {/* Left Side */}
+      <div className="hidden lg:block lg:w-1/2 relative bg-gradient-to-br from-red-900 to-red-700 h-screen sticky top-0">
         <div className="absolute inset-0 bg-black/30 z-10"></div>
         <img
           src="https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=800&h=1200&fit=crop"
           alt="Luxury Car"
           className="absolute inset-0 w-full h-full object-cover"
         />
-        <div className="relative z-20 flex flex-col justify-between p-12 text-white">
+        <div className="relative z-20 flex flex-col justify-between p-12 text-white h-full">
           <Link to="/" className="inline-flex items-center gap-2 text-white">
             <i className="fas fa-car-side text-2xl"></i>
             <span className="font-bold text-xl">Dribe</span>
@@ -108,16 +108,12 @@ export default function Login() {
         </div>
       </div>
 
-      {/* Right Side */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white">
-        <div className="max-w-md w-full">
+      {/* Right Side - Scrollable */}
+      <div className="w-full lg:w-1/2 bg-white">
+        <div className="max-w-md mx-auto px-8 py-12">
           {/* Mobile Logo */}
           <div className="lg:hidden text-center mb-8">
             <Link to="/" className="inline-flex items-center gap-2">
-              <i
-                className="fas fa-car-side text-2xl"
-                style={{ color: "#6B4226" }}
-              ></i>
               <span className="font-bold text-xl text-gray-900">Dribe</span>
             </Link>
           </div>
@@ -136,7 +132,7 @@ export default function Login() {
             </p>
           </div>
 
-          {/* General Error Banner - Keep red for errors */}
+          {/* General Error Banner */}
           {errors.general && (
             <div className="flex items-center gap-3 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl mb-6 text-sm">
               <i className="fas fa-exclamation-circle flex-shrink-0"></i>
@@ -233,7 +229,7 @@ export default function Login() {
                 </Link>
               </div>
 
-              {/* Submit Button - Brown */}
+              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={isLoading}
@@ -267,7 +263,7 @@ export default function Login() {
             </div>
           </div>
 
-          {/* Social - Keep original colors for Google and Apple */}
+          {/* Social */}
           <div className="space-y-3">
             <button className="w-full flex items-center justify-center gap-3 py-3 border border-gray-200 rounded-xl hover:bg-gray-50 transition">
               <i className="fab fa-google text-red-500"></i>
@@ -283,7 +279,7 @@ export default function Login() {
             </button>
           </div>
 
-          <p className="text-center text-xs text-gray-400 mt-8">
+          <p className="text-center text-xs text-gray-400 mt-8 pb-8">
             By continuing, you agree to our{" "}
             <a
               href="#"

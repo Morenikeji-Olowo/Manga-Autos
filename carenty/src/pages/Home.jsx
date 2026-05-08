@@ -1,44 +1,7 @@
 import { Link } from 'react-router-dom'
 import Navbar from '../components/layout/Navbar'
-
-const featuredCars = [
-  {
-    id: 1,
-    brand: 'BMW',
-    model: 'M5 Competition',
-    year: 2024,
-    price: '$85,000',
-    image: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?w=600&h=400&fit=crop',
-    tag: 'Hot Deal',
-  },
-  {
-    id: 2,
-    brand: 'Mercedes',
-    model: 'G-Class AMG',
-    year: 2023,
-    price: '$142,000',
-    image: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=600&h=400&fit=crop',
-    tag: 'Premium',
-  },
-  {
-    id: 3,
-    brand: 'Porsche',
-    model: 'Cayenne Turbo',
-    year: 2024,
-    price: '$112,000',
-    image: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=600&h=400&fit=crop',
-    tag: 'New Arrival',
-  },
-  {
-    id: 4,
-    brand: 'Audi',
-    model: 'RS7 Sportback',
-    year: 2023,
-    price: '$96,000',
-    image: 'https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=600&h=400&fit=crop',
-    tag: 'Featured',
-  },
-]
+import carService from '../services/carsService'
+import { useEffect, useState } from 'react'
 
 const gridImages = [
   'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=400&h=500&fit=crop',
@@ -56,8 +19,22 @@ const carBrands = [
   { name: 'Toyota', img: '/brands/toyota.png' },
   { name: 'Lexus', img: '/brands/lexus.png' },
 ]
-// ── Main Page ─────────────────────────────────────────────
+
 export default function Home() {
+  const[featuredCars, setFeaturedCars] = useState([]);
+
+  const getHomePageCars = async () =>{
+    try{
+      const res = await carService.getHomePageCars();
+      setFeaturedCars(res.cars);
+    }
+    catch(err){
+      console.error("Error fetching cars for homepage:", err);
+    }
+  }
+    useEffect(()=>{
+    getHomePageCars();
+  },[])
   return (
     <div style={{ background: 'var(--cream)', minHeight: '100vh' }}>
       <Navbar />
@@ -396,7 +373,7 @@ export default function Home() {
                   <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ background: 'var(--brown-light)' }}>
                     <span className="text-white text-xs font-bold font-heading">D</span>
                   </div>
-                  <span className="font-heading text-xl text-white">Dribe</span>
+                  <span className="font-heading text-xl text-white">Smota</span>
                 </div>
                 <p className="text-sm leading-relaxed font-body" style={{ color: 'rgba(255,255,255,0.4)' }}>
                   Nigeria's most trusted car marketplace.

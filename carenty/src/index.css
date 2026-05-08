@@ -17,7 +17,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Remove the Vite default #root constraints entirely */
 #root {
   width: 100%;
   max-width: 100%;

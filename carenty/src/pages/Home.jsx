@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import Navbar from '../components/layout/Navbar'
 import carService from '../services/carsService'
 import { useEffect, useState } from 'react'
+import CarCard from '../components/cars/CarCard'
 
 const gridImages = [
   'https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=400&h=500&fit=crop',
@@ -276,39 +277,8 @@ export default function Home() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-          {featuredCars.map((car, idx) => (
-            <Link
-              key={car.id}
-              to={`/cars/${car.id}`}
-              className="car-card group block rounded-2xl overflow-hidden"
-              style={{ background: 'white', animationDelay: `${idx * 0.1}s` }}
-            >
-              <div className="relative h-48 overflow-hidden">
-                <img src={car.images[0]} alt={car.model}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
-                <div className="absolute top-3 left-3">
-                  <span className="text-xs font-semibold px-2.5 py-1 rounded-full font-heading"
-                    style={{ background: 'var(--brown)', color: 'white' }}>
-                    {car.tag}
-                  </span>
-                </div>
-              </div>
-              <div className="p-4">
-                <p className="text-xs font-semibold uppercase tracking-wider mb-1 font-heading" style={{ color: 'var(--brown-light)' }}>
-                  {car.brand} · {car.year}
-                </p>
-                <h3 className="font-heading text-lg font-bold mb-2" style={{ color: 'var(--brown-dark)' }}>
-                  {car.model}
-                </h3>
-                <div className="flex items-center justify-between">
-                  <span className="text-xl font-bold font-heading" style={{ color: 'var(--brown)' }}>{car.price}</span>
-                  <span className="text-xs px-3 py-1.5 rounded-full font-medium transition group-hover:opacity-90 font-body"
-                    style={{ background: 'var(--cream)', color: 'var(--brown)' }}>
-                    View →
-                  </span>
-                </div>
-              </div>
-            </Link>
+          {featuredCars.map((car) => (
+            <CarCard car={car} />
           ))}
         </div>
       </section>

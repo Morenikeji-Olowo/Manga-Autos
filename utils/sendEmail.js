@@ -1,17 +1,17 @@
-import * as SibApiV3Sdk from '@getbrevo/brevo';
+import { TransactionalEmailsApi, SendSmtpEmail, ApiClient } from '@getbrevo/brevo';
 
-const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+const apiInstance = new TransactionalEmailsApi();
 apiInstance.authentications['api-key'].apiKey = process.env.BREVO_API_KEY;
 
 export const sendEmail = async (to, subject, text) => {
     try {
-        await apiInstance.sendTransacEmail({
-            to: [{ email: to }],
-            sender: { email: 'morenikejiolowo101@gmail.com', name: 'Smota' },
-            subject,
-            htmlContent: `<p>${text}</p>`,
-        });
+        const sendSmtpEmail = new SendSmtpEmail();
+        sendSmtpEmail.to = [{ email: to }];
+        sendSmtpEmail.sender = { email: 'morenikejiolowo101@gmail.com', name: 'Smota' };
+        sendSmtpEmail.subject = subject;
+        sendSmtpEmail.htmlContent = `<p>${text}</p>`;
 
+        await apiInstance.sendTransacEmail(sendSmtpEmail);
         console.log(`email sent to: ${to}`);
     }
     catch (err) {

@@ -1,25 +1,21 @@
-import { Resend } from "resend";
+import SibApiV3Sdk from '@getbrevo/brevo';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
+apiInstance.authentications['api-key'].apiKey = process.env.BREVO_API_KEY;
 
-export const sendEmail = async (to, subject, text) =>{
-    try{
-        const {error} = await resend.emails.send({
-            from: 'onboarding@resend.dev',
-            to,
+export const sendEmail = async (to, subject, text) => {
+    try {
+        await apiInstance.sendTransacEmail({
+            to: [{ email: to }],
+            sender: { email: 'morenikejiolowo101@gmail.com', name: 'Smota' },
             subject,
-            html: `<p>${text}</p>`,
-        })
+            htmlContent: `<p>${text}</p>`,
+        });
 
-        if(error){
-            console.error(error.message);
-            throw new Error(error.message)            
-        }
-
-        console.log(`email sent to: ${to}`)
+        console.log(`email sent to: ${to}`);
     }
-    catch(err){
+    catch (err) {
         console.error(err);
-        throw err
+        throw err;
     }
 }
